@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-Br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titulo %} {% endblock %} </title>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link rel="icon" type="image/x-icon" href=" {{ url_for('static', filename='images/LogoIco.ico' ) }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css' ) }}">  <!-- Customização padrão para todas as páginas -->
+    {% block css %} {% endblock %}
+</head>
+<body>
+    <nav> 
+        <div class="nav-logo">
+            <img src="{{ url_for('static', filename='images/Logo Principal - Sem Fundo - Maior.png' ) }}"> 
+        </div>
+        
+        <div class="nav-links">
+            <a href=""> HOME </a>
+            <a href=""> TREINOS </a>
+            <a href=""> RANKING </a>
+            <a href=""> PERFIL </a>
+        </div>        
+    </nav>
+
+    {% block conteudo %} 
+    {% endblock %}
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

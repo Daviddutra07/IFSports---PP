@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block titulo %} Faça seu Cadastro - IFSports {% endblock %}
+
+{% block css %} 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/auth.css' ) }}">
+{% endblock %}
+
+{% block conteudo %} 
+    <main>
+            <div class="left-auth"> 
+                <h1> Seja Bem-Vindo!<br> Cadastre-se e entre para nossa equipe</h1>
+                <img src=" {{ url_for('static', filename='images/diversidadeesporte.png')}}" class="left-auth-image"> 
+            </div>
+            <div class="right-auth">
+                <div class="card-auth">
+                    <h1> Cadastre-se </h1>
+                    <p> Preencha os dados abaixos para se registrar.</p>
+                    <form method="post" action="{{ url_for('auth.register') }}"> 
+                        {{ form.hidden_tag() }}
+
+                        <div class="form-grupo">
+                            {{ form.nome.label }} 
+                            <div class="input-icon">
+                                <svg  xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" > <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5m0-8c1.65 0 3 1.35 3 3s-1.35 3-3 3-3-1.35-3-3 1.35-3 3-3M4 22h16c.55 0 1-.45 1-1v-1c0-3.86-3.14-7-7-7h-4c-3.86 0-7 3.14-7 7v1c0 .55.45 1 1 1m6-7h4c2.76 0 5 2.24 5 5H5c0-2.76 2.24-5 5-5"></path> </svg>
+                                {{ form.nome(placeholder="Aluno da Silva")}}
+                            </div>
+                            {% for error in form.nome.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-grupo">
+                            {{ form.role_provisorio.label }} 
+                            {{ form.role_provisorio(id="role")}}
+                            {% for error in form.role_provisorio.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-grupo">
+                            {{ form.email.label }} 
+
+                            <div class="input-icon"> 
+                                <svg  xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"  fill="currentColor" viewBox="0 0 24 24" ><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2m-8.61 10.79c.18.14.4.21.61.21s.43-.07.61-.21l1.55-1.21L18.58 18H5.41l4.42-4.42 1.55 1.21ZM20 6v.51l-8 6.22-8-6.22V6zm0 3.04v7.54l-4.24-4.24zm-11.76 3.3L4 16.58V9.04zM20 18"></path> </svg>
+                                {{ form.email(id="email", placeholder="Ex: aluno@escolar.ifrn.edu.br") }}
+                            </div>
+                            {% for error in form.email.errors %} 
+                                <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+
+                        </div>
+                    
+                        <div class="form-grupo">
+                            {{ form.senha.label }} 
+                            <div class="input-icon">
+                                <svg  xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" > <path d="M6 22h12c1.1 0 2-.9 2-2v-9c0-1.1-.9-2-2-2h-1V7c0-2.76-2.24-5-5-5S7 4.24 7 7v2H6c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2M9 7c0-1.65 1.35-3 3-3s3 1.35 3 3v2H9zm-3 4h12v9h-5v-2.28c.59-.35 1-.99 1-1.72 0-1.1-.9-2-2-2s-2 .9-2 2a2 2 0 0 0 1 1.72V20H6z"></path> </svg>
+                                {{ form.senha(placeholder="Digite sua senha") }}
+                            </div>
+                            {% for error in form.senha.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+
+                        </div>
+
+                        <div class="form-grupo">
+                            {{ form.confirmar_senha.label }} 
+                            <div class="input-icon">
+                                <svg  xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" > <path d="M6 22h12c1.1 0 2-.9 2-2v-9c0-1.1-.9-2-2-2h-1V7c0-2.76-2.24-5-5-5S7 4.24 7 7v2H6c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2M9 7c0-1.65 1.35-3 3-3s3 1.35 3 3v2H9zm-3 4h12v9h-5v-2.28c.59-.35 1-.99 1-1.72 0-1.1-.9-2-2-2s-2 .9-2 2a2 2 0 0 0 1 1.72V20H6z"></path> </svg>
+                                {{ form.confirmar_senha(placeholder="Digite sua senha") }}
+                            </div>
+                            {% for error in form.confirmar_senha.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        {{ form.submit(class="btn-auth") }}
+
+                    </form>
+                </div>
+            </div>
+    </main>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        document.getElementById("role").addEventListener("change", function() {
+            const emailInput = document.getElementById("email");
+
+            if (this.value === "aluno") {
+                emailInput.placeholder = "Ex: aluno@escolar.ifrn.edu.br";
+            }   else if (this.value === "professor") {
+                emailInput.placeholder = "Ex: professor@ifrn.edu.br";
+            }
+        });
+    </script>
+{% endblock %}

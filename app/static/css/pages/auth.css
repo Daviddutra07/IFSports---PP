@@ -1,0 +1,164 @@
+main {
+    height: calc(100vh - 10vh);
+    width: 100vw;
+    background-color: #fafafa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.left-auth {
+    width: 50vw;
+    height: calc(100vh - 10vh);;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.left-auth > h1 {
+    color: rgba(164, 230, 128, 0.914);
+    font-size: 2rem;
+    margin-left: 50px;
+}
+
+.left-auth-image {
+    width: 40vw;
+}
+
+.right-auth {
+    width: 50vw;
+    height: calc(100vh - 10vh);;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-auth {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 35px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 20px;
+    box-shadow: 0px 10px 50px rgb(129, 221, 80, 0.495);
+    border: 2px solid rgb(129, 221, 80);
+}
+
+
+.card-auth > h1 {
+    color: rgb(129, 221, 80);
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin: 0;
+    letter-spacing: 1.5px;
+}
+
+form {
+    width: 70%;
+}
+
+.form-grupo {   
+    align-items: flex-start;
+    justify-content: center;
+    margin: 10px 0px;
+}
+
+.form-grupo > .input-icon > input {
+    width: 100%;
+    border: 2px solid rgb(129, 221, 80);
+    padding: 5%;
+    border-radius: 10px;
+    padding-left: 15%;
+    background: #f4f1f1;
+    box-shadow: 0px 10px 5px rgb(129, 221, 80, 0.495);
+    outline: none;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+
+
+.form-grupo  > select {
+    width: 100%;
+    border: 2px solid rgb(129, 221, 80);
+    padding: 5% 0;
+    border-radius: 10px;
+    background: #f4f1f1;
+    box-shadow: 0px 10px 5px rgba(129, 221, 80, 0.495);
+    cursor: pointer;
+}
+
+.form-grupo > label {
+    margin-bottom: 10px;
+}
+
+.btn-auth {
+    width: 100%;
+    border: none;
+    padding: 7.5% 0;
+    background-color: rgb(129, 221, 80);
+    border-radius: 5px;
+    outline: none;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: #f4f1f1;
+    letter-spacing: 2px;
+    cursor: pointer;
+}
+
+.input-icon {
+    position: relative;
+}
+
+.input-icon .icon {
+    position: absolute;
+    top: 50%;
+    left: 2%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    color: #000000;
+    pointer-events: none;
+}
+
+.left-auth-image {
+    animation: float 5s ease-in-out infinite;
+}
+
+@keyframes  float {
+    0%   { transform: translateY(0); }
+    25%  { transform: translateY(-6px); }
+    50%  { transform: translateY(-12px); }
+    75%  { transform: translateY(-6px); }
+    100% { transform: translateY(0); }
+}
+
+@media screen and (max-width: 950px) {
+    .card-auth {
+        width: 90%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    main {
+        flex-direction: column;
+        padding: 0;
+        margin: 0;
+        justify-content: flex-start;
+    }
+
+    .left-auth {
+        width: 100%;
+        height: auto;
+        display: none;
+    }
+
+    .right-auth {
+        width: 100%;
+        height: auto;
+    }
+}
