@@ -22,6 +22,11 @@ main {
     margin-left: 50px;
 }
 
+
+.left-auth > p, a {
+    color: rgba(125, 125, 125, 0.914);
+}
+
 .left-auth-image {
     width: 40vw;
 }

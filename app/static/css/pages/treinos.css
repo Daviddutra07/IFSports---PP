@@ -1,0 +1,112 @@
+:root {
+    --verde-principal: #1b5e20;
+    --verde-secundario: #7ed957;
+    --verde-hover: #66bb6a;
+    --fundo-claro: #f2f2f2;
+}
+
+main {
+    min-height: 90vh; 
+    padding: 30px 20px;
+    background-color: var(--fundo-claro);
+}
+
+hr {
+    margin: 0 auto 30px auto;
+    border: none;
+    height: 1px;
+    background-color: #ddd;
+}
+
+.card-form {
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 40px;
+    border-radius: 20px; 
+    border: 2px solid var(--verde-secundario);
+    box-shadow: 0 10px 25px rgba(126, 217, 87, 0.15); 
+}
+
+form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+.form-grupo {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-grupo.full {
+    grid-column: span 2;
+}
+
+.form-grupo label {
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--verde-principal);
+}
+
+.form-grupo input,
+.form-grupo select,
+.form-grupo textarea {
+    padding: 12px;
+    border-radius: 12px;
+    border: 2px solid #e0e0e0;
+    font-size: 14px;
+    transition: 0.2s ease;
+    resize: none;
+    background-color: #fafafa;
+}
+
+.form-grupo input:focus,
+.form-grupo select:focus,
+.form-grupo textarea:focus {
+    outline: none;
+    border-color: var(--verde-secundario);
+    box-shadow: 0 0 0 3px rgba(126, 217, 87, 0.2);
+    background-color: white;
+}
+
+.form-grupo input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+}
+
+.text-danger {
+    margin-top: 5px;
+    font-size: 13px;
+    color: #d32f2f;
+}
+
+input[type="submit"] {
+    grid-column: span 2;
+    margin-top: 10px;
+    padding: 14px;
+    border-radius: 14px;
+    border: none;
+    background-color: var(--verde-secundario);
+    color: white;
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+input[type="submit"]:hover {
+    background-color: var(--verde-hover);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    form {
+        grid-template-columns: 1fr;
+    }
+
+    input[type="submit"] {
+        grid-column: span 1;
+    }
+}

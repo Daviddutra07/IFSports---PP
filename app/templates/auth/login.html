@@ -10,7 +10,8 @@
     <main>
             <div class="left-auth"> 
                 <h1> Bem-Vindo de Volta!<br> Entre para acompanhar os treinos e evoluir a cada dia.</h1>
-                <img src=" {{ url_for('static', filename='images/diversidadeesporte.png')}}" class="left-auth-image"> 
+                <img src=" {{ url_for('static', filename='images/diversidadeesporte.png')}}" class="left-auth-image">
+                <p> Não tem cadastro? <a href="{{ url_for('auth.register')}}" style="color: rgba(164, 230, 128, 0.914);"> Registre-se </a></p> 
             </div>
             <div class="right-auth">
                 <div class="card-auth">

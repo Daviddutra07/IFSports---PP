@@ -17,6 +17,9 @@ def create_app():
     mail.init_app(app)
 
     from app.models.users import User
+    from app.models.treinos import Treino
+    from app.models.frequencia import Frequencia
+    from app.models.modalidades import Modalidade
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -25,6 +28,11 @@ def create_app():
 
     # Registrar controllers (blueprints)
     from app.controllers.auth.routes import auth_bp
+    from app.controllers.treinos.routes import treinos_bp
+    from app.controllers.modalidades.routes import modalidades_bp
+
     app.register_blueprint(auth_bp)
+    app.register_blueprint(treinos_bp)
+    app.register_blueprint(modalidades_bp)
 
     return app

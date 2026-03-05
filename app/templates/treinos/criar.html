@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block titulo %} Criar Treino - IFSports {% endblock %}
+
+{% block css %} 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/treinos.css' ) }}">
+{% endblock %}
+
+{% block conteudo %}
+    <main> 
+        <div class="breadcrumb"> 
+            <a href=""> Início </a> >
+            <a href="{{ url_for('treinos.listar') }}"> Treinos </a> >
+            <span> Criar Treino </span>
+        </div>
+        <hr>
+
+        <div class="card-form">
+            <form method="post" action="{{ url_for('treinos.criar') }}"> 
+                {{ form.hidden_tag() }}
+
+                <div class="form-grupo">
+                    {{ form.trn_nome.label }} 
+                    {{ form.trn_nome}}
+                    {% for error in form.trn_nome.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            
+                <div class="form-grupo">
+                    {{ form.trn_descricao.label }} 
+                    {{ form.trn_descricao}}
+                    {% for error in form.trn_descricao.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-grupo">
+                    {{ form.trn_fixo.label }} 
+                    {{ form.trn_fixo}}
+                </div>
+
+                <div class="form-grupo full" id="grupo-fixo">
+                    {{ form.trn_dia_semana.label }} 
+                    {{ form.trn_dia_semana}}
+
+                    {{ form.trn_horario.label }} 
+                    {{ form.trn_horario}}
+                </div>
+
+                <div class="form-grupo" id="grupo-data">
+                    {{ form.trn_data.label }} 
+                    {{ form.trn_data}}
+                </div>
+
+                <div class="form-grupo">
+                    {{ form.trn_quantidade.label }} 
+                    {{ form.trn_quantidade(min = 1)}}
+
+                    {% for error in form.trn_quantidade.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-grupo">
+                    {{ form.trn_mod_id.label }} 
+                    {{ form.trn_mod_id()}}
+
+                    {% for error in form.trn_mod_id.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                {{ form.submit }}
+            </form>
+        </div>
+    </main> 
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+        
+            const checkboxFixo = document.getElementById("trn_fixo");
+            const grupoFixo = document.getElementById("grupo-fixo");
+            const grupoData = document.getElementById("grupo-data");
+        
+            function toggleInputs(grupo, desabilitar) {
+                const campos = grupo.querySelectorAll("input, select, textarea");
+                campos.forEach(campo => {
+                    campo.disabled = desabilitar;
+                    if (desabilitar) {
+                        campo.value = "";
+                    }
+                });
+            }
+        
+            function atualizarCampos() {
+                if (checkboxFixo.checked) {
+                
+                    grupoFixo.style.display = "block";
+                    grupoData.style.display = "none";
+                
+                    toggleInputs(grupoData, true);   // desabilita data
+                    toggleInputs(grupoFixo, false);  // habilita fixo
+                
+                } else {
+                
+                    grupoFixo.style.display = "none";
+                    grupoData.style.display = "block";
+                
+                    toggleInputs(grupoFixo, true);   // desabilita fixo
+                    toggleInputs(grupoData, false);  // habilita data
+                }
+            }
+        
+            atualizarCampos();
+            checkboxFixo.addEventListener("change", atualizarCampos);
+        });
+    </script>
+{% endblock %}
