@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from flask import Blueprint, render_template, redirect, url_for, flash
+from flask import Blueprint, render_template, redirect, session, url_for, flash
 from flask_login import login_user, login_required, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.services.email_service import enviar_email_confirmacao, validar_token
@@ -85,13 +85,15 @@ def login():
             flash(' Sua conta está desativada.', 'error')
             return redirect(url_for('auth.login'))
 
+        session.clear()
+        logout_user()
         login_user(user)
         flash('Login realizado com sucesso!', 'success')
         return redirect(url_for('treinos.criar'))
     
     return render_template('auth/login.html', form=form)
 
-@auth_bp.route('/logout')
+@auth_bp.route('/logout', methods = ["POST"])
 @login_required
 def logout():
     logout_user()

@@ -14,7 +14,10 @@ def create_app():
 
     db.init_app(app)
     login_manager.init_app(app)
+    login_manager.login_view = "auth.login"
     mail.init_app(app)
+    login_manager.login_message = "Você precisa estar logado para acessar esta página."
+    login_manager.login_message_category = "warning"
 
     from app.models.users import User
     from app.models.treinos import Treino
@@ -25,6 +28,10 @@ def create_app():
     def load_user(user_id):
         return User.query.get(int(user_id))
 
+    @app.context_processor
+    def inject_logout_form():
+        from app.controllers.auth.forms import LogoutForm
+        return dict(logout_form=LogoutForm())
 
     # Registrar controllers (blueprints)
     from app.controllers.auth.routes import auth_bp

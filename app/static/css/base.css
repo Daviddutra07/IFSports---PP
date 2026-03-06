@@ -5,9 +5,16 @@
     font-family: 'Montserrat'; font-size: 16px;
 }
 
+:root {
+    --verde-principal: #1b5e20;
+    --verde-secundario: #7ed957;
+    --verde-hover: #66bb6a;
+    --fundo-claro: #f2f2f2;
+}
+
 html, body {
     height: 100%;
-    overflow-x: hidden;
+    background-color: var(--fundo-claro)
 }
 
 body {
@@ -22,7 +29,9 @@ nav {
     display: flex;
     justify-content: space-around;
     background-color: #164b1d;  
-    border-bottom: 1px solid black;
+    border-bottom: 3px solid rgb(255, 255, 255);
+    position: fixed;
+    z-index: 1;
 
 }
 
@@ -44,7 +53,8 @@ nav {
     width: 80%;
     height: 100%;
     gap: 10%;
-    justify-content: center;
+    justify-content: flex-end;
+    padding-right: 20px;
     align-items: center;
 }
 
@@ -52,6 +62,7 @@ nav {
     position: relative;
     color: #ffffff;
     text-decoration: none;
+    font-weight: 600;
 }
 
 .nav-links a::after {
@@ -68,6 +79,48 @@ nav {
 .nav-links a:hover::after {
     width: 100%;             
 }
+
+.nav-auth {
+    padding: 0 15px;
+    width: 80px;
+    height: 30px;
+    text-decoration: none;
+    border: none;   
+    cursor: pointer;
+
+}
+button.nav-auth {
+    background: none;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+
+.nav-links form.d-inline {
+    display: flex;              
+    align-items: center;
+    height: 100%;
+}
+
+.nav-links a.nav-auth {
+    display: flex; 
+    align-items: center;       
+    justify-content: center;    
+    color: rgb(255, 255, 255);
+    font-weight: 800;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 3px;
+    box-sizing: border-box;
+    line-height: normal; 
+    cursor: pointer;
+}
+
+main {
+    margin-top: 10vh;
+}
+
 
 .breadcrumb {
     font-size: 14px;

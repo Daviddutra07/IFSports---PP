@@ -32,8 +32,6 @@ class TreinoForm(FlaskForm):
 
     trn_mod_id = SelectField("Modalidade Esportiva", coerce=int, validators=[DataRequired(message="Selecione uma modalidade.")])   
 
-    submit = SubmitField("Criar treino")
-
     def validate(self, extra_validators=None):
         if not super().validate():
             return False
@@ -55,3 +53,9 @@ class TreinoForm(FlaskForm):
                 return False
 
         return True
+    
+class TreinoExcluir(FlaskForm):
+    submit = SubmitField("Remover")
+
+class TreinoCheckIn(FlaskForm):
+    submit = SubmitField("CheckIn")

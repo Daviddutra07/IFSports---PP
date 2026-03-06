@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block titulo %} Criar Treino - IFSports {% endblock %}
+{% block titulo %} {{ acao }} Treino - IFSports {% endblock %}
 
 {% block css %} 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/treinos.css' ) }}">
@@ -11,12 +11,12 @@
         <div class="breadcrumb"> 
             <a href=""> Início </a> >
             <a href="{{ url_for('treinos.listar') }}"> Treinos </a> >
-            <span> Criar Treino </span>
+            <span> {{ acao }} Treino </span>
         </div>
         <hr>
 
         <div class="card-form">
-            <form method="post" action="{{ url_for('treinos.criar') }}"> 
+            <form method="post" action="{{ url_action }}"> 
                 {{ form.hidden_tag() }}
 
                 <div class="form-grupo">
@@ -71,7 +71,7 @@
                     {% endfor %}
                 </div>
 
-                {{ form.submit }}
+                <button type="submit"> {{ acao }} Treino    </button>
             </form>
         </div>
     </main> 
