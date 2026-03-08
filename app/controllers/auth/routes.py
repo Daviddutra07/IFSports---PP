@@ -17,13 +17,13 @@ def register():
         nome = form.nome.data
         email = form.email.data.lower()
         senha_hash = generate_password_hash(form.senha.data)
-        role = form.role_provisorio.data 
+        role = form.user_role
 
         # Verifica se o email já existe
         if User.query.filter_by(usr_email=email).first():
             flash('Este email já está cadastrado.', 'error')
-            return redirect(url_for('auth.register'))
-
+            return render_template('auth/register.html', form=form)
+        
         user = User(usr_email=email, usr_nome=nome, usr_tipo=role, usr_senha_hash=senha_hash)
 
         db.session.add(user)
@@ -75,7 +75,7 @@ def login():
 
         if not user or not check_password_hash(user.usr_senha_hash, password):
             flash(' Email ou senha inválidos.', 'error')
-            return redirect(url_for('auth.login'))
+            return render_template('auth/login.html', form=form)
 
         if not user.usr_confirmed:
             flash(' Você precisa confirmar seu email antes de acessar o sistema.','warning')
@@ -89,7 +89,7 @@ def login():
         logout_user()
         login_user(user)
         flash('Login realizado com sucesso!', 'success')
-        return redirect(url_for('treinos.criar'))
+        return redirect(url_for('treinos.listar'))
     
     return render_template('auth/login.html', form=form)
 

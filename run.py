@@ -1,7 +1,7 @@
 from flask import Flask
 from dotenv import load_dotenv
 load_dotenv()
-from app.extensions import db
+from app.extensions import db, socketio
 
 app = Flask(__name__)
 
@@ -13,4 +13,4 @@ with app.app_context():
     db.create_all()
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    socketio.run(app, host="0.0.0.0", port=5000, debug=True)

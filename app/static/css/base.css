@@ -5,6 +5,12 @@
     font-family: 'Montserrat'; font-size: 16px;
 }
 
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 :root {
     --verde-principal: #1b5e20;
     --verde-secundario: #7ed957;
@@ -13,7 +19,7 @@
 }
 
 html, body {
-    height: 100%;
+    overflow-x: hidden;
     background-color: var(--fundo-claro)
 }
 
@@ -24,15 +30,17 @@ body {
 }
 
 nav {
+    box-sizing: border-box;
     height: 10vh;
-    width: 100%;
+    width: 100vw;
     display: flex;
     justify-content: space-around;
-    background-color: #164b1d;  
+    align-items: center;
+    background-color: var(--verde-principal);  
     border-bottom: 3px solid rgb(255, 255, 255);
     position: fixed;
     z-index: 1;
-
+    padding: 0px 20px;
 }
 
 .nav-logo {
@@ -52,9 +60,8 @@ nav {
     display: flex;
     width: 80%;
     height: 100%;
-    gap: 10%;
+    gap: 5%;
     justify-content: flex-end;
-    padding-right: 20px;
     align-items: center;
 }
 
@@ -85,17 +92,16 @@ nav {
     width: 80px;
     height: 30px;
     text-decoration: none;
-    border: none;   
-    cursor: pointer;
-
-}
-button.nav-auth {
     background: none;
     color: white;
     font-weight: 600;
     cursor: pointer;
+    border: none;
 }
 
+.nav-auth:hover {
+    background-color: var(--verde-secundario);
+}
 
 .nav-links form.d-inline {
     display: flex;              
@@ -115,6 +121,139 @@ button.nav-auth {
     box-sizing: border-box;
     line-height: normal; 
     cursor: pointer;
+}
+
+.toggle-button {
+    position: absolute;
+    top: 3.33vh;
+    right: 1rem;
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 20px;
+}
+
+.toggle-button .bar {
+    height: 3px;
+    width: 100%;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 60%;
+    z-index: 998;
+    background-color: var(--verde-principal);
+    box-shadow: -10px 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    backdrop-filter: blur(10px);
+    gap: 10px;
+    right: -100%; 
+    transition: right 0.3s ease; 
+}
+
+.sidebar.active {
+    right: 0;
+}
+
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+
+    background: rgba(0,0,0,0.4);
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: opacity 0.3s ease;
+    z-index: 997;
+}
+
+.sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+nav ul{
+    width: 100%;
+    list-style: none;
+}
+
+nav li{
+    height: 60px;
+}
+
+nav li:first-child{
+    margin-right: auto;
+    border-bottom: 1px solid white;
+    background-color: rgb(20, 71, 23);
+}
+
+.sidebar ul {
+    width: 100%;
+    list-style: none;
+}
+
+.button-sidebar {
+    text-decoration: none;
+    border: none;   
+    cursor: pointer;
+    background: none;
+    color: white;
+    font-weight: 600;
+}
+
+.sidebar a{ 
+    height: 100%;
+    padding: 0 30px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.sidebar form {
+    height: 100%;
+    padding: 0 30px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    color: #ffffff;
+    font-weight: 600;   
+}
+
+@media screen and (max-width: 768px) {
+    nav {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .toggle-button {
+        display: flex;
+    }
+
+    .nav-links.nav-logged {
+        display: none;
+    }
+
+    .nav-links.nav-guest {
+        display: flex;
+    }
 }
 
 main {

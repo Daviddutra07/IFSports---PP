@@ -2,7 +2,7 @@ from flask import Flask
 from dotenv import load_dotenv
 
 from app.config import Config
-from app.extensions import db, login_manager, mail
+from app.extensions import db, login_manager, mail, socketio
 
 load_dotenv()
 
@@ -13,6 +13,7 @@ def create_app():
     app.config.from_object(Config)
 
     db.init_app(app)
+    socketio.init_app(app)
     login_manager.init_app(app)
     login_manager.login_view = "auth.login"
     mail.init_app(app)

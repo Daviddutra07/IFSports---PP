@@ -1,39 +1,40 @@
 main {
-    height: calc(100vh - 10vh);
-    width: 100vw;
+    min-height: calc(100vh - 10vh);
+    width: 100%;
     background-color: var(--fundo-claro);
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 20px;
 }
 
 .left-auth {
-    width: 50vw;
-    height: calc(100vh - 10vh);;
+    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-.left-auth > h1 {
+.left-auth h1, .tittle-hide h1 {
     color: var(--verde-secundario);
     font-size: 2rem;
     margin-left: 50px;
 }
 
 
-.left-auth > p, a {
+.left-auth > p,
+.left-auth a {
     color: rgba(125, 125, 125, 0.914);
 }
 
 .left-auth-image {
-    width: 40vw;
+    width: 100%;
+    max-width: 600px;
 }
 
 .right-auth {
-    width: 50vw;
-    height: calc(100vh - 10vh);;
+    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -41,7 +42,8 @@ main {
 }
 
 .card-auth {
-    width: 70%;
+    width: 100%;
+    max-width: 600px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -62,7 +64,7 @@ main {
     letter-spacing: 1.5px;
 }
 
-form {
+.card-auth form {
     width: 70%;
 }
 
@@ -75,17 +77,12 @@ form {
 .form-grupo > .input-icon > input {
     width: 100%;
     border: 2px solid var(--verde-secundario);
-    padding: 5%;
+    padding: 12px 12px 12px 40px;
     border-radius: 10px;
-    padding-left: 15%;
     background: #f4f1f1;
-    box-shadow: 0px 10px 5px rgb(129, 221, 80, 0.495);
+    box-shadow: 0px 5px 10px rgba(129,221,80,0.3);
     outline: none;
-    box-sizing: border-box;
-    cursor: pointer;
 }
-
-
 
 .form-grupo  > select {
     width: 100%;
@@ -134,6 +131,14 @@ form {
     animation: float 5s ease-in-out infinite;
 }
 
+.tittle-hide {
+    display: none;
+}
+
+.register-mobile{
+    display: none;
+}
+
 @keyframes  float {
     0%   { transform: translateY(0); }
     25%  { transform: translateY(-6px); }
@@ -148,22 +153,65 @@ form {
     }
 }
 
-@media screen and (max-width: 600px) {
-    main {
+@media (max-width: 768px) {
+
+    main{
         flex-direction: column;
-        padding: 0;
-        margin: 0;
+        align-items: center;
         justify-content: flex-start;
+        padding: 30px 20px;
+        gap: 20px;
     }
 
-    .left-auth {
-        width: 100%;
-        height: auto;
+    .left-auth{
         display: none;
     }
 
-    .right-auth {
+    .tittle-hide{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        max-width: 420px;
+        gap: 8px;
+    }
+
+    .tittle-hide h1{
+        font-size: 1.4rem;
+        line-height: 1.2;
+        margin: 0;
+    }
+
+    .tittle-hide p{
+        font-size: 0.9rem;
+    }
+
+    .right-auth{
         width: 100%;
-        height: auto;
+        display: flex;
+        justify-content: flex-start;
+        margin: 0;
+        padding: 0;
+    }
+
+    .card-auth{
+        width: 100%;
+        max-width: 380px;
+        padding: 25px;
+    }
+
+    form {
+        width: 100%;
+    }
+
+    .register-desktop{
+        display: none;
+    }
+
+    .register-mobile{
+        display: block;
+        margin-top: 30px;
+        text-align: center;
+        font-size: 0.9rem;
     }
 }

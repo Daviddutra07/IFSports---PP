@@ -13,6 +13,12 @@
                 <img src=" {{ url_for('static', filename='images/diversidadeesporte.png')}}" class="left-auth-image"> 
                 <p> Já tem um cadastro? <a href="{{ url_for('auth.login')}}" style="color: rgba(164, 230, 128, 0.914);"> Faça Login</a></p>
             </div>
+
+            <div class="tittle-hide">
+                <h1> Seja Bem-Vindo!<br> Cadastre-se e entre para nossa equipe</h1>
+            </div>
+
+
             <div class="right-auth">
                 <div class="card-auth">
                     <h1> Cadastre-se </h1>
@@ -79,6 +85,8 @@
 
                     </form>
                 </div>
+
+                <p class="register-mobile"> Já tem um cadastro? <a href="{{ url_for('auth.login')}}" style="color: rgba(164, 230, 128, 0.914);"> Faça Login</a></p>
             </div>
     </main>
 {% endblock %}

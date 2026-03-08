@@ -40,12 +40,16 @@
                     {{ form.trn_fixo}}
                 </div>
 
-                <div class="form-grupo full" id="grupo-fixo">
-                    {{ form.trn_dia_semana.label }} 
-                    {{ form.trn_dia_semana}}
-
-                    {{ form.trn_horario.label }} 
-                    {{ form.trn_horario}}
+                <div id="grupo-fixo">
+                    <div class="form-grupo">
+                        {{ form.trn_dia_semana.label }} 
+                        {{ form.trn_dia_semana}}
+                    </div>
+                
+                    <div class="form-grupo">
+                        {{ form.trn_horario.label }} 
+                        {{ form.trn_horario}}
+                    </div>
                 </div>
 
                 <div class="form-grupo" id="grupo-data">

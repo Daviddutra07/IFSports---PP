@@ -1,3 +1,7 @@
+html, body {
+    overflow-y: auto;
+}
+
 /* PÁGINAS DE CRIAÇÃO/EDIÇÃO DOS TREINOS */
 
 main {
@@ -66,9 +70,11 @@ hr {
     background-color: white;
 }
 
-.form-grupo input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
+#grupo-fixo {
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
 }
 
 .text-danger {
@@ -77,7 +83,8 @@ hr {
     color: #d32f2f;
 }
 
-.card-form > form >  button, input[type="submit"] {
+.card-form form button,
+.card-form form input[type="submit"] {
     grid-column: span 2;
     margin-top: 10px;
     padding: 14px;
@@ -91,21 +98,62 @@ hr {
     transition: 0.2s ease;
 }
 
+.form-grupo input[type="checkbox"] {
+    appearance: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 2px solid var(--verde-secundario);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.form-grupo input[type="checkbox"]:checked {
+    background-color: var(--verde-secundario);
+}
+
+.form-grupo input[type="checkbox"]:checked::after {
+    content: "\F272";
+    font-family: "bootstrap-icons";
+    position: absolute;
+    color: white;
+    font-size: 24px;
+}
+
+
 input[type="submit"]:hover {
     background-color: var(--verde-hover);
     transform: translateY(-2px);
 }
 
 @media (max-width: 768px) {
-    form {
+    .card-form form {
         grid-template-columns: 1fr;
     }
 
-    input[type="submit"] {
+    .form-grupo.full {
         grid-column: span 1;
     }
-}
 
+    .card-form > form > button {
+        grid-column: span 1;
+    }
+
+    #grupo-fixo {
+        grid-column: span 1;
+        grid-template-columns: 1fr;
+    }
+
+    .card-form form button {
+        grid-column: span 1;
+    }
+
+}
 
 /* PÁGINA DE LISTAGEM DOS TREINOS */
 
@@ -276,12 +324,11 @@ input[type="submit"]:hover {
     );
 }
 
-.card-footer .acoes a, i {
+.card-footer .acoes a,
+.card-footer .acoes i {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    height: 100%;
 }
 
 .card-footer .acoes .editar, .excluir{

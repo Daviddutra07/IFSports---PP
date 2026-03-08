@@ -14,13 +14,13 @@ class TreinoForm(FlaskForm):
 
     trn_dia_semana = SelectField("Dia da semana",
         choices=[
-            (1, "Segunda-feira"),
-            (2, "Terça-feira"),
-            (3, "Quarta-feira"),
-            (4, "Quinta-feira"),
-            (5, "Sexta-feira"),
-            (6, "Sábado"),
-            (7, "Domingo"),
+            (0, "Segunda-feira"),
+            (1, "Terça-feira"),
+            (2, "Quarta-feira"),
+            (3, "Quinta-feira"),
+            (4, "Sexta-feira"),
+            (5, "Sábado"),
+            (6, "Domingo"),
         ], coerce=int, validators=[Optional()])
 
     trn_horario = TimeField( "Horário", format="%H:%M", validators=[Optional()])
@@ -37,7 +37,7 @@ class TreinoForm(FlaskForm):
             return False
 
         if self.trn_fixo.data:
-            if not self.trn_dia_semana.data:
+            if self.trn_dia_semana.data is None:
                 self.trn_dia_semana.errors.append("Informe o dia da semana.")
                 return False
             if not self.trn_horario.data:

@@ -1,4 +1,4 @@
-<div class="card-treino">
+<div class="card-treino" id="treino-{{ treino.trn_id }}">
     <div class="card-topo">
         {{ treino.modalidade.mod_nome }}
     </div>
@@ -13,7 +13,7 @@
         <div class="info-treino">
             {% if treino.trn_fixo %}
                 <p>📅 
-                    Toda 
+                    Toda(o)
                     {% set dias = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'] %}
                     {{ dias[treino.trn_dia_semana] }}
                 </p>
@@ -29,10 +29,10 @@
             {% endif %}
 
             {% if treino.trn_proxima_data %}
-                <p>🔥 Próximo: {{ treino.trn_proxima_data.strftime('%d/%m/%Y') }}</p>
+                <p>🔥 Próximo: {{ treino.trn_data.strftime('%d/%m/%Y') }}</p>
             {% endif %}
 
-            <p>👥 {{ treino.trn_quantidade }} vagas</p>
+            <p> 👥  <span class="vagas-ocupadas">     {{ treino.vagas_ocupadas }} </span> / <span class="vagas-total">     {{ treino.trn_quantidade }} </span> vagas </p>
 
             {% if current_user.usr_tipo == 'aluno' %}
                 <p>👨‍🏫 Prof. {{ treino.professor.usr_nome }}</p>

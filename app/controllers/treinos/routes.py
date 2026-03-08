@@ -1,7 +1,8 @@
 from datetime import datetime, timezone
 from flask import Blueprint, abort, render_template, redirect, request, url_for, flash
 from flask_login import login_required, current_user
-from app.extensions import db
+from app.controllers.treinos.utils import calcular_primeira_data, calcular_proxima_data
+from app.extensions import db, socketio
 from app.models.treinos import Treino
 from app.models.frequencia import Frequencia
 from app.controllers.treinos.forms import TreinoCheckIn, TreinoExcluir, TreinoForm
@@ -19,22 +20,25 @@ def criar():
 
     form.trn_mod_id.choices = [(m.mod_id, m.mod_nome) for m in modalidades]
 
-
     if form.validate_on_submit():
-        treino = Treino(
-            trn_nome=form.trn_nome.data,
-            trn_descricao=form.trn_descricao.data,
-            trn_fixo=form.trn_fixo.data,
-            trn_dia_semana=form.trn_dia_semana.data if form.trn_fixo.data else None,
-            trn_horario=form.trn_horario.data if form.trn_fixo.data else None,
-            trn_data=form.trn_data.data if not form.trn_fixo.data else None,
-            trn_pro_id=current_user.usr_id,
-            trn_quantidade=form.trn_quantidade.data,
-            trn_mod_id=form.trn_mod_id.data
-        )
+        if form.trn_fixo.data == True:
+            primeira_data = calcular_primeira_data(form.trn_dia_semana.data, form.trn_horario.data)
+            proxima_data = calcular_proxima_data(primeira_data)
+            treino = Treino(trn_nome=form.trn_nome.data, trn_descricao=form.trn_descricao.data, trn_fixo=form.trn_fixo.data, trn_dia_semana=form.trn_dia_semana.data, trn_horario=form.trn_horario.data, trn_data=primeira_data, trn_proxima_data = proxima_data, trn_pro_id=current_user.usr_id, trn_quantidade=form.trn_quantidade.data, trn_mod_id=form.trn_mod_id.data)
+        else: 
+            data_avulsa = form.trn_data.data.replace(tzinfo=timezone.utc)
+
+            treino = Treino(trn_nome=form.trn_nome.data, trn_descricao=form.trn_descricao.data, trn_fixo=form.trn_fixo.data, trn_data=data_avulsa, trn_pro_id=current_user.usr_id, trn_quantidade=form.trn_quantidade.data, trn_mod_id=form.trn_mod_id.data)
+
 
         db.session.add(treino)
         db.session.commit()
+
+        card_treino = render_template("components/_card_treino.html",treino=treino, checkin_form=TreinoCheckIn(), excluir_form=TreinoExcluir())
+
+        socketio.emit("treino_criado", {
+            "id": treino.trn_id,
+            "html": card_treino})
 
         flash("Treino criado com sucesso!", "success")
         return redirect(url_for("treinos.listar"))
@@ -61,18 +65,25 @@ def listar():
 @treinos_bp.route("/<int:id>/checkin", methods=["POST"])
 @login_required
 def checkin(id):
-    if current_user.usr_tipo != "aluno":
-        flash(" Apenas alunos podem realizar check-in.", "error")
-        return redirect(url_for("treinos.listar"))
-
-    treino = Treino.query.get_or_404(id)
+    treino =  (Treino.query.filter_by(trn_id=id).with_for_update().first_or_404())
     agora = datetime.now(timezone.utc)
+
 
     if treino.trn_fixo:
         data_ocorrencia = agora.date()
     else:
         data_ocorrencia = treino.trn_data
 
+    total_checkins = Frequencia.query.filter_by(frq_treino_id=treino.trn_id,frq_data_ocorrencia=data_ocorrencia).count()
+
+    if current_user.usr_tipo != "aluno":
+        flash(" Apenas alunos podem realizar check-in.", "error")
+        return redirect(url_for("treinos.listar"))
+
+    if total_checkins >= treino.trn_quantidade: 
+        flash("Treino lotado.") 
+        return redirect(url_for("treinos.listar")) 
+    
     existente = Frequencia.query.filter_by(
         frq_aluno_id=current_user.usr_id,
         frq_treino_id=treino.trn_id,
@@ -83,17 +94,17 @@ def checkin(id):
         flash(" Você já realizou check-in neste treino.", "warning")
         return redirect(url_for("treinos.listar"))
 
-    frequencia = Frequencia(
-        frq_aluno_id=current_user.usr_id,
-        frq_treino_id=treino.trn_id,
-        frq_data_ocorrencia=data_ocorrencia,
-        frq_status="checkin"
-    )
+    frequencia = Frequencia(frq_aluno_id=current_user.usr_id, frq_treino_id=treino.trn_id, frq_data_ocorrencia=data_ocorrencia,frq_status="checkin")
 
     db.session.add(frequencia)
     db.session.commit()
 
+    total_checkins = Frequencia.query.filter_by(frq_treino_id=treino.trn_id,frq_data_ocorrencia=data_ocorrencia).count()
+
+    socketio.emit("treino_atualizado",{"treino_id": treino.trn_id,"vagas_ocupadas": total_checkins})
+
     flash("Check-in realizado com sucesso!", "success")
+
     return redirect(url_for("treinos.listar"))
 
 @treinos_bp.route("/frequencia/<int:frequencia_id>/validar/<string:status>", methods=["POST"])
@@ -160,7 +171,8 @@ def remover(id):
         db.session.commit()
         flash("Treino removido com sucesso!", "success")
     except Exception as e:
-        db.session.rollback()
         flash(f"Não foi possível remover este treino: {str(e)}", "error")
+        db.session.rollback()
+        print({str(e)})
 
     return redirect(url_for("treinos.listar"))
