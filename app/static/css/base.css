@@ -5,9 +5,22 @@
     font-family: 'Montserrat'; font-size: 16px;
 }
 
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+:root {
+    --verde-principal: #1b5e20;
+    --verde-secundario: #7ed957;
+    --verde-hover: #66bb6a;
+    --fundo-claro: #f2f2f2;
+}
+
 html, body {
-    height: 100%;
     overflow-x: hidden;
+    background-color: var(--fundo-claro)
 }
 
 body {
@@ -17,13 +30,17 @@ body {
 }
 
 nav {
+    box-sizing: border-box;
     height: 10vh;
-    width: 100%;
+    width: 100vw;
     display: flex;
     justify-content: space-around;
-    background-color: rgb(44, 143, 22);  
-    border-bottom: 1px solid black;
-
+    align-items: center;
+    background-color: var(--verde-principal);  
+    border-bottom: 3px solid rgb(255, 255, 255);
+    position: fixed;
+    z-index: 1;
+    padding: 0px 20px;
 }
 
 .nav-logo {
@@ -43,8 +60,8 @@ nav {
     display: flex;
     width: 80%;
     height: 100%;
-    gap: 10%;
-    justify-content: center;
+    gap: 5%;
+    justify-content: flex-end;
     align-items: center;
 }
 
@@ -52,6 +69,7 @@ nav {
     position: relative;
     color: #ffffff;
     text-decoration: none;
+    font-weight: 600;
 }
 
 .nav-links a::after {
@@ -67,4 +85,197 @@ nav {
 
 .nav-links a:hover::after {
     width: 100%;             
+}
+
+.sidebar li:hover {
+    background-color: rgb(25, 132, 25);
+}
+
+.nav-auth {
+    padding: 0 15px;
+    width: 80px;
+    height: 30px;
+    text-decoration: none;
+    background: none;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+}
+
+.nav-auth:hover {
+    background-color: rgb(25, 132, 25)
+}
+
+.nav-links form.d-inline {
+    display: flex;              
+    align-items: center;
+    height: 100%;
+}
+
+.nav-links a.nav-auth {
+    display: flex; 
+    align-items: center;       
+    justify-content: center;    
+    color: rgb(255, 255, 255);
+    font-weight: 800;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 3px;
+    box-sizing: border-box;
+    line-height: normal; 
+    cursor: pointer;
+}
+
+.toggle-button {
+    position: absolute;
+    top: 3.33vh;
+    right: 1rem;
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 20px;
+}
+
+.toggle-button .bar {
+    height: 3px;
+    width: 100%;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 60%;
+    z-index: 998;
+    background-color: var(--verde-principal);
+    box-shadow: -10px 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    backdrop-filter: blur(10px);
+    gap: 10px;
+    right: -100%; 
+    transition: right 0.3s ease; 
+}
+
+.sidebar.active {
+    right: 0;
+}
+
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+
+    background: rgba(0,0,0,0.4);
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: opacity 0.3s ease;
+    z-index: 997;
+}
+
+.sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+nav ul{
+    width: 100%;
+    list-style: none;
+}
+
+nav li{
+    height: 60px;
+}
+
+nav li:first-child{
+    margin-right: auto;
+    border-bottom: 1px solid white;
+    background-color: rgb(20, 71, 23);
+}
+
+.sidebar ul {
+    width: 100%;
+    list-style: none;
+}
+
+.button-sidebar {
+    text-decoration: none;
+    border: none;   
+    cursor: pointer;
+    background: none;
+    color: white;
+    font-weight: 600;
+}
+
+.sidebar a{ 
+    height: 100%;
+    padding: 0 30px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.sidebar form {
+    height: 100%;
+    padding: 0 30px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    color: #ffffff;
+    font-weight: 600;   
+}
+
+@media screen and (max-width: 768px) {
+    nav {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .toggle-button {
+        display: flex;
+    }
+
+    .nav-links.nav-logged {
+        display: none;
+    }
+
+    .nav-links.nav-guest {
+        display: flex;
+    }
+}
+
+main {
+    margin-top: 10vh;
+}
+
+
+.breadcrumb {
+    font-size: 14px;
+    margin-bottom: 20px;
+    color: #666;
+}
+
+.breadcrumb a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
 }

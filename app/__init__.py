@@ -1,8 +1,10 @@
 from flask import Flask
 from dotenv import load_dotenv
+from flask_login import current_user
+from flask_socketio import join_room
 
 from app.config import Config
-from app.extensions import db, login_manager, mail
+from app.extensions import db, login_manager, mail, socketio
 
 load_dotenv()
 
@@ -13,18 +15,50 @@ def create_app():
     app.config.from_object(Config)
 
     db.init_app(app)
+    socketio.init_app(app)
+
+    @socketio.on("connect")
+    def handle_connect():
+        if current_user.is_authenticated:
+            if current_user.usr_tipo == "aluno":
+                join_room("alunos")
+            elif current_user.usr_tipo == "professor":
+                join_room("professores")
+
+    @socketio.on("entrar_treino")
+    def entrar_treino(data):
+        treino_id = data["treino_id"]
+        room = f"treino_{treino_id}"
+        join_room(room)
+    
+
     login_manager.init_app(app)
+    login_manager.login_view = "auth.login"
     mail.init_app(app)
+    login_manager.login_message = "Você precisa estar logado para acessar esta página."
+    login_manager.login_message_category = "warning"
 
     from app.models.users import User
+    from app.models.treinos import Treino
+    from app.models.frequencia import Frequencia
+    from app.models.modalidades import Modalidade
 
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
 
+    @app.context_processor
+    def inject_logout_form():
+        from app.controllers.auth.forms import LogoutForm
+        return dict(logout_form=LogoutForm())
 
     # Registrar controllers (blueprints)
     from app.controllers.auth.routes import auth_bp
+    from app.controllers.treinos.routes import treinos_bp
+    from app.controllers.modalidades.routes import modalidades_bp
+
     app.register_blueprint(auth_bp)
+    app.register_blueprint(treinos_bp)
+    app.register_blueprint(modalidades_bp)
 
     return app

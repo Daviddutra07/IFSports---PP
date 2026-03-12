@@ -24,3 +24,6 @@ class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     senha = PasswordField('Senha', validators=[DataRequired()])
     submit = SubmitField('Entrar')
+
+class LogoutForm(FlaskForm):
+    submit = SubmitField("Sair")

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block titulo %} Editar Treino {% endblock %}
+
+{% block conteudo %}
+<h1>Editar Treino</h1>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.trn_nome.label }} {{ form.trn_nome() }}
+    {{ form.trn_descricao.label }} {{ form.trn_descricao() }}
+
+    
+    {{ form.submit(value="Salvar alterações") }}
+</form>
+{% endblock %}

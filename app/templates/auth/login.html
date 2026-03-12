@@ -10,9 +10,15 @@
     <main>
             <div class="left-auth"> 
                 <h1> Bem-Vindo de Volta!<br> Entre para acompanhar os treinos e evoluir a cada dia.</h1>
-                <img src=" {{ url_for('static', filename='images/diversidadeesporte.png')}}" class="left-auth-image"> 
+                <img src=" {{ url_for('static', filename='images/diversidadeesporte.png')}}" class="left-auth-image">
+                <p class="register-desktop"> Não tem cadastro? <a href="{{ url_for('auth.register')}}" style="color: rgba(164, 230, 128, 0.914);"> Registre-se </a></p> 
+            </div>
+
+            <div class="tittle-hide">
+                <h1> Bem-Vindo de Volta!<br> Entre para acompanhar os treinos e evoluir a cada dia.</h1>
             </div>
             <div class="right-auth">
+
                 <div class="card-auth">
                     <h1> Entrar </h1>
                     <p> Preencha os dados abaixos para se continuar.</p>
@@ -48,6 +54,8 @@
 
                     </form>
                 </div>
+
+                <p class="register-mobile"> Não tem cadastro? <a href="{{ url_for('auth.register')}}" style="color: rgba(164, 230, 128, 0.914)">Registre-se</a> </p>
             </div>
     </main>
 {% endblock %}

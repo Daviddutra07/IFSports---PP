@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block titulo %} {{ acao }} Treino - IFSports {% endblock %}
+
+{% block css %} 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/treinos.css' ) }}">
+{% endblock %}
+
+{% block conteudo %}
+    <main> 
+        <div class="breadcrumb"> 
+            <a href=""> Início </a> >
+            <a href="{{ url_for('treinos.listar') }}"> Treinos </a> >
+            <span> {{ acao }} Treino </span>
+        </div>
+        <hr>
+
+        <div class="card-form">
+            <form method="post" action="{{ url_action }}"> 
+                {{ form.hidden_tag() }}
+
+                <div class="form-grupo">
+                    {{ form.trn_nome.label }} 
+                    {{ form.trn_nome}}
+                    {% for error in form.trn_nome.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            
+                <div class="form-grupo">
+                    {{ form.trn_descricao.label }} 
+                    {{ form.trn_descricao}}
+                    {% for error in form.trn_descricao.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-grupo">
+                    {{ form.trn_fixo.label }} 
+                    {{ form.trn_fixo}}
+                </div>
+
+                <div id="grupo-fixo">
+                    <div class="form-grupo">
+                        {{ form.trn_dia_semana.label }} 
+                        {{ form.trn_dia_semana }}
+
+                        {% for error in form.trn_dia_semana.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                
+
+                    <div class="form-grupo">
+                        {{ form.trn_horario.label }} 
+                        {{ form.trn_horario }}
+
+                        {% for error in form.trn_horario.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                    <div class="form-grupo" id="grupo-data">
+                        {{ form.trn_data.label }} 
+                        {{ form.trn_data }}
+
+                        {% for error in form.trn_data.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                <div class="form-grupo">
+                    {{ form.trn_quantidade.label }} 
+                    {{ form.trn_quantidade(min = 1)}}
+
+                    {% for error in form.trn_quantidade.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-grupo">
+                    {{ form.trn_mod_id.label }} 
+                    {{ form.trn_mod_id()}}
+
+                    {% for error in form.trn_mod_id.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <button type="submit"> {{ acao }} Treino    </button>
+            </form>
+        </div>
+    </main> 
+{% endblock %}
+
+{% block scripts %}
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const checkboxFixo = document.getElementById("trn_fixo");
+    const grupoFixo = document.getElementById("grupo-fixo");
+    const grupoData = document.getElementById("grupo-data");
+
+    const diaInput = document.getElementById("trn_dia_semana");
+    const horarioInput = document.getElementById("trn_horario");
+    const dataInput = document.getElementById("trn_data");
+
+    function atualizarCampos() {
+
+        if (checkboxFixo.checked) {
+
+            grupoData.style.display = "none";
+            dataInput.disabled = true;
+
+            grupoFixo.style.display = "grid";
+            diaInput.disabled = false;
+            horarioInput.disabled = false;
+
+        } else {
+
+            grupoData.style.display = "block";
+            dataInput.disabled = false;
+
+            grupoFixo.style.display = "none";
+            diaInput.disabled = true;
+            horarioInput.disabled = true;
+
+        }
+
+    }
+
+    atualizarCampos(); // executa ao carregar a página
+
+    checkboxFixo.addEventListener("change", atualizarCampos);
+
+});
+
+</script>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block titulo %} Treinos- IFSports {% endblock %}
+
+{% block css %} 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/treinos.css' ) }}">
+{% endblock %}
+
+{% block conteudo %}
+    <main> 
+        <header class="treinos-header">
+            <h1 class="treino-titulo">Treinos Disponíveis</h1>
+            <p>Rumo à Vitória, Faça Check-In! Cada treino é uma chance de ganhar pontos e melhorar sua performance!</p>
+            {% if current_user.usr_tipo == "professor" %}
+                <div class="new-treino"> 
+                    <a href="{{ url_for('treinos.criar')}}"> CRIAR TREINO </a>
+                </div>
+            {% endif %}
+        </header>
+
+        <section class="treinos-container">
+            {% for treino in treinos_pag.items %}
+                {% include 'components/_card_treino.html' %}
+            {% else %}
+                <div class="no-treinos">
+                    <h2>Ops! Nenhum treino cadastrado.</h2>
+                    <p>Ainda não existem treinos disponíveis.</p>
+            {% endfor %}
+        </section>
+
+        <div class="pagination">
+            {% if treinos_pag.has_prev %}
+                <a class="page-link" href="{{ url_for('treinos.listar', page=treinos_pag.prev_num) }}">« Anterior</a>
+            {% endif %}
+    
+            <span>Página {{ treinos_pag.page }} de {{ treinos_pag.pages }}</span>
+    
+            {% if treinos_pag.has_next %}
+                <a class="page-link" href="{{ url_for('treinos.listar', page=treinos_pag.next_num) }}">Próxima »</a>
+            {% endif %}
+        </div>
+        
+    </main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    socket.on("atualizar_treinos", function(){
+        location.reload(); 
+    });
+</script>
+{% endblock %}
