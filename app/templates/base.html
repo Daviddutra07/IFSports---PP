@@ -83,6 +83,9 @@
 
 {% block scripts %}{% endblock %}
 <script>
+
+    const USER_TYPE = "{{ current_user.usr_tipo if current_user.is_authenticated else '' }}";
+
     document.addEventListener("DOMContentLoaded", function(){
     
         const openBtn = document.getElementById("openSidebar");

@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime
 from flask import Blueprint, render_template, redirect, session, url_for, flash
 from flask_login import login_user, login_required, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -57,7 +57,7 @@ def confirmar_email(token):
         flash(' Conta já confirmada.', 'info')
     else:
         user.usr_confirmed = True
-        user.usr_confirmed_at = datetime.now(timezone.utc)
+        user.usr_confirmed_at = datetime.now
         db.session.commit()
         flash('Conta confirmada com sucesso!', 'success')
 

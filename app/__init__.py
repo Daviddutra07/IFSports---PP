@@ -1,5 +1,7 @@
 from flask import Flask
 from dotenv import load_dotenv
+from flask_login import current_user
+from flask_socketio import join_room
 
 from app.config import Config
 from app.extensions import db, login_manager, mail, socketio
@@ -14,6 +16,22 @@ def create_app():
 
     db.init_app(app)
     socketio.init_app(app)
+
+    @socketio.on("connect")
+    def handle_connect():
+        if current_user.is_authenticated:
+            if current_user.usr_tipo == "aluno":
+                join_room("alunos")
+            elif current_user.usr_tipo == "professor":
+                join_room("professores")
+
+    @socketio.on("entrar_treino")
+    def entrar_treino(data):
+        treino_id = data["treino_id"]
+        room = f"treino_{treino_id}"
+        join_room(room)
+    
+
     login_manager.init_app(app)
     login_manager.login_view = "auth.login"
     mail.init_app(app)

@@ -17,7 +17,6 @@
                     {% set dias = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'] %}
                     {{ dias[treino.trn_dia_semana] }}
                 </p>
-
                 {% if treino.trn_horario %}
                     <p>⏰ {{ treino.trn_horario.strftime('%H:%M') }}</p>
                 {% endif %}
@@ -32,34 +31,49 @@
                 <p>🔥 Próximo: {{ treino.trn_data.strftime('%d/%m/%Y') }}</p>
             {% endif %}
 
-            <p> 👥  <span class="vagas-ocupadas">     {{ treino.vagas_ocupadas }} </span> / <span class="vagas-total">     {{ treino.trn_quantidade }} </span> vagas </p>
+            <p> 👥  <span class="vagas-ocupadas">{{ treino.vagas_ocupadas }}</span> / <span class="vagas-total">{{ treino.trn_quantidade }}</span> vagas </p>
 
-            {% if current_user.usr_tipo == 'aluno' %}
+            {% if (user_tipo or current_user.usr_tipo) == 'aluno' %}
                 <p>👨‍🏫 Prof. {{ treino.professor.usr_nome }}</p>
             {% endif %}
 
         </div>
         <div class="card-footer">
-            <span class="treino"> <a href=""> Detalhes </a>
-            {% if current_user.usr_tipo == 'aluno' %}
-                <form method="post" action="{{ url_for('treinos.checkin', id=treino.trn_id)}}">
-                    {{ checkin_form.hidden_tag() }}
-                    <button type="submit" class="btn-checkin"> CHECK-IN </button>
-                </form>
-            {% endif %}
-            </span>
-            {% if current_user.usr_tipo == 'professor' %}
-                <div class="acoes">
-                    <span class="editar"> <a href="{{ url_for('treinos.editar', id=treino.trn_id)}}" title="Editar"> <i class="bi bi-pencil-fill"></i> </a> </span>
-                        <form method="post" action="{{ url_for('treinos.remover', id=treino.trn_id)}}">
-                            {{ excluir_form.hidden_tag() }}
-                            <button type="submit" title="Excluir" class="excluir"> <i class="bi bi-trash3"></i> </button>
+            <span class="treino">
+                <a href="{{ url_for('treinos.detalhes', id=treino.trn_id) }}">Detalhes</a>
+            
+                {% if (user_tipo or current_user.usr_tipo) == 'aluno' %}
+            
+                    {% if treino.ja_fez_checkin %}
+                        <form method="post" action="{{ url_for('treinos.cancelar_checkin', id=treino.trn_id) }}">
+                            <button type="submit" class="btn-cancelar">CANCELAR</button>
                         </form>
+                    {% elif treino.vagas_ocupadas >= treino.trn_quantidade %}
+                        <button class="btn-lotado" disabled>LOTADO</button>
+                    {% else %}
+                        <form method="post" action="{{ url_for('treinos.checkin', id=treino.trn_id) }}" id="form-checkin-{{ treino.trn_id }}>
+                            {{ checkin_form.hidden_tag() }}
+                            <button type="submit" class="btn-checkin"   >CHECK-IN</button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+            </span>
+        
+            {% if (user_tipo or current_user.usr_tipo) == "professor": %}
+                <div class="acoes">
+                    <span class="editar">
+                        <a href="{{ url_for('treinos.editar', id=treino.trn_id)}}" title="Editar">
+                            <i class="bi bi-pencil-fill"></i>
+                        </a>
+                    </span>
+                    <form method="post" action="{{ url_for('treinos.remover', id=treino.trn_id) }}">
+                        {{ excluir_form.hidden_tag() }}
+                        <button type="submit" title="Excluir" class="excluir">
+                            <i class="bi bi-trash3"></i>
+                        </button>
+                    </form>
                 </div>
             {% endif %}
-
-
         </div>
-
     </div>
 </div>

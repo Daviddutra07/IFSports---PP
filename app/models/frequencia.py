@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime
 from app.extensions import db
 
 
@@ -8,7 +8,7 @@ class Frequencia(db.Model):
     frq_aluno_id = db.Column(db.Integer,db.ForeignKey("tb_usuarios.usr_id"), nullable=False)
     frq_treino_id = db.Column(db.Integer, db.ForeignKey("tb_treinos.trn_id"), nullable=False)
     frq_data_ocorrencia = db.Column(db.DateTime, nullable=False)
-    frq_checkin_em = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    frq_checkin_em = db.Column(db.DateTime, default=datetime.now, nullable=False)
     frq_status = db.Column(db.Enum( "checkin","presente","ausente", name="status_frequencia"), default="checkin", nullable=False)
     frq_validado_em = db.Column(db.DateTime, nullable=True)
     aluno = db.relationship("User", foreign_keys=[frq_aluno_id])
@@ -22,3 +22,10 @@ class Frequencia(db.Model):
             name="uq_aluno_treino_data"
         ),
     )
+
+    @classmethod
+    def treino_ja_validado(cls, treino_id, data_ocorrencia):
+        return db.session.query(cls.frq_id).filter_by(
+            frq_treino_id=treino_id,
+            frq_data_ocorrencia=data_ocorrencia
+        ).filter(cls.frq_validado_em != None).first() is not None

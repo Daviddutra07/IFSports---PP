@@ -33,6 +33,16 @@ class TreinoForm(FlaskForm):
     trn_mod_id = SelectField("Modalidade Esportiva", coerce=int, validators=[DataRequired(message="Selecione uma modalidade.")])   
 
     def validate(self, extra_validators=None):
+        if self.trn_fixo.data:
+            # limpa data antes de validar
+            self.trn_data.data = None
+
+        else:
+            # limpa campos de fixo
+            self.trn_dia_semana.data = None
+            self.trn_horario.data = None
+
+
         if not super().validate():
             return False
 

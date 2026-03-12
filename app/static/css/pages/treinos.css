@@ -231,7 +231,8 @@ input[type="submit"]:hover {
     display: flex;
     padding: 20px;
     flex-direction: column;
-    gap: 5px;
+    gap: 10px;
+    flex: 1;
 }
 
 .card-conteudo h3 {
@@ -283,6 +284,7 @@ input[type="submit"]:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: auto;
 }
 
 .card-footer a {
@@ -389,14 +391,13 @@ input[type="submit"]:hover {
     height: 30px;
 }
 
-.btn-checkin {
+.btn-checkin, .btn-lotado, .btn-cancelar {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 30px;
     width: 50%;
     padding: 0 10%;
-    background-color: blue;
     color: white;
     border-radius: 7.5px;
     text-transform: uppercase;
@@ -408,6 +409,40 @@ input[type="submit"]:hover {
     bottom: 0px;
     cursor: pointer;
 }
+
+.btn-checkin {
+    background-color: blue;
+}
+
+.btn-lotado, .btn-cancelar{
+    background-color: red;
+}
+
+.no-treinos {
+    grid-column: 1 / -1;
+    text-align: center;
+    background-color: white;
+    padding: 40px 20px;
+    border-radius: 20px;
+    border: 2px solid var(--verde-secundario);
+    box-shadow: 0 10px 25px rgba(126, 217, 87, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.no-treinos h2 {
+    font-size: 1.8rem;
+    color: var(--verde-principal);
+}
+
+.no-treinos p {
+    font-size: 1rem;
+    color: #555;
+}
+
 
 .pagination {
     display: flex;

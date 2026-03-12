@@ -43,19 +43,32 @@
                 <div id="grupo-fixo">
                     <div class="form-grupo">
                         {{ form.trn_dia_semana.label }} 
-                        {{ form.trn_dia_semana}}
+                        {{ form.trn_dia_semana }}
+
+                        {% for error in form.trn_dia_semana.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
                     </div>
                 
+
                     <div class="form-grupo">
                         {{ form.trn_horario.label }} 
-                        {{ form.trn_horario}}
+                        {{ form.trn_horario }}
+
+                        {% for error in form.trn_horario.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
                     </div>
                 </div>
 
-                <div class="form-grupo" id="grupo-data">
-                    {{ form.trn_data.label }} 
-                    {{ form.trn_data}}
-                </div>
+                    <div class="form-grupo" id="grupo-data">
+                        {{ form.trn_data.label }} 
+                        {{ form.trn_data }}
+
+                        {% for error in form.trn_data.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
 
                 <div class="form-grupo">
                     {{ form.trn_quantidade.label }} 
@@ -82,44 +95,47 @@
 {% endblock %}
 
 {% block scripts %}
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-        
-            const checkboxFixo = document.getElementById("trn_fixo");
-            const grupoFixo = document.getElementById("grupo-fixo");
-            const grupoData = document.getElementById("grupo-data");
-        
-            function toggleInputs(grupo, desabilitar) {
-                const campos = grupo.querySelectorAll("input, select, textarea");
-                campos.forEach(campo => {
-                    campo.disabled = desabilitar;
-                    if (desabilitar) {
-                        campo.value = "";
-                    }
-                });
-            }
-        
-            function atualizarCampos() {
-                if (checkboxFixo.checked) {
-                
-                    grupoFixo.style.display = "block";
-                    grupoData.style.display = "none";
-                
-                    toggleInputs(grupoData, true);   // desabilita data
-                    toggleInputs(grupoFixo, false);  // habilita fixo
-                
-                } else {
-                
-                    grupoFixo.style.display = "none";
-                    grupoData.style.display = "block";
-                
-                    toggleInputs(grupoFixo, true);   // desabilita fixo
-                    toggleInputs(grupoData, false);  // habilita data
-                }
-            }
-        
-            atualizarCampos();
-            checkboxFixo.addEventListener("change", atualizarCampos);
-        });
-    </script>
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const checkboxFixo = document.getElementById("trn_fixo");
+    const grupoFixo = document.getElementById("grupo-fixo");
+    const grupoData = document.getElementById("grupo-data");
+
+    const diaInput = document.getElementById("trn_dia_semana");
+    const horarioInput = document.getElementById("trn_horario");
+    const dataInput = document.getElementById("trn_data");
+
+    function atualizarCampos() {
+
+        if (checkboxFixo.checked) {
+
+            grupoData.style.display = "none";
+            dataInput.disabled = true;
+
+            grupoFixo.style.display = "grid";
+            diaInput.disabled = false;
+            horarioInput.disabled = false;
+
+        } else {
+
+            grupoData.style.display = "block";
+            dataInput.disabled = false;
+
+            grupoFixo.style.display = "none";
+            diaInput.disabled = true;
+            horarioInput.disabled = true;
+
+        }
+
+    }
+
+    atualizarCampos(); // executa ao carregar a página
+
+    checkboxFixo.addEventListener("change", atualizarCampos);
+
+});
+
+</script>
 {% endblock %}

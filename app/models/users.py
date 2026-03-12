@@ -9,7 +9,7 @@ class User(UserMixin, db.Model):
     usr_nome = db.Column(db.String(70))
     usr_tipo = db.Column(db.String(20), nullable=False)
     usr_senha_hash = db.Column(db.String(255), nullable=False)
-    usr_created_At = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    usr_created_At = db.Column(db.DateTime, default=datetime.now, nullable=False)
     usr_confirmed = db.Column(db.Boolean, default=False)
     usr_confirmed_at = db.Column(db.DateTime, nullable=True)
     usr_is_active = db.Column(db.Boolean, default=True)

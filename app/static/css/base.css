@@ -87,6 +87,10 @@ nav {
     width: 100%;             
 }
 
+.sidebar li:hover {
+    background-color: rgb(25, 132, 25);
+}
+
 .nav-auth {
     padding: 0 15px;
     width: 80px;
@@ -100,7 +104,7 @@ nav {
 }
 
 .nav-auth:hover {
-    background-color: var(--verde-secundario);
+    background-color: rgb(25, 132, 25)
 }
 
 .nav-links form.d-inline {

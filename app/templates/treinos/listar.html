@@ -20,7 +20,11 @@
 
         <section class="treinos-container">
             {% for treino in treinos_pag.items %}
-            {% include 'components/_card_treino.html' %}
+                {% include 'components/_card_treino.html' %}
+            {% else %}
+                <div class="no-treinos">
+                    <h2>Ops! Nenhum treino cadastrado.</h2>
+                    <p>Ainda não existem treinos disponíveis.</p>
             {% endfor %}
         </section>
 
@@ -40,29 +44,9 @@
 {% endblock %}
 
 {% block scripts %}
-    <script>
-        socket.on("treino_atualizado", function(data){
-
-        const card = document.getElementById("treino-" + data.treino_id);
-
-        if(!card) return;
-
-        const vagasElemento = card.querySelector(".vagas-ocupadas");
-
-        if(vagasElemento){
-            vagasElemento.textContent = data.vagas_ocupadas;
-        }}); 
-
-        socket.on("treino_criado", function(data){
-
-        if(!window.location.pathname.includes("treinos")) return;
-
-
-        const container = document.querySelector(".treinos-container");
-        if(!container) return;
-            
-        container.insertAdjacentHTML("afterbegin", data.html);
-
-        });
-    </script>
+<script>
+    socket.on("atualizar_treinos", function(){
+        location.reload(); 
+    });
+</script>
 {% endblock %}

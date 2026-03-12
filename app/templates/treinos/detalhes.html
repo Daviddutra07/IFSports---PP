@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% block titulo %} {{ treino.trn_nome }} - IFSports {% endblock %}
+
+{% block css %} 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/detalhestreinos.css' ) }}">
+{% endblock %}
+
+{% block conteudo %}
+<main>
+    <div class="header"> 
+        <h1>{{ treino.trn_nome }} </h1>
+        <p> Data: {{ treino.trn_data.strftime('%d/%m às %H:%M') }} </p>
+    </div>
+
+    {% if treino.trn_descricao %}
+        <h2> Descrição </h2>
+        <div class="caption">
+            <p> {{ treino.trn_descricao }} </p> 
+        </div>
+    {% endif %}
+
+    <h2> Informações </h2>
+    <div class="infos">
+        <div class="info-item">
+            <div class="info-header">
+                <i class="bi bi-trophy"></i>
+                <span class="info-label">Modalidade</span>
+            </div>
+            <span class="info-value">{{ treino.modalidade.mod_nome }}</span>
+        </div>
+    
+        <div class="info-item">
+            <div class="info-header">
+                <i class="bi bi-check-square"></i>
+                <span class="info-label">Treino Fixo</span>
+            </div>
+            <span class="info-value">{{ "Sim" if treino.trn_fixo else "Não" }}</span>
+        </div>
+    
+        {% if treino.trn_fixo %}
+            {% set dias = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'] %}
+            <div class="info-item">
+                <div class="info-header">
+                    <i class="bi bi-calendar-week"></i>
+                    <span class="info-label">Dia da semana</span>
+                </div>
+                <span class="info-value">{{ dias[treino.trn_dia_semana] }}</span>
+            </div>
+        
+            <div class="info-item">
+                <div class="info-header">
+                    <i class="bi bi-clock"></i>
+                    <span class="info-label">Horário</span>
+                </div>
+                <span class="info-value">{{ treino.trn_horario.strftime('%H:%M') }}</span>
+            </div>
+        {% else %}
+            <div class="info-item">
+                <div class="info-header">
+                    <i class="bi bi-calendar-event"></i>
+                    <span class="info-label">Data e horário</span>
+                </div>
+                <span class="info-value">{{ treino.trn_data.strftime('%d/%m às %H:%M') }}</span>
+            </div>
+        {% endif %}
+        
+        <div class="info-item">
+            <div class="info-header">
+                <i class="bi bi-people"></i>
+                <span class="info-label">Vagas</span>
+            </div>
+            <span class="info-value">{{ treino.trn_quantidade }}</span>
+        </div>
+    
+        <div class="info-item">
+            <div class="info-header">
+                <i class="bi bi-person-badge"></i>
+                <span class="info-label">Professor</span>
+            </div>
+            <span class="info-value">{{ treino.professor.usr_nome }}</span>
+        </div>
+    </div>
+
+<div class="participantes">
+    <h2 class="participantes-titulo">Participantes</h2>
+
+    {% if current_user.usr_tipo == "professor" and not ja_validado %}
+        <form method="POST" action="{{ url_for('treinos.validar_frequencias', treino_id=treino.trn_id) }}">
+    {% endif %}
+
+    <table class="tabela-participantes">
+        <thead>
+            <tr>
+                <th>Aluno</th>
+                <th>Check-in</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+    
+        <tbody>
+            {% for participante in alunos %}
+                <tr>
+                    <td>
+                        <i class="bi bi-person-circle"></i>
+                        {{ participante.aluno.usr_nome }}
+                    </td>
+                
+                    <td>
+                        {{ participante.frq_checkin_em.strftime('%H:%M') }}
+                    </td>
+                
+                    <td>
+                        {% if current_user.usr_tipo == "professor" and not ja_validado %}
+                            <input type="checkbox" name="status_{{ participante.frq_id }}" value="presente" {% if participante.frq_status == 'presente' %}checked{% endif %}>
+                            Presente
+                        {% else %}
+                            <span class="status {{ participante.frq_status }}">
+                                {{ participante.frq_status }}
+                            </span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if current_user.usr_tipo == "professor" and not ja_validado %}
+        <button type="submit" class="btn btn-success mt-2">
+            Validar Frequência
+        </button>
+        </form>
+    {% endif %}
+</div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+
+const treinoId = {{ treino.trn_id }};
+socket.emit("entrar_treino", {treino_id: treinoId});
+
+socket.on("novo_checkin", function(data) {
+
+    const tabela = document.querySelector(".tabela-participantes tbody");
+
+    const existente = Array.from(tabela.querySelectorAll("tr"))
+        .some(tr => tr.dataset.alunoId == data.aluno_id);
+
+    if (existente) return;
+
+    const linha = `
+        <tr data-aluno-id="${data.aluno_id}">
+            <td><i class="bi bi-person-circle"></i> ${data.aluno}</td>
+            <td>${data.horario}</td>
+            <td>
+                <span class="status ${data.status}">${data.status}</span>
+            </td>
+        </tr>
+    `;
+
+    tabela.insertAdjacentHTML("beforeend", linha);
+});
+
+socket.on("checkin_cancelado", function(data){
+
+    const tabela = document.querySelector(".tabela-participantes tbody");
+
+    const linha = tabela.querySelector(`tr[data-aluno-id="${data.aluno_id}"]`);
+
+    if(linha){
+        linha.remove();
+    }
+
+});
+
+</script>
+{% endblock %}
