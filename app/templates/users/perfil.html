@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block titulo %} {{ user.usr_nome }} - IFSports {% endblock %}
+
+{% block css %} 
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/perfil.css' ) }}">
+{% endblock %}
+
+{% block conteudo %}
+<main class="perfil-page">
+    <header> 
+        <span class="usr-foto""> 
+            <img src="{{ url_for('static', filename=user.usr_img) }}" alt="Foto de perfil">
+        </span> 
+        <span class="usr_nome"> 
+            <span><h1> {{ user.usr_nome}} </h1></span> 
+            {% if aluno %}
+                <p class="brilho"> Nível: {{ nivel }} - {{ nome }} </p>
+                <p class="brilho">Pontos: {{ user.usr_pontos }}</p>
+                <p class="brilho">Nota média: {{ media }}</p>
+            {% else %}
+                <p class="brilho"> Professor </p>
+            {% endif %}
+        </span> 
+    </header>
+
+    <section class="dados">
+        <div class="usr-dados">
+            <p>Nome de usuário: {{ user.usr_nome }}</p>
+            <p>Email: {{ user.usr_email }}</p>
+            {% if aluno %}
+                <p> Modalidade: {{ user.modalidade.mod_nome }} </p>
+            {% endif %}
+            <p>Tipo: {{user.usr_tipo | capitalize }} </p>
+            <p> Registro em: {{ user.usr_created_At.strftime('%d/%m às %H:%M') }} </p>
+        </div>
+        {% if current_user.usr_id == user.usr_id %}     
+            <a href="{{ url_for('usuarios.editar', id=user.usr_id) }}" class="btn">
+                Editar Perfil
+            </a>
+        {% endif %}
+    </section>
+
+    {% if aluno %}
+        <section class="usr-conquistas">
+            <h2>Conquistas recentes</h2>
+        {% if conquistas %}
+            <div class="conquistas-lista">
+                {% for uc in conquistas %}
+                    {% set tier = uc.conquista.cnq_tier %}
+                    {% set config = tier_config.get(tier, tier_config["normal"]) %}
+                    <div class="conquista-item {% if tier in ['ouro', 'lendária'] %}brilho-borda {{ tier }}{% endif %} " style="border-color: {{ config['borda'] }}; background-color: {{ config['cor'] }};">
+                        <span class="icone">{{ config['icone'] }}</span>
+                        <div class="conquista-info" style="color: {{ config['texto'] }}">
+                            <strong>{{ uc.conquista.cnq_nome }}</strong>
+                            <p>{{ uc.conquista.cnq_descricao }}</p>
+                            <small style="color: {{ config['tier_cor'] }}">Tier: {{ uc.conquista.cnq_tier | capitalize }}</small>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if total_conquistas > 3 %}
+                <a href="{{ url_for('usuarios.conquistas', id=user.usr_id) }}" class="btn">
+                    Ver todas as conquistas
+                </a>
+            {% endif %}
+        {% else %}
+            <p> O aluno ainda não alcançou nenhuma conquista.
+        </section>
+        {% endif %}
+    {% endif %}
+
+    {% if aluno %}
+            <section class="usr_treinos">
+                    <h2> Treinos Recentes </h2>
+            {% if treinos %}
+                    <div class="treinos-lista">
+                        {% for freq in treinos %}
+                            <div class="treino-item">
+                                <div class="treino-info">
+                                    <span class="treino-topo">
+                                        {{ freq.frq_mod_nome if freq.frq_mod_nome else freq.treino.modalidade.mod_nome }}
+                                    </span>
+                                    
+                                    <div class="treino-conteudo">
+                                        <p class="treino-titulo brilho">
+                                            {{ freq.treino.trn_nome if freq.frq_trn_nome else freq.treino.trn_nome }}
+                                        </p>
+                                        <p>
+                                            {{ freq.frq_data_ocorrencia.strftime("%d/%m/%Y às %H:%M" ) }}
+                                        </p>
+                                
+                                        
+                                        <p class="treino-nota">
+                                            {% if freq.frq_aluno_nota == 0 %}
+                                            <span class="nota-zero">Nota: 0 </span>
+                                            {% else %}
+                                            <span class="nota">Nota:
+                                                {% for i in range(freq.frq_aluno_nota) %}
+                                                <i class="bi bi-star-fill estrela"></i>
+                                                {% endfor %}
+                                            </span>
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <a href="{{ url_for('usuarios.historico', id=user.usr_id) }}" class="btn">
+                        Ver todos os treinos
+                    </a>
+            </section>
+        {% else %}
+            <p> O aluno ainda não participou de treinos. </p>
+        {% endif %}
+    {% endif %}
+</main>
+{% endblock %}

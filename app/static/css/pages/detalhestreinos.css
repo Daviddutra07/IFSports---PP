@@ -6,6 +6,19 @@ main {
     flex-direction: column;
 }
 
+.usr_foto {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.usr_foto img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 .header {
     display: flex;
     justify-content: space-between;
@@ -152,6 +165,11 @@ main h2 {
     color: white;
 }
 
+.participantes td a{
+    text-decoration: none;
+    color: black;
+}
+
 .participantes th {
     padding: 14px;
     text-align: left;
@@ -173,6 +191,20 @@ main h2 {
     background: #f5f8ff;
     transition: 0.2s;
 }
+
+.btn-validar {
+    position: absolute;
+    margin-top: 10px;
+    background: var(--verde-principal);
+    color: white;
+    padding: 12px 22px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
 
 
 @media (max-width: 768px) {

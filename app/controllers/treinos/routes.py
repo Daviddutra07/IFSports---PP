@@ -1,4 +1,5 @@
 from datetime import datetime
+from sqlalchemy.exc import IntegrityError
 from flask import Blueprint, abort, render_template, redirect, request, url_for, flash
 from flask_login import login_required, current_user
 from app.controllers.treinos.utils import calcular_primeira_data, calcular_proxima_data
@@ -8,17 +9,9 @@ from app.models.frequencia import Frequencia
 from app.controllers.treinos.forms import TreinoCheckIn, TreinoExcluir, TreinoForm
 from app.models.modalidades import Modalidade
 from app.decorators.auth import professor_required
+from app.services.gamification_service import adicionar_pontos, remover_pontos, verificar_conquistas
 
 treinos_bp = Blueprint('treinos', __name__, url_prefix='/treinos', template_folder='templates/treinos')
-
-def render_card_treino(treino):
-    return render_template(
-        "components/_card_treino.html",
-        treino=treino,
-        checkin_form=TreinoCheckIn(),
-        excluir_form=TreinoExcluir(),
-        user_tipo=current_user.usr_tipo
-    )
 
 @treinos_bp.route("/")
 @login_required
@@ -137,7 +130,7 @@ def remover(id):
         flash("Treino removido com sucesso!", "success")
         socketio.emit("atualizar_treinos", room="alunos")
     except Exception as e:
-        flash(f"Não foi possível remover este treino: {str(e)}", "error")
+        flash(f"Não foi possível remover este treino", "error")
         db.session.rollback()
 
     return redirect(url_for("treinos.listar"))
@@ -152,17 +145,26 @@ def checkin(id):
     data_ocorrencia = treino.trn_data
 
     if current_user.usr_tipo != "aluno":
-        flash(" Apenas alunos podem realizar check-in.", "error")
+        flash(" Apenas alunos podem realizar inscrição.", "error")
+        return redirect(url_for("treinos.listar"))
+    
+    if not treino.trn_ativo:
+        flash("Este treino não está mais ativo.", "error")
         return redirect(url_for("treinos.listar"))
     
     if agora > treino.trn_data:
-        flash("Não é possível fazer check-in em um treino depois de passar a data e horário", "error")
+        flash("Não é possível fazer inscrição em um treino depois de passar a data e horário", "error")
         return redirect(url_for("treinos.listar")) 
 
     if treino.trn_vagas_ocupadas >= treino.trn_quantidade: 
         flash("Treino lotado.", "error") 
         return redirect(url_for("treinos.listar")) 
     
+    if treino.trn_fixo:
+        frequencia = Frequencia(frq_aluno_id=current_user.usr_id,frq_treino_id=treino.trn_id,frq_data_ocorrencia=data_ocorrencia,frq_status="inscricao", frq_trn_nome=treino.trn_nome, frq_mod_nome=treino.modalidade.mod_nome)
+    else:
+        frequencia = Frequencia(frq_aluno_id=current_user.usr_id,frq_treino_id=treino.trn_id,frq_data_ocorrencia=data_ocorrencia,frq_status="inscricao")
+        
     existente = Frequencia.query.filter_by(
         frq_aluno_id=current_user.usr_id,
         frq_treino_id=treino.trn_id,
@@ -170,17 +172,13 @@ def checkin(id):
     ).first()
 
     if existente:
-        flash(" Você já realizou check-in neste treino.", "warning")
-        return redirect(url_for("treinos.listar"))
-    
-    if not treino.trn_ativo:
-        flash("Este treino não está mais ativo.", "error")
+        flash(" Você já realizou sua inscrição neste treino.", "warning")
         return redirect(url_for("treinos.listar"))
 
-    frequencia = Frequencia(frq_aluno_id=current_user.usr_id, frq_treino_id=treino.trn_id, frq_data_ocorrencia=data_ocorrencia,frq_status="checkin")
-
-    db.session.add(frequencia)
     treino.trn_vagas_ocupadas += 1
+    adicionar_pontos(current_user.usr_id, 5) #A cada check-in em treino, premia o usuário com 5 pontos.
+    verificar_conquistas(current_user.usr_id) #Gamificação do sistema, verifica se o usuário tem alguma conquista a receber
+    db.session.add(frequencia)
     db.session.commit()
 
     flash("Check-in realizado com sucesso!", "success")
@@ -188,7 +186,7 @@ def checkin(id):
     socketio.emit("atualizar_treinos", room="alunos")
     #Atualiza a tabela de alunos participantes do treino quando você estiver na página de detalhes dele
     room = f"treino_{treino.trn_id}"
-    socketio.emit("novo_checkin",{"treino_id": treino.trn_id, "aluno_id": current_user.usr_id, "aluno": current_user.usr_nome, "horario": frequencia.frq_checkin_em.strftime("%H:%M"), "status": frequencia.frq_status},room=room)
+    socketio.emit("novo_checkin",{"treino_id": treino.trn_id, "aluno_id": current_user.usr_id, "aluno": current_user.usr_nome, "horario": frequencia.frq_reserva_em.strftime("%H:%M"), "status": frequencia.frq_status},room=room)
 
     return redirect(url_for("treinos.listar"))
 
@@ -205,18 +203,19 @@ def cancelar_checkin(id):
     ).first()
 
     if not frequencia:
-        flash("Você não possui check-in neste treino.", "info")
+        flash("Você não possui inscrição neste treino.", "info")
         return redirect(url_for("treinos.listar"))
     
     if datetime.now() > treino.trn_data:
-        flash("Você não pode retirar o check-in em um treino que já ocorreu ou está ocorrendo.", "warning")
+        flash("Você não pode retirar a inscrição em um treino que já ocorreu ou está ocorrendo.", "warning")
         return redirect(url_for("treinos.listar"))
 
     db.session.delete(frequencia)
     treino.trn_vagas_ocupadas -= 1
+    remover_pontos(current_user.usr_id, 5)
     db.session.commit()
 
-    flash("Check-in cancelado com sucesso!", "success")
+    flash("Inscrição cancelada com sucesso!", "success")
     socketio.emit("atualizar_treinos", room="alunos")
 
     room = f"treino_{treino.trn_id}"
@@ -224,7 +223,7 @@ def cancelar_checkin(id):
 
     return redirect(url_for("treinos.listar"))
 
-@treinos_bp.route('/detalhes/<int:treino_id>/validar', methods=["POST"])
+@treinos_bp.route('/detalhes/<int:treino_id>/validar', methods=["GET", "POST"])
 @professor_required
 def validar_frequencias(treino_id):
     agora = datetime.now()
@@ -233,44 +232,57 @@ def validar_frequencias(treino_id):
 
     ja_validado = Frequencia.treino_ja_validado(treino_id, treino.trn_data)
 
-    if ja_validado:
-        flash("Este treino já foi validado.", "warning")
-        return redirect(url_for("treinos.detalhes", id=treino_id))
+    alunos = Frequencia.query.filter_by(frq_treino_id=treino_id, frq_data_ocorrencia=treino.trn_data).all()
 
     if treino.trn_pro_id != current_user.usr_id:
         flash("Você não pode validar este treino.", "error")
         return redirect(url_for("treinos.detalhes", id=treino_id))
     
-    if agora < treino.trn_data:
-        flash("Você só poder validar um treino após chegar o horário e data dele.", "info")
-        return redirect(url_for("treinos.detalhes", id=treino_id))
+    if request.method == "POST":
 
-    alunos = Frequencia.query.filter_by(frq_treino_id=treino_id, frq_data_ocorrencia=treino.trn_data).all()
+            if ja_validado:
+                flash("Este treino já foi validado.", "warning")
+                return redirect(url_for("treinos.detalhes", id=treino_id))
 
-    if not alunos:
-        flash("Não há participantes para validar.", "warning")
-        return redirect(url_for("treinos.detalhes", id=treino_id))
+            if agora < treino.trn_data:
+                flash("Você só pode validar após o treino.", "info")
+                return redirect(url_for("treinos.detalhes", id=treino_id))
 
-    for frequencia in alunos:
-        status = "presente" if f"status_{frequencia.frq_id}" in request.form else "ausente"
-        frequencia.frq_status = status
-        frequencia.frq_validado_em = datetime.now()
-        db.session.add(frequencia)
+            if not alunos:
+                if treino.trn_fixo:
+                    treino.trn_data = treino.trn_proxima_data
+                    treino.trn_proxima_data = calcular_proxima_data(treino.trn_data)
+                    treino.trn_vagas_ocupadas = 0
+                else:
+                    treino.trn_ativo = 0
+                flash("Não há participantes para validar.", "warning")
+                return redirect(url_for("treinos.detalhes", id=treino_id))
 
-    if treino.trn_fixo:
-        treino.trn_data = treino.trn_proxima_data
-        treino.trn_proxima_data = calcular_proxima_data(treino.trn_data)
-        treino.trn_vagas_ocupadas = 0
+            for frequencia in alunos:
+                status = "presente" if f"status_{frequencia.frq_id}" in request.form else "ausente"
+                frequencia.frq_status = status
+                frequencia.frq_validado_em = datetime.now()
+                nota = request.form.get(f"estrelas_{frequencia.frq_id}")
+                if nota:
+                    frequencia.frq_aluno_nota = int(nota)
+                if status == "presente":
+                    adicionar_pontos(frequencia.aluno.usr_id, 10 + (int(nota) if nota else 0))
 
-    else: 
-        treino.trn_ativo = 0
+                verificar_conquistas(frequencia.aluno.usr_id)
 
-    db.session.commit()
-    flash("Frequências validadas com sucesso!", "success")
+            if treino.trn_fixo:
+                treino.trn_data = treino.trn_proxima_data
+                treino.trn_proxima_data = calcular_proxima_data(treino.trn_data)
+                treino.trn_vagas_ocupadas = 0
+            else:
+                treino.trn_ativo = 0
 
-    socketio.emit("atualizar_treinos", room="alunos")
+            db.session.commit()
 
-    return redirect(url_for("treinos.detalhes", id=treino_id))
+            flash("Frequências validadas com sucesso!", "success")
+            socketio.emit("atualizar_treinos", room="alunos")
+            return redirect(url_for("treinos.detalhes", id=treino_id))
+    return render_template("treinos/validar_frequencias.html",treino=treino,alunos=alunos,ja_validado=ja_validado)
 
 
 @treinos_bp.route('/detalhes/<int:id>', methods=["GET"])

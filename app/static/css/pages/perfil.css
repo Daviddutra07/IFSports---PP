@@ -1,0 +1,515 @@
+/* ESTILO PÁGINA DE PERFIL E REAPROVEITA ALGUNS ESTILOS PARA A PÁGINA DE CONQUISTAS*/
+
+main {
+    min-height: 90vh;
+    padding: 30px 100px;
+    background-color: var(--fundo-claro);
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;  
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(0,0,0,0.2);
+    width: 100%;
+    height: auto;
+}
+
+.perfil-page header h1 {
+    font-size: 2.2rem;
+    color: var(--verde-principal);
+    font-weight: bolder;
+    letter-spacing: 1px;
+}
+
+.perfil-page header .usr_nome {
+    width: calc(100% - 200px);
+}
+
+.brilho {
+    font-size: 18px;
+
+    background: linear-gradient(
+        90deg,
+        #1b5e20 0%,
+        #1b5e20 40%,
+        #ffffff 50%,
+        #1b5e20 60%,
+        #1b5e20 100%
+    );
+
+    background-size: 300%;
+    background-clip: text;
+    -webkit-background-clip: text;
+
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+
+    animation: brilho 10s linear infinite;
+
+}
+
+@keyframes brilho {
+    from {
+        background-position: -150%;
+    }
+    to {
+        background-position: 150%;
+    }
+}
+
+
+.usr-foto {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 0.5px solid var(--verde-principal);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.usr-foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+.usr-dados {
+    background-color: white;
+    border: 1px solid var(--verde-secundario);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    transition: 0.3s;
+}
+
+.usr-dados p {
+    font-size: 16px;
+    margin: 4px 0;
+    color: var(--verde-principal);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.usr-dados p::before {
+    content: "•";
+    color: var(--verde-principal);
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.usr-dados:hover {
+    transform: translateY(-2px);
+}
+
+.usr-conquistas {
+    margin-top: 30px;
+}
+
+h2 {
+    font-size: 20px;
+    color: var(--verde-principal);
+    margin-bottom: 15px;
+}
+
+.conquistas-lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 18px;
+    margin-top: 20px;
+}
+
+.conquista-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    border: 2px solid;
+    border-radius: 12px;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.conquista-item:hover {
+    transform: translateY(-2px);
+}
+
+.icone {
+    font-size: 30px;
+    padding: 10px;
+    border-radius: 50%;
+    margin-right: 15px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.conquista-info strong {
+    font-size: 18px;
+}
+
+.conquista-info p {
+    font-size: 14px;
+    margin: 3px 0;
+}
+
+.conquista-info small {
+    font-size: 14px;
+}
+
+.brilho-borda {
+    position: relative;
+    animation: borda-brilho 2s linear infinite;
+}
+
+@keyframes borda-brilho {
+    0% {
+        box-shadow: 0 0 5px 2px rgba(255, 215, 0, 0.6);
+    }
+    50% {
+        box-shadow: 0 0 15px 5px rgba(255, 215, 0, 1);
+    }
+    100% {
+        box-shadow: 0 0 5px 2px rgba(255, 215, 0, 0.6);
+    }
+}
+
+.conquista-item.brilho-borda.lendária {
+    animation: borda-brilho-lendaria 2s linear infinite;
+}
+
+@keyframes borda-brilho-lendaria {
+    0% {
+        box-shadow: 0 0 5px 2px rgba(124, 58, 237, 0.6);
+    }
+    50% {
+        box-shadow: 0 0 15px 5px rgba(124, 58, 237, 1);
+    }
+    100% {
+        box-shadow: 0 0 5px 2px rgba(124, 58, 237, 0.6);
+    }
+}
+
+.btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: var(--verde-principal);
+    color: #fff;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.btn:hover {
+    background-color: var(--verde-secundario);
+}
+
+.usr_treinos {
+    margin-top: 15px;
+}
+
+.treinos-lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 18px;
+    margin-top: 20px;
+}
+
+
+.treino-item {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid var(--verde-secundario);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height:100%;
+}
+
+.treino-conteudo {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    font-weight: 600;
+}
+
+
+.treino-item:hover {
+    transform: translateY(-2px);
+}
+
+.treino-topo {
+    display: block;
+    width: 100%;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, var(--verde-secundario), var(--verde-hover));
+    color: white;
+    font-weight: 600;
+    font-size: 15px;
+    border-radius: 12px 12px 0 0;
+    box-sizing: border-box;
+}
+
+.treino-item:hover .treino-topo {
+    filter: brightness(1.1);
+}
+
+
+.treino-titulo {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.treino-nota {
+    margin-top: 6px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 600;
+}
+
+.nota-zero {
+    font-weight: 600;
+}
+
+.estrela {
+    color: gold;
+    font-size: 14px;
+}
+
+@media (max-width: 768px) {
+    main {
+        padding: 20px;
+    }
+
+    header {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .perfil-page header .usr_nome {
+        width: calc(100% + 200px);
+        text-align: center;
+        height: 100%;
+    }
+
+    .perfil-page .usr_nome h1 {
+        height: auto;
+        flex: 1;
+        width: 100%;
+        font-size: 1.5rem;
+    }
+}  
+
+/* ESTILOS ESPECÍFICOS PARA A PÁGINA DE CONQUISTAS */
+
+.conquistas-page .usr_nome h1 {
+    font-size: 2.5rem;
+}
+
+
+.conquistas-page .usr-conquistas {
+    position: relative;
+}
+
+.conquistas-page .titulo {
+    display: flex;
+    justify-content: space-between;
+}
+
+.conquistas-page .titulo p {
+    color: var(--verde-principal);
+    font-size: 20px;
+}
+
+.conquistas-page .conquistas-lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px; 
+}
+
+.conquistas-page .conquista-item {
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: auto; 
+}
+
+.conquistas-page .icone {
+    font-size: 24px;
+    padding: 6px;
+}
+
+.conquistas-page .conquista-info strong {
+    font-size: 16px;
+}
+
+.conquistas-page .conquista-info p {
+    font-size: 12px;
+    margin: 2px 0;
+}
+
+.conquistas-page .conquista-info small {
+    font-size: 12px;
+}
+
+.usr-conquistas-bloqueadas .conquista-item{
+    border-color: rgb(121, 121, 121);
+    background-color: rgb(201, 201, 201);
+}
+
+
+@media (max-width: 1024px) {
+    .conquistas-page .conquistas-lista {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .conquista-item {
+        padding: 8px 10px;
+    }
+
+    .icone {
+        font-size: 22px;
+        padding: 5px;
+    }
+
+    .conquista-info strong {
+        font-size: 15px;
+    }
+
+    .conquista-info p,
+    .conquista-info small {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .conquistas-page .usr_nome h1 {
+        text-align: center;
+        width: 100%;
+        font-size: 22px;
+    }
+
+    .conquistas-page .conquistas-lista {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .conquistas-page .conquista-item {
+        padding: 6px 8px;
+    }
+
+    .conquistas-page .icone {
+        font-size: 18px;
+        padding: 4px;
+    }
+
+    .conquistas-page .conquista-info strong {
+        font-size: 13px;
+    }
+
+    .conquistas-page .conquista-info p,
+    .conquistas-page .conquista-info small {
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 400px) {
+    .conquistas-page .conquistas-lista {
+        grid-template-columns: repeat(1, 1fr);
+        gap: 12px;
+    }
+}
+
+/* ESTILO PARA A PÁGINA DE HISTÓRICO (A ESTILIZAÇÃO DA PÁGINA DE PERFIL É QUASE TODO APROVEITADO) */
+
+.historico {
+    display: flex;
+    flex-direction: column;
+}
+
+.historico-page .treinos-lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+    gap: 18px;
+    margin-top: 20px;
+    align-items:start;
+}
+
+.historico-titulo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.historico-titulo h1 {
+    font-size: 2.5rem;
+}
+
+.historico-titulo p {
+    color: var(--verde-principal);
+    font-size: 20px;
+}
+
+.paginacao{
+    margin-top:30px;
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    align-items:center;
+}
+
+.paginacao a{
+    padding:8px 14px;
+    background:var(--verde-secundario);
+    color:white;
+    border-radius:6px;
+    text-decoration:none;
+    font-weight:600;
+}
+
+.paginacao a:hover{
+    background:var(--verde-hover);
+}
+
+@media (max-width: 768px) {
+    .historico-titulo h1 {
+        font-size: 1.2rem;
+    }
+
+    
+    .historico-page .treino-conteudo p:not([class]) {
+        font-size: 12px;
+    }
+
+    .historico-page .treino-titulo {
+        font-size: 14px;
+    }
+
+    .historico-page .treino-nota .nota, 
+    .historico-page .treino-nota .nota-zero
+    {
+        font-size: 12px;
+    }
+}

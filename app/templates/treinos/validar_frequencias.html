@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+
+{% block titulo %} Validar Frequência - IFSports {% endblock %}
+
+{% block conteudo %}
+
+{% block css %} 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/validar_treino.css' ) }}">
+{% endblock %}
+
+<main>
+
+    <div class="header">
+        <h1>Validar Frequências</h1>
+        <p>{{ treino.trn_nome }} - {{ treino.trn_data.strftime('%d/%m às %H:%M') }}</p>
+    </div>
+
+    <div class="treino-info">
+        <p><strong>Treino:</strong> {{ treino.trn_nome }}</p>
+        <p><strong>Data:</strong> {{ treino.trn_data.strftime('%d/%m/%Y às %H:%M') }}</p>
+    </div>
+
+    <form method="POST">
+
+        <h2 class="participantes-titulo">Participantes</h2>
+
+        <div class="participantes">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Aluno</th>
+                        <th>Inscrição</th>
+                        <th>Compareceu?</th>
+                        <th>Nota</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for participante in alunos %}
+                    <tr>
+
+                        <td>
+                            {{ participante.aluno.usr_nome }}
+                        </td>
+
+                        <td>
+                            {{ participante.frq_reserva_em.strftime('%H:%M') }}
+                        </td>
+
+                        <td>
+                            <input
+                                type="checkbox"
+                                name="status_{{ participante.frq_id }}"
+                                data-id="{{ participante.frq_id }}"
+                                class="check-presenca"
+                                {% if participante.frq_status == "presente" %}checked{% endif %}
+                            >
+                        </td>
+
+                        <td>
+
+                            <div class="estrelas desativado" data-id="{{ participante.frq_id }}">
+
+                                <input
+                                    type="hidden"
+                                    name="estrelas_{{ participante.frq_id }}"
+                                    id="rating_{{ participante.frq_id }}"
+                                    value="{{ participante.frq_estrelas or 0 }}"
+                                >
+
+                                <i class="bi bi-star estrela"
+                                   data-value="1"
+                                   data-id="{{ participante.frq_id }}"></i>
+
+                                <i class="bi bi-star estrela"
+                                   data-value="2"
+                                   data-id="{{ participante.frq_id }}"></i>
+
+                                <i class="bi bi-star estrela"
+                                   data-value="3"
+                                   data-id="{{ participante.frq_id }}"></i>
+
+                                <i class="bi bi-star estrela"
+                                   data-value="4"
+                                   data-id="{{ participante.frq_id }}"></i>
+
+                                <i class="bi bi-star estrela"
+                                   data-value="5"
+                                   data-id="{{ participante.frq_id }}"></i>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <button type="submit" class="btn-validar">
+            Salvar validação
+        </button>
+
+    </form>
+
+</main>
+
+
+<script>
+
+document.querySelectorAll(".estrela").forEach(estrela => {
+
+    estrela.addEventListener("click", function(){
+
+        const valor = this.dataset.value
+        const id = this.dataset.id
+
+        const input = document.getElementById("rating_" + id)
+
+        input.value = valor
+
+        const estrelas = document.querySelectorAll(`.estrela[data-id="${id}"]`)
+
+        estrelas.forEach(e => {
+
+            if(e.dataset.value <= valor){
+
+                e.classList.remove("bi-star")
+                e.classList.add("bi-star-fill","ativa")
+
+            }else{
+
+                e.classList.remove("bi-star-fill","ativa")
+                e.classList.add("bi-star")
+
+            }
+
+        })
+
+    })
+
+})
+
+document.querySelectorAll(".check-presenca").forEach(check => {
+
+    check.addEventListener("change", function(){
+
+        const id = this.dataset.id
+        const estrelas = document.querySelector(`.estrelas[data-id="${id}"]`)
+
+        if(this.checked){
+
+            estrelas.classList.remove("desativado")
+
+        }else{
+
+            estrelas.classList.add("desativado")
+
+            const input = document.getElementById("rating_" + id)
+            input.value = 0
+
+        }
+
+    })
+
+})
+
+</script>
+
+{% endblock %}

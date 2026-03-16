@@ -1,0 +1,186 @@
+main {
+    min-height: 90vh;
+    padding: 30px 100px;
+    background-color: var(--fundo-claro);
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+    border-bottom: 0.25px solid rgba(0,0,0,0.2);
+}
+
+.header h1 {
+    font-size: 2.6rem;
+    font-weight: bold;
+    color: var(--verde-principal);
+}
+
+.header p {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--verde-secundario);
+}
+
+
+.treino-info {
+    margin-top: 20px;
+    background: white;
+    border-radius: 12px;
+    padding: 18px;
+    border: 1px solid var(--verde-secundario);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.treino-info p {
+    font-size: 15px;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.participantes-titulo {
+    font-size: 18px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: var(--verde-principal);
+}
+
+
+.participantes table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.participantes thead {
+    background: var(--verde-secundario);
+    color: white;
+}
+
+.participantes th {
+    padding: 14px;
+    text-align: left;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.participantes td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+
+.participantes tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.participantes tbody tr:hover {
+    background: #f7fbf8;
+    transition: 0.2s;
+}
+
+
+.status-check {
+    color: #2e7d32;
+    font-weight: 600;
+}
+
+.status-falta {
+    color: #c62828;
+    font-weight: 600;
+}
+
+
+.estrelas {
+    display: flex;
+    gap: 5px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.estrela {
+    color: #ccc;
+    transition: 0.2s;
+}
+
+.estrela.ativa {
+    color: #ffc107;
+}
+
+
+.btn-validar {
+    margin-top: 25px;
+    align-self: flex-end;
+    background: var(--verde-principal);
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-validar:hover {
+
+    background: #1b5e20;
+}
+
+input[type="checkbox"] {
+    appearance: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 2px solid var(--verde-secundario);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+[type="checkbox"]:checked {
+    background-color: var(--verde-secundario);
+}
+
+input[type="checkbox"]:checked::after {
+    content: "\F272";
+    font-family: "bootstrap-icons";
+    position: absolute;
+    color: white;
+    font-size: 24px;
+}
+
+.estrelas.desativado{
+    pointer-events:none;
+    opacity:0.4;
+}
+
+@media (max-width: 768px) {
+
+    main {
+        padding: 20px;
+    }
+
+    .header {
+        flex-direction: column;
+        gap: 6px;
+        text-align: center;
+    }
+
+    .header h1 {
+        font-size: 2rem;
+    }
+
+}

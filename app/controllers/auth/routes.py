@@ -89,6 +89,10 @@ def login():
         logout_user()
         login_user(user)
         flash('Login realizado com sucesso!', 'success')
+
+        if user.usr_primeiro_login:
+            return redirect(url_for("usuarios.concluir") )
+
         return redirect(url_for('treinos.listar'))
     
     return render_template('auth/login.html', form=form)

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block titulo %} Histórico - IFSports {% endblock %}
+
+{% block css %} 
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/perfil.css' ) }}">
+{% endblock %}
+
+{% block conteudo %}
+<main class="historico-page">
+    <header style="justify-content: flex-start"> 
+        <span class="historico-titulo"> 
+            <h1 class="brilho"> {{ user.usr_nome}} - Histórico </h1> 
+        </span> 
+    </header>
+
+    {% if treinos %}
+        <div class="treinos-lista">
+            {% for freq in treinos %}
+                <div class="treino-item">
+                    <div class="treino-info">
+                        <span class="treino-topo">
+                            {{ freq.frq_mod_nome if freq.frq_mod_nome else freq.treino.modalidade.mod_nome }}
+                        </span>
+
+                        <div class="treino-conteudo">
+                            <p class="treino-titulo brilho">
+                                {{ freq.treino.trn_nome if freq.frq_trn_nome else freq.treino.trn_nome }}
+                            </p>
+                            <p>
+                                {{ freq.frq_data_ocorrencia.strftime("%d/%m/%Y às %H:%M" ) }}
+                            </p>
+                            
+                            <p> {{ freq.frq_status | capitalize }} </p>
+
+                            <p class="treino-nota">
+                                {% if freq.frq_aluno_nota == 0 %}
+                                <span class="nota-zero">Nota: 0 </span>
+                                {% else %}
+                                <span class="nota">Nota:
+                                    {% for i in range(freq.frq_aluno_nota) %}
+                                    <i class="bi bi-star-fill estrela"></i>
+                                    {% endfor %}
+                                </span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+    <div class="paginacao">
+        {% if paginacao.has_prev %}
+            <a href="{{ url_for('usuarios.historico', id=user.usr_id, page=paginacao.prev_num) }}">
+                ← Anterior
+            </a>
+        {% endif %}
+
+        <span>Página {{ paginacao.page }} de {{ paginacao.pages }}</span>
+
+        {% if paginacao.has_next %}
+            <a href="{{ url_for('usuarios.historico', id=user.usr_id, page=paginacao.next_num) }}">
+                Próxima →
+            </a>
+        {% endif %}
+
+    </div>
+</main>
+{% endblock %}
