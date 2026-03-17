@@ -7,5 +7,4 @@ mail = Mail()
 db = SQLAlchemy()
 login_manager = LoginManager()
 login_manager.login_view = "auth.login"
-socketio = SocketIO()
-
+socketio = SocketIO()   

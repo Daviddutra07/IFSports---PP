@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block titulo %} Conquistas {{ user.usr_nome }} - IFSports {% endblock %}
+
+{% block css %} 
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/perfil.css' ) }}">
+{% endblock %}
+
+{% block conteudo %}
+<main class="conquistas-page">
+    <header style="justify-content: flex-start"> 
+        <span class="usr_nome"> 
+            <h1 class="brilho"> {{ user.usr_nome}} </h1> 
+        </span> 
+    </header>
+
+    <section class="usr-conquistas">
+        <span class="titulo">
+            <h2>Conquistas Alcançadas</h2>
+            <p> {{ total_cnq_usr }} / {{ total_cnq }} </p>
+        </span>
+        <div class="conquistas-lista">
+            {% for uc in conquistas %}
+                {% set tier = uc.conquista.cnq_tier %}
+                {% set config = tier_config.get(tier, tier_config["normal"]) %}
+                <div class="conquista-item {% if tier in ['ouro', 'lendária'] %}brilho-borda {{ tier }}{% endif %} " style="border-color: {{ config['borda'] }}; background-color: {{ config['cor'] }};">
+                    <span class="icone">{{ config['icone'] }}</span>
+                    <div class="conquista-info" style="color: {{ config['texto'] }}">
+                        <strong>{{ uc.conquista.cnq_nome }}</strong>
+                        <p>{{ uc.conquista.cnq_descricao }}</p>
+                        <small style="color: {{ config['tier_cor'] }}">Tier: {{ uc.conquista.cnq_tier | capitalize }}</small>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    
+    <section class="usr-conquistas-bloqueadas" style="margin-top: 15px;">
+        <span class="titulo">
+            <h2>Conquistas Não Alcançadas</h2>
+        </span>
+        <div class="conquistas-lista">
+            {% for c in conquistas_disponiveis %}
+                <div class="conquista-item">
+                    <span class="icone">🔒</span>
+                    <div class="conquista-info">
+                        <strong>{{ c.cnq_nome }}</strong>
+                        <p>{{ c.cnq_descricao }}</p>
+                        <small>Tier: {{ c.cnq_tier | capitalize }}</small>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+</main>
+{% endblock %}

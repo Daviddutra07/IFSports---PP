@@ -78,47 +78,44 @@
                 <i class="bi bi-person-badge"></i>
                 <span class="info-label">Professor</span>
             </div>
-            <span class="info-value">{{ treino.professor.usr_nome }}</span>
+            <span class="info-value"> <a href="{{ url_for('usuarios.perfil', id=treino.professor.usr_id) }}" style="text-decoration: none; color: black"> {{ treino.professor.usr_nome }} </a> </span>
         </div>
     </div>
 
 <div class="participantes">
     <h2 class="participantes-titulo">Participantes</h2>
 
-    {% if current_user.usr_tipo == "professor" and not ja_validado %}
-        <form method="POST" action="{{ url_for('treinos.validar_frequencias', treino_id=treino.trn_id) }}">
-    {% endif %}
-
     <table class="tabela-participantes">
         <thead>
             <tr>
                 <th>Aluno</th>
-                <th>Check-in</th>
+                <th>Reserva</th>
                 <th>Status</th>
             </tr>
         </thead>
     
         <tbody>
             {% for participante in alunos %}
-                <tr>
-                    <td>
-                        <i class="bi bi-person-circle"></i>
-                        {{ participante.aluno.usr_nome }}
+                <tr data-aluno-id="{{ participante.aluno.usr_id }}">
+                    <td class="usr_foto">
+                        <img src="{{ url_for('static', filename=participante.aluno.usr_img) }}" alt="Foto de perfil">
+                        <a href="{{ url_for('usuarios.perfil', id=participante.aluno.usr_id) }}">{{ participante.aluno.usr_nome }} </a>
                     </td>
                 
                     <td>
-                        {{ participante.frq_checkin_em.strftime('%H:%M') }}
+                        {{ participante.frq_reserva_em.strftime('%H:%M') }}
                     </td>
                 
                     <td>
-                        {% if current_user.usr_tipo == "professor" and not ja_validado %}
-                            <input type="checkbox" name="status_{{ participante.frq_id }}" value="presente" {% if participante.frq_status == 'presente' %}checked{% endif %}>
-                            Presente
-                        {% else %}
-                            <span class="status {{ participante.frq_status }}">
-                                {{ participante.frq_status }}
-                            </span>
-                        {% endif %}
+                        <span class="status {{ participante.frq_status }}">
+                            {% if participante.frq_status == "inscricao" %}
+                                Inscrito
+                            {% elif participante.frq_status == "presente" %}
+                                Presente
+                            {% elif participante.frq_status == "ausente" %}
+                                Ausente
+                            {% endif %}
+                        </span>
                     </td>
                 </tr>
             {% endfor %}
@@ -126,10 +123,9 @@
     </table>
 
     {% if current_user.usr_tipo == "professor" and not ja_validado %}
-        <button type="submit" class="btn btn-success mt-2">
-            Validar Frequência
-        </button>
-        </form>
+    <a href="{{ url_for('treinos.validar_frequencias', treino_id=treino.trn_id) }}"class="btn-validar">
+        Validar Frequência
+    </a>
     {% endif %}
 </div>
 </main>

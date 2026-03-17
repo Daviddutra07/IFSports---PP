@@ -1,4 +1,5 @@
 from flask import Blueprint, flash, redirect, render_template, url_for
+from flask_login import login_required
 from app.controllers.modalidades.forms import ModalidadeForm
 from app.decorators.auth import professor_required
 from app.models.modalidades import Modalidade

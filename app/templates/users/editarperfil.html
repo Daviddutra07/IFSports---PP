@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block titulo %} Editar Perfil - IFSports {% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/confirmar_editar_user.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+<main>
+    <div class="card-perfil">
+        <h2>Editar Perfil</h2>
+        <form method="post" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+
+            <div class="form-grupo">
+                {{ form.nome.label }}
+                {{ form.nome(class="input") }}
+            </div>
+
+            {% if form.modalidade %}
+            <div class="form-grupo">
+                {{ form.modalidade.label }}
+                {{ form.modalidade(class="input") }}
+            </div>
+            {% endif %}
+
+            {% if form.senha %}
+            <div class="form-grupo">
+                {{ form.senha.label }}
+                {{ form.senha(class="input") }}
+                <small>Deixe em branco para manter a senha atual</small>
+            </div>
+
+            <div class="form-grupo">
+                {{ form.confirmar_senha.label }}
+                {{ form.confirmar_senha(class="input") }}
+            </div>
+            {% endif %}
+
+            <div class="form-grupo">
+                {{ form.imagem.label }}
+                {{ form.imagem(class="input") }}
+            </div>
+
+            <div class="preview-container">
+                <img id="preview" src="{{ url_for('static', filename=user.usr_img) }}" alt="Preview da imagem">
+            </div>
+
+            <div class="form-grupo">
+                <span class="remover"> {{ form.remover_imagem.label()}} {{ form.remover_imagem }} </span>
+            </div>
+
+
+            <button type="submit">Atualizar Perfil</button>
+        </form>
+    </div>
+</main>
+
+<script>
+const inputImagem = document.querySelector('input[type="file"]');
+const preview = document.getElementById('preview');
+
+inputImagem.addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = "block";
+    }
+});
+</script>
+{% endblock %}

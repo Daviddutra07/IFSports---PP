@@ -15,81 +15,85 @@
         </div>
         <hr>
 
-        <div class="card-form">
-            <form method="post" action="{{ url_action }}"> 
-                {{ form.hidden_tag() }}
+        <div class="utils">
+            <div class="card-form">
+                <form method="post" action="{{ url_action }}"> 
+                    {{ form.hidden_tag() }}
 
-                <div class="form-grupo">
-                    {{ form.trn_nome.label }} 
-                    {{ form.trn_nome}}
-                    {% for error in form.trn_nome.errors %}
-                        <div class="text-danger">{{ error }}</div>
-                    {% endfor %}
-                </div>
-            
-                <div class="form-grupo">
-                    {{ form.trn_descricao.label }} 
-                    {{ form.trn_descricao}}
-                    {% for error in form.trn_descricao.errors %}
-                        <div class="text-danger">{{ error }}</div>
-                    {% endfor %}
-                </div>
-
-                <div class="form-grupo">
-                    {{ form.trn_fixo.label }} 
-                    {{ form.trn_fixo}}
-                </div>
-
-                <div id="grupo-fixo">
                     <div class="form-grupo">
-                        {{ form.trn_dia_semana.label }} 
-                        {{ form.trn_dia_semana }}
-
-                        {% for error in form.trn_dia_semana.errors %}
+                        {{ form.trn_nome.label }} 
+                        {{ form.trn_nome}}
+                        {% for error in form.trn_nome.errors %}
                             <div class="text-danger">{{ error }}</div>
                         {% endfor %}
                     </div>
                 
+                    <div class="form-grupo">
+                        {{ form.trn_descricao.label }} 
+                        {{ form.trn_descricao}}
+                        {% for error in form.trn_descricao.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
 
                     <div class="form-grupo">
-                        {{ form.trn_horario.label }} 
-                        {{ form.trn_horario }}
+                        {{ form.trn_fixo.label }} 
+                        {{ form.trn_fixo}}
+                    </div>
 
-                        {% for error in form.trn_horario.errors %}
+                    <div id="grupo-fixo">
+                        <div class="form-grupo">
+                            {{ form.trn_dia_semana.label }} 
+                            {{ form.trn_dia_semana }}
+
+                            {% for error in form.trn_dia_semana.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    
+
+                        <div class="form-grupo">
+                            {{ form.trn_horario.label }} 
+                            {{ form.trn_horario }}
+
+                            {% for error in form.trn_horario.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                        <div class="form-grupo" id="grupo-data">
+                            {{ form.trn_data.label }} 
+                            {{ form.trn_data }}
+
+                            {% for error in form.trn_data.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                    <div class="form-grupo">
+                        {{ form.trn_quantidade.label }} 
+                        {{ form.trn_quantidade(min = 1)}}
+
+                        {% for error in form.trn_quantidade.errors %}
                             <div class="text-danger">{{ error }}</div>
                         {% endfor %}
                     </div>
-                </div>
 
-                    <div class="form-grupo" id="grupo-data">
-                        {{ form.trn_data.label }} 
-                        {{ form.trn_data }}
+                    <div class="form-grupo">
+                        {{ form.trn_mod_id.label }} 
+                        {{ form.trn_mod_id()}}
 
-                        {% for error in form.trn_data.errors %}
+                        {% for error in form.trn_mod_id.errors %}
                             <div class="text-danger">{{ error }}</div>
                         {% endfor %}
                     </div>
 
-                <div class="form-grupo">
-                    {{ form.trn_quantidade.label }} 
-                    {{ form.trn_quantidade(min = 1)}}
-
-                    {% for error in form.trn_quantidade.errors %}
-                        <div class="text-danger">{{ error }}</div>
-                    {% endfor %}
-                </div>
-
-                <div class="form-grupo">
-                    {{ form.trn_mod_id.label }} 
-                    {{ form.trn_mod_id()}}
-
-                    {% for error in form.trn_mod_id.errors %}
-                        <div class="text-danger">{{ error }}</div>
-                    {% endfor %}
-                </div>
-
-                <button type="submit"> {{ acao }} Treino    </button>
-            </form>
+                    <button type="submit"> {{ acao }} Treino    </button>
+                </form>
+            </div>
+            <p> Se necessário, insira uma modalidade nova. </p>
+            <a href="{{ url_for('modalidades.criar' ) }}"> Criar Modalidade </a> 
         </div>
     </main> 
 {% endblock %}

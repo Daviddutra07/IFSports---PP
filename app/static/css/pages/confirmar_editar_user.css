@@ -1,0 +1,172 @@
+html, body {
+    overflow-y: auto;
+}
+
+main {
+    min-height: 90vh;
+    padding: 40px 20px;
+    background-color: var(--fundo-claro);
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* CARD PRINCIPAL */
+
+.card-perfil {
+    width: 100%;
+    max-width: 600px;
+    background-color: white;
+
+    padding: 40px;
+
+    border-radius: 20px;
+    border: 2px solid var(--verde-secundario);
+
+    box-shadow: 0 10px 25px rgba(126, 217, 87, 0.15);
+
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.card-perfil h2 {
+    text-align: center;
+    color: var(--verde-principal);
+    font-size: 1.8rem;
+}
+
+/* FORM */
+
+.card-perfil form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-grupo {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-grupo label {
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--verde-principal);
+}
+
+/* INPUTS */
+
+.form-grupo input,
+.form-grupo select {
+    padding: 12px;
+    border-radius: 12px;
+    border: 2px solid #e0e0e0;
+    font-size: 14px;
+
+    transition: 0.2s ease;
+
+    background-color: #fafafa;
+}
+
+.form-grupo input:focus,
+.form-grupo select:focus {
+    outline: none;
+
+    border-color: var(--verde-secundario);
+
+    box-shadow: 0 0 0 3px rgba(126, 217, 87, 0.2);
+
+    background-color: white;
+}
+
+
+
+/* PREVIEW DA FOTO */
+
+.preview-container {
+    display: flex;
+    justify-content: center;
+}
+
+.preview-container img {
+    width: 140px;
+    height: 140px;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+
+    border: 3px solid var(--verde-secundario);
+
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.form-grupo input[type="checkbox"] {
+    appearance: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 2px solid var(--verde-secundario);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.form-grupo input[type="checkbox"]:checked {
+    background-color: var(--verde-secundario);
+}
+
+.form-grupo input[type="checkbox"]:checked::after {
+    content: "\F272";
+    font-family: "bootstrap-icons";
+    position: absolute;
+    color: white;
+    font-size: 24px;
+}
+
+/* BOTÃO */
+
+.card-perfil button {
+    margin-top: 10px;
+
+    padding: 14px;
+
+    border-radius: 14px;
+
+    border: none;
+
+    background-color: var(--verde-secundario);
+
+    color: white;
+
+    font-weight: 600;
+
+    letter-spacing: 1px;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.card-perfil button:hover {
+    background-color: var(--verde-hover);
+
+    transform: translateY(-2px);
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 600px) {
+
+    .card-perfil {
+        padding: 30px 20px;
+    }
+
+}

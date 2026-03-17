@@ -1,8 +1,13 @@
 import os
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
     #Chave Secreta
     SECRET_KEY = os.getenv("SECRET_KEY")
+    MAX_CONTENT_LENGTH = 5 * 1024 * 1024
+
+    #Configuração de de destino de arquivos de upload
+    UPLOADED_IMAGES_DEST = os.path.join(BASE_DIR, 'static', 'uploads', 'images')
 
     #Configuração da confirmação por email
     MAIL_USERNAME = os.getenv("EMAIL_USER")

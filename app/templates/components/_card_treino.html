@@ -53,7 +53,7 @@
                     {% else %}
                         <form method="post" action="{{ url_for('treinos.checkin', id=treino.trn_id) }}" id="form-checkin-{{ treino.trn_id }}>
                             {{ checkin_form.hidden_tag() }}
-                            <button type="submit" class="btn-checkin"   >CHECK-IN</button>
+                            <button type="submit" class="btn-checkin"   >INSCRIÇÃO</button>
                         </form>
                     {% endif %}
                 {% endif %}

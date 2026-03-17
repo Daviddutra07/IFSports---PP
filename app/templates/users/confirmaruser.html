@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block titulo %} Confirmar Perfil - IFSports {% endblock %}
+
+{% block css %} 
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/confirmar_editar_user.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+<main>
+    <div class="card-perfil">
+        <h2>Finalize seu perfil</h2>
+        <form method="post" enctype="multipart/form-data">
+
+            {{ form.hidden_tag() }}
+            
+            <div class="form-grupo">
+                {{ form.imagem.label }}
+                {{ form.imagem }}
+            </div>
+        
+            <div class="preview-container">
+                <img id="preview" src="{{ current_user.usr_img or '' }}" alt="Preview da imagem"  style="display: none;">
+            </div>
+
+            {% if tipo == 'aluno' %}
+            <div class="form-grupo">
+                {{ form.modalidade.label }}
+                {{ form.modalidade }}
+            </div>
+            {% endif %}
+        
+            <button type="submit">Concluir Perfil</button>
+
+        </form>
+    </div>
+</main>
+
+<script>
+const inputImagem = document.querySelector('input[type="file"]');
+const preview = document.getElementById('preview');
+
+if(inputImagem){
+    inputImagem.addEventListener('change', function() {
+        const file = this.files[0];
+        if (file) {
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = "block";
+        }
+    });
+}
+</script>
+{% endblock %}
