@@ -32,10 +32,10 @@ def create_app():
             elif current_user.usr_tipo == "professor":
                 join_room("professores")
 
-    @socketio.on("entrar_treino")
-    def entrar_treino(data):
-        treino_id = data["treino_id"]
-        room = f"treino_{treino_id}"
+    @socketio.on("entrar_ocorrencia")
+    def entrar_ocorrencia(data):
+        ocorrencia_id = data["ocorrencia_id"]
+        room = f"ocorrencia_{ocorrencia_id}"
         join_room(room)
     
 
@@ -50,6 +50,7 @@ def create_app():
     from app.models.frequencia import Frequencia
     from app.models.modalidades import Modalidade
     from app.models.conquistas import Conquista
+    from app.models.treino_ocorrencia import TreinoOcorrencia
 
     @login_manager.user_loader
     def load_user(user_id):
