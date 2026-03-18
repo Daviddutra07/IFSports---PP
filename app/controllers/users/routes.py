@@ -30,13 +30,22 @@ def perfil(id):
         total_conquistas = len(conquistas)
 
         agora = datetime.now()
-        treinos = (Frequencia.query.options(
-                joinedload(Frequencia.treino).joinedload(Treino.modalidade))
+        treinos = (
+            Frequencia.query.options(
+                joinedload(Frequencia.treino).joinedload(Treino.modalidade),
+                joinedload(Frequencia.ocorrencia)
+            )
             .filter(
                 Frequencia.frq_aluno_id == id,
                 Frequencia.frq_status == "presente",
                 Frequencia.frq_data_ocorrencia < agora
-            ).order_by(Frequencia.frq_data_ocorrencia.desc()).limit(3).all())
+            )
+            .order_by(Frequencia.frq_data_ocorrencia.desc())
+            .limit(3)
+            .all()
+        )        
+
+        
         return render_template("users/perfil.html",user=user,conquistas=conquistas_exibicao, tier_config=TIER_CONFIG, nivel=nivel, total_conquistas=total_conquistas, aluno=aluno, treinos=treinos, media=media, nome=nome)
     return render_template("users/perfil.html",user=user)
 
@@ -90,11 +99,14 @@ def historico(id):
     user = User.query.get_or_404(id)
 
     page = request.args.get("page", 1, type=int)
-    per_page = 6 
+    per_page = 6
 
     paginacao = (
         Frequencia.query
-        .options(joinedload(Frequencia.treino).joinedload(Treino.modalidade))
+        .options(
+            joinedload(Frequencia.treino).joinedload(Treino.modalidade),
+            joinedload(Frequencia.ocorrencia)
+        )
         .filter(
             Frequencia.frq_aluno_id == id,
             Frequencia.frq_status != "inscricao"
@@ -103,7 +115,12 @@ def historico(id):
         .paginate(page=page, per_page=per_page)
     )
 
-    return render_template("users/historico.html",user=user,treinos=paginacao.items,paginacao=paginacao)
+    return render_template(
+        "users/historico.html",
+        user=user,
+        treinos=paginacao.items,
+        paginacao=paginacao
+    )
 
 @usuarios_bp.route("/editar/<int:id>", methods=["GET", "POST"])
 @login_required

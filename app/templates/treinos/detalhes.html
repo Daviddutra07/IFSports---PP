@@ -9,18 +9,18 @@
 {% block conteudo %}
 <main>
     <div class="header"> 
-        <h1>{{ treino.trn_nome }} </h1>
-        <p> Data: {{ treino.trn_data.strftime('%d/%m às %H:%M') }} </p>
+        <h1>{{ treino.trn_nome }}</h1>
+        <p>Data: {{ ocorrencia.tro_data.strftime('%d/%m às %H:%M') }}</p>
     </div>
 
     {% if treino.trn_descricao %}
-        <h2> Descrição </h2>
+        <h2>Descrição</h2>
         <div class="caption">
-            <p> {{ treino.trn_descricao }} </p> 
+            <p>{{ treino.trn_descricao }}</p> 
         </div>
     {% endif %}
 
-    <h2> Informações </h2>
+    <h2>Informações</h2>
     <div class="infos">
         <div class="info-item">
             <div class="info-header">
@@ -55,13 +55,21 @@
                 </div>
                 <span class="info-value">{{ treino.trn_horario.strftime('%H:%M') }}</span>
             </div>
+
+            <div class="info-item">
+                <div class="info-header">
+                    <i class="bi bi-calendar-event"></i>
+                    <span class="info-label">Próxima ocorrência</span>
+                </div>
+                <span class="info-value">{{ ocorrencia.tro_data.strftime('%d/%m às %H:%M') }}</span>
+            </div>
         {% else %}
             <div class="info-item">
                 <div class="info-header">
                     <i class="bi bi-calendar-event"></i>
                     <span class="info-label">Data e horário</span>
                 </div>
-                <span class="info-value">{{ treino.trn_data.strftime('%d/%m às %H:%M') }}</span>
+                <span class="info-value">{{ ocorrencia.tro_data.strftime('%d/%m às %H:%M') }}</span>
             </div>
         {% endif %}
         
@@ -78,67 +86,71 @@
                 <i class="bi bi-person-badge"></i>
                 <span class="info-label">Professor</span>
             </div>
-            <span class="info-value"> <a href="{{ url_for('usuarios.perfil', id=treino.professor.usr_id) }}" style="text-decoration: none; color: black"> {{ treino.professor.usr_nome }} </a> </span>
+            <span class="info-value">
+                <a href="{{ url_for('usuarios.perfil', id=treino.professor.usr_id) }}" style="text-decoration: none; color: black">
+                    {{ treino.professor.usr_nome }}
+                </a>
+            </span>
         </div>
     </div>
 
-<div class="participantes">
-    <h2 class="participantes-titulo">Participantes</h2>
+    <div class="participantes">
+        <h2 class="participantes-titulo">Participantes</h2>
 
-    <table class="tabela-participantes">
-        <thead>
-            <tr>
-                <th>Aluno</th>
-                <th>Reserva</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-    
-        <tbody>
-            {% for participante in alunos %}
-                <tr data-aluno-id="{{ participante.aluno.usr_id }}">
-                    <td class="usr_foto">
-                        <img src="{{ url_for('static', filename=participante.aluno.usr_img) }}" alt="Foto de perfil">
-                        <a href="{{ url_for('usuarios.perfil', id=participante.aluno.usr_id) }}">{{ participante.aluno.usr_nome }} </a>
-                    </td>
-                
-                    <td>
-                        {{ participante.frq_reserva_em.strftime('%H:%M') }}
-                    </td>
-                
-                    <td>
-                        <span class="status {{ participante.frq_status }}">
-                            {% if participante.frq_status == "inscricao" %}
-                                Inscrito
-                            {% elif participante.frq_status == "presente" %}
-                                Presente
-                            {% elif participante.frq_status == "ausente" %}
-                                Ausente
-                            {% endif %}
-                        </span>
-                    </td>
+        <table class="tabela-participantes">
+            <thead>
+                <tr>
+                    <th>Aluno</th>
+                    <th>Reserva</th>
+                    <th>Status</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+    
+            <tbody>
+                {% for participante in alunos %}
+                    <tr data-aluno-id="{{ participante.aluno.usr_id }}">
+                        <td class="usr_foto">
+                            <img src="{{ url_for('static', filename=participante.aluno.usr_img) }}" alt="Foto de perfil">
+                            <a href="{{ url_for('usuarios.perfil', id=participante.aluno.usr_id) }}">
+                                {{ participante.aluno.usr_nome }}
+                            </a>
+                        </td>
+                    
+                        <td>
+                            {{ participante.frq_reserva_em.strftime('%H:%M') }}
+                        </td>
+                    
+                        <td>
+                            <span class="status {{ participante.frq_status }}">
+                                {% if participante.frq_status == "inscricao" %}
+                                    Inscrito
+                                {% elif participante.frq_status == "presente" %}
+                                    Presente
+                                {% elif participante.frq_status == "ausente" %}
+                                    Ausente
+                                {% endif %}
+                            </span>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-    {% if current_user.usr_tipo == "professor" and not ja_validado %}
-    <a href="{{ url_for('treinos.validar_frequencias', treino_id=treino.trn_id) }}"class="btn-validar">
-        Validar Frequência
-    </a>
-    {% endif %}
-</div>
+        {% if current_user.usr_tipo == "professor" and not ja_validado %}
+            <a href="{{ url_for('treinos.validar_frequencias', ocorrencia_id=ocorrencia.tro_id) }}" class="btn-validar">
+                Validar Frequência
+            </a>
+        {% endif %}
+    </div>
 </main>
 {% endblock %}
 
 {% block scripts %}
 <script>
-
-const treinoId = {{ treino.trn_id }};
-socket.emit("entrar_treino", {treino_id: treinoId});
+const ocorrenciaId = {{ ocorrencia.tro_id }};
+socket.emit("entrar_ocorrencia", { ocorrencia_id: ocorrenciaId });
 
 socket.on("novo_checkin", function(data) {
-
     const tabela = document.querySelector(".tabela-participantes tbody");
 
     const existente = Array.from(tabela.querySelectorAll("tr"))
@@ -148,10 +160,15 @@ socket.on("novo_checkin", function(data) {
 
     const linha = `
         <tr data-aluno-id="${data.aluno_id}">
-            <td><i class="bi bi-person-circle"></i> ${data.aluno}</td>
+            <td class="usr_foto">
+                <i class="bi bi-person-circle"></i>
+                ${data.aluno}
+            </td>
             <td>${data.horario}</td>
             <td>
-                <span class="status ${data.status}">${data.status}</span>
+                <span class="status ${data.status}">
+                    ${data.status === "inscricao" ? "Inscrito" : data.status === "presente" ? "Presente" : "Ausente"}
+                </span>
             </td>
         </tr>
     `;
@@ -159,17 +176,13 @@ socket.on("novo_checkin", function(data) {
     tabela.insertAdjacentHTML("beforeend", linha);
 });
 
-socket.on("checkin_cancelado", function(data){
-
+socket.on("checkin_cancelado", function(data) {
     const tabela = document.querySelector(".tabela-participantes tbody");
-
     const linha = tabela.querySelector(`tr[data-aluno-id="${data.aluno_id}"]`);
 
-    if(linha){
+    if (linha) {
         linha.remove();
     }
-
 });
-
 </script>
 {% endblock %}

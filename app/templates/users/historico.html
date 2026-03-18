@@ -10,7 +10,7 @@
 <main class="historico-page">
     <header style="justify-content: flex-start"> 
         <span class="historico-titulo"> 
-            <h1 class="brilho"> {{ user.usr_nome}} - Histórico </h1> 
+            <h1 class="brilho">{{ user.usr_nome }} - Histórico</h1> 
         </span> 
     </header>
 
@@ -25,31 +25,45 @@
 
                         <div class="treino-conteudo">
                             <p class="treino-titulo brilho">
-                                {{ freq.treino.trn_nome if freq.frq_trn_nome else freq.treino.trn_nome }}
+                                {{ freq.frq_trn_nome if freq.frq_trn_nome else freq.treino.trn_nome }}
                             </p>
+
                             <p>
-                                {{ freq.frq_data_ocorrencia.strftime("%d/%m/%Y às %H:%M" ) }}
+                                {{ freq.frq_data_ocorrencia.strftime("%d/%m/%Y às %H:%M") }}
                             </p>
                             
-                            <p> {{ freq.frq_status | capitalize }} </p>
+                            <p>{{ freq.frq_status | capitalize }}</p>
 
                             <p class="treino-nota">
-                                {% if freq.frq_aluno_nota == 0 %}
-                                <span class="nota-zero">Nota: 0 </span>
+                                {% if freq.frq_aluno_nota is not none and freq.frq_aluno_nota > 0 %}
+                                    <span class="nota">
+                                        Nota:
+                                        {% for i in range(freq.frq_aluno_nota) %}
+                                            <i class="bi bi-star-fill estrela"></i>
+                                        {% endfor %}
+                                    </span>
                                 {% else %}
-                                <span class="nota">Nota:
-                                    {% for i in range(freq.frq_aluno_nota) %}
-                                    <i class="bi bi-star-fill estrela"></i>
-                                    {% endfor %}
-                                </span>
+                                    <span class="nota-zero">Nota: 0</span>
                                 {% endif %}
                             </p>
+
+                            {% if freq.frq_ocorrencia_id %}
+                                <p>
+                                    <a href="{{ url_for('treinos.detalhes', ocorrencia_id=freq.frq_ocorrencia_id) }}">
+                                        Ver detalhes
+                                    </a>
+                                </p>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             {% endfor %}
         </div>
-        {% endif %}
+    {% else %}
+        <div class="treinos-lista">
+            <p>Este usuário ainda não possui histórico de treinos.</p>
+        </div>
+    {% endif %}
 
     <div class="paginacao">
         {% if paginacao.has_prev %}
@@ -65,7 +79,6 @@
                 Próxima →
             </a>
         {% endif %}
-
     </div>
 </main>
 {% endblock %}
