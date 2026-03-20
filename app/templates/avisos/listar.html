@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block titulo %}Avisos - IFSports{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/avisos.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+<main class="avisos-page">
+    <div class="header">
+        <h1>Avisos</h1>
+
+        {% if current_user.usr_tipo == "professor" %}
+            <a class="btn-novo-aviso" href="{{ url_for('avisos.criar') }}">Novo aviso</a>
+        {% endif %}
+    </div>
+
+    <section class="avisos-lista">
+        {% for aviso in avisos %}
+            <article class="aviso-card">
+                <div class="aviso-topo">
+                    <h2>
+                        {{ aviso.avs_titulo }}
+                        {% if aviso.avs_fixado %}
+                            <span class="pin">📌</span>
+                        {% endif %}
+                    </h2>
+
+                    {% if current_user.usr_tipo == "professor" %}
+                        <div class="aviso-acoes">
+                            <a href="{{ url_for('avisos.editar', id=aviso.avs_id) }}">Editar</a>
+
+                            <form method="POST" action="{{ url_for('avisos.excluir', id=aviso.avs_id) }}">
+                                <button type="submit">Excluir</button>
+                            </form>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <p class="aviso-mensagem">{{ aviso.avs_mensagem }}</p>
+                    {% if aviso.treino %}
+                        <span class="meta-tag">
+                            <strong>Treino:</strong> {{ aviso.treino.trn_nome }}
+                        </span>
+                    {% endif %}
+                </div>
+
+                <div class="aviso-rodape">
+                    <span class="publico">
+                        {% if aviso.treino %}
+                            Participantes do treino
+                        {% elif aviso.modalidade %}
+                            {{ aviso.modalidade.mod_nome }}
+                        {% else %}
+                            Todos
+                        {% endif %}
+                    </span>
+                
+                    <small>
+                        {{ aviso.autor.usr_nome }} • {{ aviso.avs_created_at.strftime('%d/%m/%Y às %H:%M') }}
+                    </small>
+                </div>
+            </article>
+        {% else %}
+            <p class="sem-avisos">Nenhum aviso disponível.</p>
+        {% endfor %}
+    </section>
+</main>
+{% endblock %}
