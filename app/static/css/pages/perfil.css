@@ -472,6 +472,19 @@ h2 {
     font-size: 20px;
 }
 
+.historico-page .treino-conteudo a {
+    width: 100%;
+    background-color: rgba(222, 222, 222, 0.8);
+    box-shadow: 0 0 10px 0.5px rgba(0, 0, 0, 0.2); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    border-radius: 5px;
+    color: black;
+    text-decoration: none;
+}
+
 .paginacao{
     margin-top:30px;
     display:flex;

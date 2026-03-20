@@ -51,6 +51,8 @@ def create_app():
     from app.models.modalidades import Modalidade
     from app.models.conquistas import Conquista
     from app.models.treino_ocorrencia import TreinoOcorrencia
+    from app.models.avisos import Aviso
+    
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -66,7 +68,9 @@ def create_app():
     from app.controllers.treinos.routes import treinos_bp
     from app.controllers.modalidades.routes import modalidades_bp
     from app.controllers.users.routes import usuarios_bp
+    from app.controllers.avisos.routes import avisos_bp
 
+    app.register_blueprint(avisos_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(treinos_bp)
     app.register_blueprint(modalidades_bp)

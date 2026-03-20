@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block titulo %}{{ titulo }} - IFSports{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/avisos.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+<main class="avisos-form-page">
+    <div class="breadcrumb">
+        <a href="">Início</a> >
+        <a href="{{ url_for('avisos.listar') }}">Avisos</a> >
+        <span>{{ titulo }}</span>
+    </div>
+    <hr>
+
+    <div class="utils">
+        <div class="card-form">
+            <h1>{{ titulo }}</h1>
+
+            <form method="POST">
+                {{ form.hidden_tag() }}
+
+                <div class="form-grupo full">
+                    {{ form.avs_titulo.label }}
+                    {{ form.avs_titulo(class="form-control") }}
+                    {% for erro in form.avs_titulo.errors %}
+                        <div class="text-danger">{{ erro }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-grupo full">
+                    {{ form.avs_mensagem.label }}
+                    {{ form.avs_mensagem(class="form-control", rows="5") }}
+                    {% for erro in form.avs_mensagem.errors %}
+                        <div class="text-danger">{{ erro }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-grupo">
+                    {{ form.avs_modalidade_id.label }}
+                    {{ form.avs_modalidade_id(class="form-control") }}
+                    {% for erro in form.avs_modalidade_id.errors %}
+                        <div class="text-danger">{{ erro }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-grupo">
+                    {{ form.avs_treino_id.label }}
+                    {{ form.avs_treino_id(class="form-control") }}
+                    {% for erro in form.avs_treino_id.errors %}
+                        <div class="text-danger">{{ erro }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-grupo">
+                    {{ form.avs_expira_em.label }}
+                    {{ form.avs_expira_em(class="form-control") }}
+                    {% for erro in form.avs_expira_em.errors %}
+                        <div class="text-danger">{{ erro }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-grupo checkbox-grupo">
+                    <div class="checkbox-inline">
+                        {{ form.avs_fixado() }}
+                        {{ form.avs_fixado.label }}
+                    </div>
+                </div>
+
+                {{ form.submit(class="btn-submit") }}
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}
