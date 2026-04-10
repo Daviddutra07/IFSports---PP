@@ -49,8 +49,8 @@ def perfil(id):
         return render_template("users/perfil.html",user=user,conquistas=conquistas_exibicao, tier_config=TIER_CONFIG, nivel=nivel, total_conquistas=total_conquistas, aluno=aluno, treinos=treinos, media=media, nome=nome)
     return render_template("users/perfil.html",user=user)
 
-@login_required
 @usuarios_bp.route("/concluir", methods=["GET", "POST"])
+@login_required
 def concluir():
     user = current_user
 

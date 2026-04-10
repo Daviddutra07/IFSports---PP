@@ -177,9 +177,12 @@ def checkin(id):
     ocorrencia.tro_vagas_ocupadas += 1
 
     adicionar_pontos(current_user.usr_id, 5)
-    verificar_conquistas(current_user.usr_id)
 
     db.session.add(frequencia)
+    db.session.flush()      
+
+    verificar_conquistas(current_user.usr_id)  
+
     db.session.commit()
 
     flash("Check-in realizado com sucesso!", "success")

@@ -16,7 +16,7 @@ avisos_bp = Blueprint("avisos",__name__,url_prefix="/avisos",template_folder="te
 
 def encher_select(form):
     modalidades = Modalidade.query.order_by(Modalidade.mod_nome.asc()).all()
-    treinos = Treino.query.order_by(Treino.trn_created_at.desc()).all()
+    treinos = Treino.query.filter(Treino.trn_ativo.is_(True), Treino.trn_deleted_at.is_(None)).order_by(Treino.trn_created_at.desc()).all()
 
     form.avs_modalidade_id.choices = [(0, "Todas / Global")] + [(m.mod_id, m.mod_nome) for m in modalidades]
 

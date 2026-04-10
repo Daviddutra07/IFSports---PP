@@ -1,0 +1,262 @@
+main.ranking-page {
+    min-height: 90vh;
+    padding: 30px 100px;
+    background-color: var(--fundo-claro);
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.ranking-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    padding-bottom: 20px;
+}
+
+.ranking-header h1 {
+    font-size: 2.2rem;
+    color: var(--verde-principal);
+    margin-bottom: 8px;
+}
+
+.ranking-header p {
+    color: #666;
+    font-size: 1rem;
+}
+
+.ranking-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.section-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.section-topo h2 {
+    color: #222;
+    font-size: 1.5rem;
+}
+
+.section-info {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.ranking-card {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.06);
+    padding: 20px;
+    overflow-x: auto;
+}
+
+.ranking-tabela {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.ranking-tabela th,
+.ranking-tabela td {
+    padding: 14px 12px;
+    text-align: left;
+    border-bottom: 1px solid #ececec;
+}
+
+.ranking-tabela th {
+    color: #444;
+    font-size: 0.95rem;
+}
+
+.ranking-tabela td {
+    color: #222;
+    font-size: 0.98rem;
+}
+
+.ranking-tabela tr.top-1 {
+    background: rgba(255, 215, 0, 0.12);
+    font-weight: 700;
+}
+
+.ranking-tabela tr.top-2 {
+    background: rgba(192, 192, 192, 0.14);
+    font-weight: 700;
+}
+
+.ranking-tabela tr.top-3 {
+    background: rgba(205, 127, 50, 0.12);
+    font-weight: 700;
+}
+
+.ranking-vazio {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    color: #666;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.05);
+}
+
+.ranking-vazio.interno {
+    box-shadow: none;
+    background: #f8f8f8;
+    padding: 16px;
+}
+
+.modalidades-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 20px;
+}
+
+.modalidade-card {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.modalidade-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.modalidade-topo h3 {
+    color: var(--verde-principal);
+    font-size: 1.2rem;
+}
+
+.modalidade-topo span {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.ranking-filtro {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.ranking-filtro form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ranking-filtro select {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: white;
+    font-weight: 500;
+}
+
+.ranking-tabela-container {
+    max-height: 47.73vh;   /* altura fixa baseada na tela */
+    overflow-y: auto;   /* scroll só quando precisar */
+}
+
+.ranking-tabela thead th {
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 2;
+}
+
+.ranking-tabela {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.coluna-aluno {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.foto-ranking {
+    width: 42px;
+    height: 42px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #e5e5e5;
+}
+
+.aluno-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.link-perfil {
+    color: #222;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.link-perfil:hover {
+    color: var(--verde-principal);
+    text-decoration: underline;
+}
+
+.linha-usuario {
+    background-color: #f0fff4;
+}
+
+.ranking-tabela tr.top-20 {
+    background: rgba(76, 175, 80, 0.06);
+}
+
+.ranking-tabela tr.top-20 td:first-child {
+    font-weight: 700;
+    color: var(--verde-principal);
+}
+
+.ranking-tabela tr.top-20.linha-usuario {
+    background-color: #dcfce7;
+}
+
+.ranking-tabela tr.top-10 {
+    background: linear-gradient(
+        to right,
+        rgba(255, 215, 0, 0.08),
+        rgba(255, 255, 255, 0)
+    );
+    position: relative;
+}
+
+.ranking-tabela tr.top-10 td:first-child {
+    font-weight: 700;
+    color: #b8860b;
+}   
+
+.ranking-tabela tr.top-10.linha-usuario {
+    background: linear-gradient(
+        to right,
+        rgba(255, 215, 0, 0.12),
+        rgba(220, 252, 231, 0.6)
+    );
+}
+
+@media (max-width: 900px) {
+    main.ranking-page {
+        padding: 25px 20px;
+    }
+
+    .modalidades-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .ranking-tabela-container {
+        max-height: 50vh;
+    }
+}

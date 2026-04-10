@@ -3,7 +3,7 @@ import os
 from flask import Flask
 from dotenv import load_dotenv
 from flask_login import current_user
-from flask_socketio import join_room
+from flask_socketio import join_room,leave_room
 
 from app.config import Config
 from app.extensions import db, login_manager, mail, socketio
@@ -31,6 +31,16 @@ def create_app():
                 join_room("alunos")
             elif current_user.usr_tipo == "professor":
                 join_room("professores")
+
+    @socketio.on("entrar_pagina_treinos")
+    def entrar_pagina_treinos():
+        if current_user.is_authenticated:
+            join_room("pagina_treinos")
+    
+    @socketio.on("sair_pagina_treinos")
+    def sair_pagina_treinos():
+        if current_user.is_authenticated:
+            leave_room("pagina_treinos")
 
     @socketio.on("entrar_ocorrencia")
     def entrar_ocorrencia(data):
@@ -69,7 +79,9 @@ def create_app():
     from app.controllers.modalidades.routes import modalidades_bp
     from app.controllers.users.routes import usuarios_bp
     from app.controllers.avisos.routes import avisos_bp
+    from app.controllers.rankings.routes import rankings_bp
 
+    app.register_blueprint(rankings_bp)
     app.register_blueprint(avisos_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(treinos_bp)

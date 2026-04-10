@@ -17,7 +17,7 @@ def register():
         nome = form.nome.data
         email = form.email.data.lower()
         senha_hash = generate_password_hash(form.senha.data)
-        role = form.user_role
+        role = form.user_role.data
 
         # Verifica se o email já existe
         if User.query.filter_by(usr_email=email).first():

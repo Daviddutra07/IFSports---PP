@@ -37,7 +37,7 @@
         <div class="nav-links nav-logged">
             <a href="">HOME</a>
             <a href="{{ url_for('treinos.listar') }}">TREINOS</a>
-            <a href="">RANKING</a>
+            <a href="{{ url_for('rankings.listar') }}">RANKING</a>
             <a href="{{ url_for('avisos.listar' )}}">AVISOS</a>
             <a href="{{ url_for('usuarios.perfil', id=current_user.usr_id) }}">PERFIL</a>
             <form method="POST" action="{{ url_for('auth.logout') }}" class="d-inline">
@@ -51,7 +51,7 @@
                 <li> <a href="#" id="closeSidebar">Fechar</a> </li>
                 <li> <a href="">HOME</a> </li>
                 <li> <a href="{{ url_for('treinos.listar') }}">TREINOS</a></li>
-                <li> <a href="">RANKING</a> </li>
+                <li> <a href="{{ url_for('rankings.listar') }}">RANKING</a> </li>
                 <li> <a href="{{ url_for('avisos.listar' )}}">AVISOS</a> </li>
                 <li> <a href="{{ url_for('usuarios.perfil', id=current_user.usr_id) }}">PERFIL</a> </li>    
                 <li>

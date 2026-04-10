@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block titulo %}Rankings - IFSports{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/rankings.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+<main class="ranking-page">
+    <header class="ranking-header">
+        <h1>Rankings</h1>
+        <p>Confira a classificação por pontos no geral ou por modalidade.</p>
+    </header>
+
+    <section class="ranking-section">
+        <div class="section-topo">
+            <div>
+                <h2>
+                    {% if modalidade_selecionada %}
+                        Ranking - {{ modalidade_selecionada.mod_nome }}
+                    {% else %}
+                        Ranking Geral
+                    {% endif %}
+                </h2>
+
+                <span class="section-info">
+                    {% if modalidade_selecionada %}
+                        Exibindo apenas os alunos desta modalidade.
+                    {% else %}
+                        Exibindo todos os alunos no ranking geral.
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="ranking-filtro">
+                <form method="GET">
+                    <label for="modalidade">Filtrar por:</label>
+                    <select name="modalidade" id="modalidade" onchange="this.form.submit()">
+                        <option value="">Ranking Geral</option>
+
+                        {% for m in modalidades %}
+                            <option value="{{ m.mod_id }}"
+                                {% if modalidade_id == m.mod_id %}selected{% endif %}>
+                                {{ m.mod_nome }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </div>
+        </div>
+
+        {% if exibir %}
+            <div class="ranking-card">
+                <div class="ranking-tabela-container"> 
+                    <table class="ranking-tabela">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Aluno</th>
+
+                                {% if not modalidade_selecionada %}
+                                    <th>Modalidade</th>
+                                {% endif %}
+
+                                <th>Pontos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for aluno in ranking %}
+                                <tr class="
+                                    {% if loop.index <= 3 %}
+                                        top-{{ loop.index }}
+                                    {% elif loop.index <= 10 %}
+                                            top-10
+                                    {% elif loop.index <= 20 %}
+                                        top-20
+                                    {% endif %}
+                                    {% if aluno.usr_id == current_user.usr_id %} linha-usuario {% endif %}
+                                ">
+                                    <td>
+                                        {% if loop.index == 1 %}
+                                            🥇
+                                        {% elif loop.index == 2 %}
+                                            🥈
+                                        {% elif loop.index == 3 %}
+                                            🥉
+                                        {% else %}
+                                            {{ loop.index }}
+                                        {% endif %}
+                                    </td>
+
+                                    <td class="coluna-aluno">
+                                        <img class="foto-ranking" src="{{ url_for('static', filename=aluno.usr_img) }}" alt="Foto de perfil de {{ aluno.usr_nome }}">
+                                    
+                                        <div class="aluno-info">
+                                            <a class="link-perfil" href="{{ url_for('usuarios.perfil', id=aluno.usr_id) }}">
+                                                {{ aluno.usr_nome }}
+                                            </a>
+                                        
+                                            {% if aluno.usr_id == current_user.usr_id %}
+                                                <span class="voce-badge">(Você)</span>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+
+                                    {% if not modalidade_selecionada %}
+                                        <td>
+                                            {{ aluno.modalidade.mod_nome if aluno.modalidade else "Sem modalidade" }}
+                                        </td>
+                                    {% endif %}
+
+                                    <td>{{ aluno.usr_pontos }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% else %}
+            <div class="ranking-vazio">
+                <p>
+                    {% if modalidade_selecionada %}
+                        Esta modalidade ainda não possui o mínimo de 10 participantes para exibir o ranking.
+                    {% else %}
+                        O ranking geral só é exibido quando houver pelo menos 10 participantes.
+                    {% endif %}
+                </p>
+            </div>
+        {% endif %}
+    </section>
+</main>
+{% endblock %}
