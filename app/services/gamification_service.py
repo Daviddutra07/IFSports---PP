@@ -3,7 +3,6 @@ from app.models.frequencia import Frequencia
 from app.extensions import db
 from sqlalchemy import func
 from app.models.conquistas import Conquista, UsuarioConquista
-from app.extensions import db
 
 TIER_CONFIG = {
     "normal": {
@@ -18,7 +17,6 @@ TIER_CONFIG = {
         "borda": "#f88d00",
         "tier_cor": "#424242"
     },
-
     "bronze": {
         "icone": "🥉",
         "cor": "#cd8032d4",
@@ -58,16 +56,12 @@ def remover_pontos(usuario_id, pontos):
 def calcular_nivel(pontos):
     if pontos >= 1100:
         return 5, "Atleta Profissional"
-
     elif pontos >= 750:
         return 4, "Atleta de Alto Nível"
-
     elif pontos >= 450:
         return 3, "Atleta Competidor"
-
     elif pontos >= 200:
         return 2, "Atleta Dedicado"
-
     else:
         return 1, "Atleta Amador"
 
@@ -80,9 +74,17 @@ def calcular_media(usuario_id):
 
     return round(media, 2) if media else None
 
-def verificar_conquistas(user_id):
 
-    conquistas = Conquista.query.all()
+
+def verificar_conquistas(user_id):
+    houve_nova = False
+
+    # ordena para as lendárias ficarem por último
+    conquistas = (
+        Conquista.query
+        .order_by(Conquista.cnq_tier_valor.asc(), Conquista.cnq_id.asc())
+        .all()
+    )
 
     # presenças
     presencas = db.session.query(func.count(Frequencia.frq_id)).filter(
@@ -107,7 +109,7 @@ def verificar_conquistas(user_id):
     total_avaliacoes = avaliacoes[0] or 0
     media_notas = float(avaliacoes[1] or 0)
 
-    # nota perfeita (calculada uma vez)
+    # nota perfeita
     nota_perfeita = db.session.query(Frequencia.frq_id).filter(
         Frequencia.frq_aluno_id == user_id,
         Frequencia.frq_aluno_nota == 5
@@ -118,7 +120,14 @@ def verificar_conquistas(user_id):
     pontos = usuario.usr_pontos
 
     # ranking
-    ranking = db.session.query(User.usr_id).order_by(User.usr_pontos.desc()).all()
+    ranking = (
+        db.session.query(User.usr_id, User.usr_nome)
+        .filter(User.usr_tipo == "aluno")
+        .order_by(User.usr_pontos.desc(), User.usr_nome.asc())
+        .all()
+    )
+
+    total_participantes_ranking = len(ranking)
 
     posicao = None
     for i, u in enumerate(ranking, start=1):
@@ -127,8 +136,8 @@ def verificar_conquistas(user_id):
             break
 
     for conquista in conquistas:
-
         desbloquear = False
+
         if conquista.cnq_tipo == "inscricao":
             if inscricoes >= conquista.cnq_meta:
                 desbloquear = True
@@ -136,7 +145,6 @@ def verificar_conquistas(user_id):
         elif conquista.cnq_tipo == "presenca":
             if presencas >= conquista.cnq_meta:
                 desbloquear = True
-
 
         elif conquista.cnq_tipo == "primeira_avaliacao":
             if total_avaliacoes >= 1:
@@ -147,7 +155,10 @@ def verificar_conquistas(user_id):
                 desbloquear = True
 
         elif conquista.cnq_tipo == "media":
-            if total_avaliacoes >= 3 and media_notas >= conquista.cnq_meta:
+            # elite esportiva agora só com no mínimo 10 avaliações
+            minimo_avaliacoes = 10 if conquista.cnq_nome == "Elite esportiva!" else 3
+
+            if total_avaliacoes >= minimo_avaliacoes and media_notas >= conquista.cnq_meta:
                 desbloquear = True
 
         elif conquista.cnq_tipo == "pontos":
@@ -155,19 +166,23 @@ def verificar_conquistas(user_id):
                 desbloquear = True
 
         elif conquista.cnq_tipo == "ranking":
-            if posicao and posicao <= conquista.cnq_meta:
+            # só analisa ranking se houver ao menos 10 participantes
+            if total_participantes_ranking >= 10 and posicao and posicao <= conquista.cnq_meta:
                 desbloquear = True
 
         if desbloquear:
-            conceder_conquista(user_id, conquista)
+            concedida = conceder_conquista(user_id, conquista)
+            if concedida:
+                houve_nova = True
+
+    if houve_nova:
+        verificar_conquistas(user_id)
 
 def conceder_conquista(user_id, conquista):
-
     existe = UsuarioConquista.query.filter_by(
         usc_usr_id=user_id,
         usc_cnq_id=conquista.cnq_id
     ).first()
-
     if existe:
         return False
 
@@ -175,11 +190,8 @@ def conceder_conquista(user_id, conquista):
         usc_usr_id=user_id,
         usc_cnq_id=conquista.cnq_id
     )
-
     db.session.add(nova)
 
-    # bônus da conquista
     usuario = User.query.get(user_id)
     usuario.usr_pontos += conquista.cnq_pontos_bonus
-
     return True

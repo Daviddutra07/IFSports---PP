@@ -46,8 +46,14 @@
 
 {% block scripts %}
 <script>
+    socket.emit("entrar_pagina_treinos");
+
     socket.on("atualizar_treinos", function(){
-        location.reload(); 
+        location.reload();
+    });
+
+    window.addEventListener("beforeunload", function () {
+        socket.emit("sair_pagina_treinos");
     });
 </script>
 {% endblock %}

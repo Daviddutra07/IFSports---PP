@@ -6,3 +6,5 @@ __pycache__/
 
 #Ignorar fotos enviadas ao sistema
 app/static/uploads/
+
+seed.py

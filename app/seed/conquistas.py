@@ -70,10 +70,10 @@ def inserir_conquistas():
         ),
 
         Conquista(
-            cnq_nome="Entrou no ranking!",
-            cnq_descricao="Apareça no ranking de pontuação.",
+            cnq_nome="Entrou no Top 20!",
+            cnq_descricao="Fique entre os 20 primeiros do ranking de pontuação.",
             cnq_tipo="ranking",
-            cnq_meta=9999,
+            cnq_meta=20,
             cnq_pontos_bonus=10,
             cnq_tier="bronze",
             cnq_tier_valor=3
@@ -181,7 +181,7 @@ def inserir_conquistas():
 
         Conquista(
             cnq_nome="Elite esportiva!",
-            cnq_descricao="Mantenha média de notas maior ou igual a 4.5 (mínimo 3 avaliações).",
+            cnq_descricao="Mantenha média de notas maior ou igual a 4.5 (mínimo 10 avaliações).",
             cnq_tipo="media",
             cnq_meta=4.5,
             cnq_pontos_bonus=35,
