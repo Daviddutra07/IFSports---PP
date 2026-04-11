@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block titulo %}Notificações - IFSports{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/notificacoes.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+<main class="notificacoes-page">
+    <div class="header">
+        <div>
+            <h1>Notificações</h1>
+            <p>Acompanhe atualizações importantes da sua conta e dos seus treinos.</p>
+        </div>
+
+        {% if notificacoes %}
+        <form method="POST" action="{{ url_for('notificacoes.marcar_todas_como_lidas') }}">
+            <button type="submit" class="marcar-todas">Marcar todas como lidas</button>
+        </form>
+        {% endif %}
+    </div>
+
+    {% if notificacoes %}
+        <section class="lista-notificacoes">
+            {% for notificacao in notificacoes %}
+                <article class="notificacao {% if not notificacao.not_lida %}nao-lida{% endif %}">
+                    <div class="notificacao-topo">
+                        <div>
+                            <h2>{{ notificacao.not_titulo }}</h2>
+                            <small>
+                                {{ notificacao.not_created_at.strftime('%d/%m/%Y às %H:%M') }}
+                            </small>
+                        </div>
+
+                        {% if not notificacao.not_lida %}
+                            <span class="badge">Nova</span>
+                        {% endif %}
+                    </div>
+
+                    {% if notificacao.not_descricao %}
+                        <p>{{ notificacao.not_descricao }}</p>
+                    {% endif %}
+
+                    <div class="notificacao-acoes">
+                        {% if not notificacao.not_lida %}
+                            <button 
+                                class="marcar-lida"
+                                onclick="marcarComoLida({{ notificacao.not_id }}, this)">
+                                Marcar como lida
+                            </button>
+                        {% endif %}
+
+                        {% if notificacao.not_link %}
+                            <button 
+                                class="marcar-lida"
+                                onclick="abrirNotificacao({{ notificacao.not_id }}, '{{ notificacao.not_link }}', this)">
+                                Abrir
+                            </button>
+                        {% endif %}
+
+
+                    </div>
+                </article>
+            {% endfor %}
+        </section>
+    {% else %}
+        <section class="sem-notificacoes">
+            <p>Você não possui notificações no momento.</p>
+        </section>
+    {% endif %}
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function atualizarUI(notificacao, botao) {
+    if (!notificacao) return;
+
+    notificacao.classList.remove("nao-lida");
+
+    const badge = notificacao.querySelector(".badge");
+    if (badge) badge.remove();
+
+    const botaoLida = notificacao.querySelector(".marcar-lida");
+    if (botaoLida) botaoLida.remove();
+}
+
+
+function marcarComoLida(id, botao) {
+    fetch(`/notificacoes/${id}/ler`, {
+        method: "POST"
+    })
+    .then(response => {
+        if (!response.ok) throw new Error("Erro ao marcar como lida");
+        return response.json();
+    })
+    .then(data => {
+        if (data.sucesso) {
+            const notificacao = botao.closest(".notificacao");
+            atualizarUI(notificacao, botao);
+        }
+    })
+    .catch(err => console.error(err));
+}
+
+
+function abrirNotificacao(id, link, botao) {
+    const notificacao = botao.closest(".notificacao");
+
+    fetch(`/notificacoes/${id}/ler`, {
+        method: "POST"
+    })
+    .then(() => {
+        atualizarUI(notificacao, botao);
+
+        setTimeout(() => {
+            window.location.href = link;
+        }, 100);
+    })
+    .catch(err => {
+        console.error(err);
+        window.location.href = link; 
+    });
+}
+</script>
+{% endblock %}

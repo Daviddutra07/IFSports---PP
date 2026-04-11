@@ -111,7 +111,7 @@
                     <tr data-aluno-id="{{ participante.aluno.usr_id }}">
                         <td class="usr_foto">
                             <img src="{{ url_for('static', filename=participante.aluno.usr_img) }}" alt="Foto de perfil">
-                            <a href="{{ url_for('usuarios.perfil', id=participante.aluno.usr_id) }}">
+                            <a href="{{ url_for('usuarios.perfil', id=participante.aluno.usr_id) }}" class="link-perfil">
                                 {{ participante.aluno.usr_nome }}
                             </a>
                         </td>

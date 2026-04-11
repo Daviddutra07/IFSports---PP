@@ -10,7 +10,7 @@ from app.models.treino_ocorrencia import TreinoOcorrencia
 from app.models.treinos import Treino
 from app.models.frequencia import Frequencia
 from app.controllers.avisos.forms import AvisoForm
-
+from app.services.notificacao_service import criar_notificacao_por_publico
 
 avisos_bp = Blueprint("avisos",__name__,url_prefix="/avisos",template_folder="templates")
 
@@ -101,6 +101,44 @@ def criar():
 
         db.session.add(aviso)
         db.session.commit()
+
+        if aviso.avs_treino_id:
+            criar_notificacao_por_publico(
+                publico="treino",
+                tipo="aviso",
+                titulo=f"Novo Aviso - {aviso.avs_titulo}",
+                descricao=aviso.avs_mensagem,
+                link=url_for("avisos.listar"),
+                ocorrencia_id=aviso.treino.ocorrencia_aberta.tro_id if aviso.treino and aviso.treino.ocorrencia_aberta else None,
+                referencia_id=aviso.avs_id,
+                referencia_tipo="aviso",
+                expira_em=aviso.avs_expira_em + time
+            )
+
+        elif aviso.avs_modalidade_id:
+            criar_notificacao_por_publico(
+                publico="modalidade",
+                tipo="aviso",
+                titulo=aviso.avs_titulo,
+                descricao=aviso.avs_mensagem,
+                link=url_for("avisos.listar"),
+                modalidade_id=aviso.avs_modalidade_id,
+                referencia_id=aviso.avs_id,
+                referencia_tipo="aviso",
+                expira_em=aviso.avs_expira_em
+            )
+
+        else:
+            criar_notificacao_por_publico(
+                publico="global",
+                tipo="aviso",
+                titulo=aviso.avs_titulo,
+                descricao=aviso.avs_mensagem,
+                link=url_for("avisos.listar"),
+                referencia_id=aviso.avs_id,
+                referencia_tipo="aviso",
+                expira_em=aviso.avs_expira_em
+            )
 
         flash("Aviso criado com sucesso.", "success")
         return redirect(url_for("avisos.listar"))

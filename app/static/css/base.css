@@ -72,6 +72,26 @@ nav {
     font-weight: 600;
 }
 
+.notificacao-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 1.4rem;
+}
+
+.notificacao-bolinha {
+    position: absolute;
+    top: 2px;
+    right: 0px;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
 .nav-links a::after {
     content: '';
     position: absolute;

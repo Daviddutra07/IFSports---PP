@@ -205,7 +205,10 @@ main h2 {
     text-decoration: none;
 }
 
-
+.link-perfil:hover {
+    color: var(--verde-principal);
+    text-decoration: underline;
+}
 
 @media (max-width: 768px) {
 

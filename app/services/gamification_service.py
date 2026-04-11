@@ -3,6 +3,7 @@ from app.models.frequencia import Frequencia
 from app.extensions import db
 from sqlalchemy import func
 from app.models.conquistas import Conquista, UsuarioConquista
+from app.services.notificacao_service import criar_notificacao_usuario
 
 TIER_CONFIG = {
     "normal": {
@@ -183,6 +184,7 @@ def conceder_conquista(user_id, conquista):
         usc_usr_id=user_id,
         usc_cnq_id=conquista.cnq_id
     ).first()
+
     if existe:
         return False
 
@@ -194,4 +196,17 @@ def conceder_conquista(user_id, conquista):
 
     usuario = User.query.get(user_id)
     usuario.usr_pontos += conquista.cnq_pontos_bonus
+
+    criar_notificacao_usuario(
+        usuario_id=user_id,
+        tipo="conquista",
+        titulo="Nova conquista desbloqueada!",
+        descricao=f"Você conquistou: {conquista.cnq_nome}.",
+        link=f"/usuarios/conquistas/{user_id}",
+        publico="usuario",
+        referencia_id=conquista.cnq_id,
+        referencia_tipo="conquista",
+        commit=False
+    )
+
     return True
