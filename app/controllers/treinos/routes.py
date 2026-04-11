@@ -10,6 +10,7 @@ from app.controllers.treinos.forms import TreinoCheckIn, TreinoExcluir, TreinoFo
 from app.models.modalidades import Modalidade
 from app.decorators.auth import professor_required
 from app.services.gamification_service import adicionar_pontos, remover_pontos, verificar_conquistas
+from app.services.notificacao_service import criar_notificacao_por_publico, criar_notificacao_usuario
 
 treinos_bp = Blueprint('treinos', __name__, url_prefix='/treinos', template_folder='templates/treinos')
 
@@ -55,6 +56,15 @@ def criar():
 
         db.session.add(ocorrencia)
         db.session.commit()
+
+        criar_notificacao_por_publico(
+            publico="modalidade", tipo="treino_criado", titulo="Novo treino disponível",
+            descricao=(
+                f"Um novo treino de {treino.modalidade.mod_nome} foi criado: "
+                f"{treino.trn_nome}, em {ocorrencia.tro_data.strftime('%d/%m às %H:%M')}."
+            ),
+            link=url_for("treinos.listar"),
+            modalidade_id=treino.trn_mod_id,referencia_id=treino.trn_id,referencia_tipo="treino")
 
         socketio.emit("atualizar_treinos", room="alunos")
         flash("Treino criado com sucesso!", "success")
@@ -110,6 +120,12 @@ def editar(id):
 
         db.session.commit()
 
+        if ocorrencia and data_antiga != ocorrencia.tro_data:
+            criar_notificacao_por_publico(publico="treino",tipo="treino_alterado",titulo="Treino alterado",
+                descricao=f"O treino {treino.trn_nome} teve sua data ou horário alterado.",
+                link=url_for("treinos.detalhes", ocorrencia_id=ocorrencia.tro_id),
+                ocorrencia_id=ocorrencia.tro_id, referencia_id=treino.trn_id, referencia_tipo="treino")
+
         flash("Treino editado com sucesso!", "success")
         socketio.emit("atualizar_treinos", room="alunos")
 
@@ -127,6 +143,15 @@ def remover(id):
         treino.trn_deleted_at = datetime.now()
         treino.trn_ativo = False
         db.session.commit()
+
+        ocorrencia = obter_ocorrencia_aberta(treino.trn_id)
+
+        if ocorrencia:
+            criar_notificacao_por_publico( publico="treino", tipo="treino_cancelado", titulo="Treino cancelado",
+                descricao=f"O treino {treino.trn_nome} foi cancelado.",
+                link=url_for("treinos.listar"),
+                ocorrencia_id=ocorrencia.tro_id, referencia_id=treino.trn_id, referencia_tipo="treino")
+
         flash("Treino removido com sucesso!", "success")
         socketio.emit("atualizar_treinos", room="alunos")
     except Exception as e:
@@ -279,6 +304,15 @@ def validar_frequencias(ocorrencia_id):
 
             if status == "presente":
                 adicionar_pontos(frequencia.aluno.usr_id, 10 + (int(nota) if nota else 0))
+
+            criar_notificacao_usuario(usuario_id=frequencia.aluno.usr_id,tipo="validacao",titulo="Treino validado",
+                    descricao=(
+                        f"Sua participação no treino {treino.trn_nome} foi registrada como "
+                        f"{'presença' if status == 'presente' else 'ausência'}."
+                    ),
+                    link=url_for("usuarios.historico", id=frequencia.aluno.usr_id),
+                    publico="usuario", referencia_id=ocorrencia.tro_id, referencia_tipo="ocorrencia", commit=False
+                )
 
             verificar_conquistas(frequencia.aluno.usr_id)
 

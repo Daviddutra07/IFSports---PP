@@ -1,0 +1,243 @@
+main.notificacoes-page {
+    min-height: 90vh;
+    padding: 24px 70px;
+    background-color: var(--fundo-claro);
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* HEADER */
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    padding: 14px 20px;
+    border-bottom: 0.25px solid rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 2.4rem;
+    font-weight: bolder;
+    color: var(--verde-principal);
+    margin: 0;
+}
+
+.header p {
+    margin-top: 6px;
+    font-size: 14px;
+    color: #4f4f4f;
+    font-weight: 500;
+}
+
+/* BOTÃO MARCAR TODAS */
+
+.marcar-todas {
+    border: none;
+    background: var(--verde-principal);
+    color: white;
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 9px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    cursor: pointer;
+}
+
+.marcar-todas:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+}
+
+/* LISTA */
+
+.lista-notificacoes {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.lista-notificacoes{
+    width: min(750px, 92%);
+    margin: 0 auto;
+    padding: 0;
+}
+
+/* CARD */
+
+.notificacao {
+    background: #ffffff;
+    border: 1px solid var(--verde-secundario);
+    border-radius: 12px;
+    padding: 16px 18px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    transition: 0.2s ease;
+}
+
+.notificacao:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 14px rgba(0,0,0,0.10);
+}
+
+/* NÃO LIDA */
+
+.notificacao.nao-lida {
+    border-left: 5px solid var(--verde-secundario);
+    background: #f8fff9;
+}
+
+/* TOPO */
+
+.notificacao-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.notificacao-topo h2 {
+    font-size: 1.1rem;
+    color: var(--verde-principal);
+    font-weight: 700;
+    margin: 0 0 4px 0;
+    word-break: break-word;
+}
+
+.notificacao-topo small {
+    color: #666;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* BADGE */
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #f7fff8;
+    color: var(--verde-principal);
+    border: 1px solid var(--verde-secundario);
+    border-radius: 999px;
+    padding: 5px 10px;
+    font-size: 11.5px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* DESCRIÇÃO */
+
+.notificacao p {
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--verde-secundario);
+    font-size: 14px;
+    background-color: #ffffff;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    margin: 0 0 12px 0;
+    color: #222;
+    font-weight: 500;
+    line-height: 1.45;
+    white-space: pre-line;
+}
+
+.notificacao p {
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    background: transparent;
+}
+
+/* AÇÕES */
+
+.notificacao-acoes {
+    border-top: 1px solid rgba(0,0,0,0.08);
+    padding-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.marcar-lida {
+    border: none;
+    background: var(--verde-principal);
+    color: white;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.marcar-lida:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+}
+
+/* ESTADO VAZIO */
+
+.sem-notificacoes {
+    background: #ffffff;
+    border: 1px solid var(--verde-secundario);
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--verde-principal);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 768px) {
+    main.notificacoes-page {
+        padding: 18px 16px;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 12px 8px;
+    }
+
+    .header h1 {
+        font-size: 1.9rem;
+    }
+
+    .notificacao {
+        padding: 14px;
+    }
+
+    .notificacao-topo {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .badge {
+        align-self: flex-start;
+    }
+
+    .notificacao-acoes {
+        justify-content: stretch;
+    }
+
+    .marcar-lida {
+        width: 100%;
+        text-align: center;
+    }
+
+    .marcar-todas {
+        width: 100%;
+        text-align: center;
+    }
+}

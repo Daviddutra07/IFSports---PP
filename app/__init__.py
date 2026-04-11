@@ -7,6 +7,7 @@ from flask_socketio import join_room,leave_room
 
 from app.config import Config
 from app.extensions import db, login_manager, mail, socketio
+from app.models.notificacoes import Notificacao
 from app.seed.conquistas import inserir_conquistas
 
 load_dotenv()
@@ -72,6 +73,18 @@ def create_app():
     def inject_logout_form():
         from app.controllers.auth.forms import LogoutForm
         return dict(logout_form=LogoutForm())
+    
+    @app.context_processor
+    def inject_notificacoes():
+        tem_notificacoes_nao_lidas = False
+
+        if current_user.is_authenticated:
+            tem_notificacoes_nao_lidas = Notificacao.query.filter_by(
+                not_usr_id=current_user.usr_id,
+                not_lida=False
+            ).first() is not None
+
+        return dict(tem_notificacoes_nao_lidas=tem_notificacoes_nao_lidas)
 
     # Registrar controllers (blueprints)
     from app.controllers.auth.routes import auth_bp
@@ -80,6 +93,7 @@ def create_app():
     from app.controllers.users.routes import usuarios_bp
     from app.controllers.avisos.routes import avisos_bp
     from app.controllers.rankings.routes import rankings_bp
+    from app.controllers.notificacoes.routes import notificacoes_bp
 
     app.register_blueprint(rankings_bp)
     app.register_blueprint(avisos_bp)
@@ -87,6 +101,7 @@ def create_app():
     app.register_blueprint(treinos_bp)
     app.register_blueprint(modalidades_bp)
     app.register_blueprint(usuarios_bp)
+    app.register_blueprint(notificacoes_bp)
 
     with app.app_context():
         db.create_all()
