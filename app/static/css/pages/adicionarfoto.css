@@ -1,0 +1,192 @@
+html,
+body {
+    overflow-y: auto;
+}
+
+main {
+    min-height: 90vh;
+    padding: 30px 20px;
+    background-color: var(--fundo-claro);
+}
+
+hr {
+    margin: 0 auto 30px auto;
+    border: none;
+    height: 1px;
+    background-color: #ddd;
+}
+
+.mural-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.mural-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.mural-header p {
+    color: #555;
+}
+
+.card-form {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    border: 2px solid var(--verde-secundario);
+    box-shadow: 0 10px 25px rgba(126, 217, 87, .15);
+}
+
+.card-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.form-grupo {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-grupo label {
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--verde-principal);
+}
+
+.input-form {
+
+    width:100%;
+
+    padding:12px;
+
+    border:2px solid #e0e0e0;
+
+    border-radius:12px;
+
+    background:#fafafa;
+
+    transition:.2s;
+
+    font-size:1rem;
+
+}
+
+.input-form:focus {
+
+    outline:none;
+
+    border-color:var(--verde-secundario);
+
+    box-shadow:0 0 0 3px rgba(126,217,87,.2);
+
+    background:white;
+
+}
+
+.text-danger {
+    color: #d32f2f;
+    margin-top: 5px;
+    font-size: 13px;
+}
+
+
+.input-form[type="file"] {
+
+    cursor:pointer;
+
+}
+
+
+.input-form[type="file"]::file-selector-button {
+
+    border:none;
+
+    padding:8px 15px;
+
+    margin-right:10px;
+
+    border-radius:10px;
+
+    background:var(--verde-secundario);
+
+    color:white;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+}
+
+.btn-form {
+
+    width:100%;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:999px;
+
+    background:var(--verde-principal);
+
+    color:white;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+
+.preview-container {
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:center;
+
+    margin-top:20px;
+
+}
+
+
+.preview-container img {
+
+    display:block;
+
+    width:300px;
+
+    height:220px;
+
+    object-fit:cover;
+
+    border-radius:15px;
+
+    border:3px solid var(--verde-secundario);
+
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+
+}
+
+.btn-form:hover {
+
+    background:var(--verde-hover);
+
+    transform:translateY(-2px);
+
+}
+
+@media (max-width:768px) {
+
+    .card-form {
+        padding: 25px;
+    }
+
+}

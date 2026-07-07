@@ -32,34 +32,6 @@ header {
 
 .brilho {
     font-size: 18px;
-
-    background: linear-gradient(
-        90deg,
-        #1b5e20 0%,
-        #1b5e20 40%,
-        #ffffff 50%,
-        #1b5e20 60%,
-        #1b5e20 100%
-    );
-
-    background-size: 300%;
-    background-clip: text;
-    -webkit-background-clip: text;
-
-    color: transparent;
-    -webkit-text-fill-color: transparent;
-
-    animation: brilho 10s linear infinite;
-
-}
-
-@keyframes brilho {
-    from {
-        background-position: -150%;
-    }
-    to {
-        background-position: 150%;
-    }
 }
 
 

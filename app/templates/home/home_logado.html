@@ -1,0 +1,485 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Home - IFSports{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/home_logado.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+
+<main class="home-page">
+
+    <!-- COLUNA ESQUERDA -->
+    <section class="coluna esquerda">
+
+        <div class="boas-vindas">
+            <h2>
+                Seja bem-vindo(a), <br>
+                {{ current_user.usr_nome }}!
+            </h2>
+
+            <p>
+                {% if perfil == "aluno" %}
+                    Acompanhe seus treinos, desempenho e conquistas.
+                {% else %}
+                    Gerencie seus treinos e acompanhe suas inscrições.
+                {% endif %}
+            </p>
+        </div>
+
+
+        <div class="card proximos-treinos">
+
+            {% if perfil == "aluno" %}
+
+                <div class="treinos-disponiveis">
+
+                    <h3 class="brilho">
+                        Próximos treinos
+                    </h3>
+
+                    {% if treinos_disponiveis %}
+
+                        <ul>
+                            {% for treino in treinos_disponiveis %}
+                                <li>
+                                    <strong>{{ treino.trn_nome }}</strong><br>
+
+                                    {% if treino.ocorrencia_aberta %}
+                                        {{ treino.ocorrencia_aberta.tro_data.strftime('%d/%m/%Y às %H:%M') }}
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+
+                    {% else %}
+
+                        <p>
+                            Você não possui treinos próximos.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+
+                <a href="{{ url_for('treinos.listar') }}" class="btn-home">
+                    Ver mais detalhes
+                </a>
+
+
+            {% else %}
+
+
+                <h3>
+                    Próximas ocorrências
+                </h3>
+
+
+                {% if proximas_ocorrencias %}
+
+                    <ul>
+
+                        {% for ocorrencia in proximas_ocorrencias %}
+
+                            <li>
+                                <strong>
+                                    {{ ocorrencia.treino.trn_nome }}
+                                </strong><br>
+
+                                {{ ocorrencia.tro_data.strftime('%d/%m/%Y às %H:%M') }}
+                            </li>
+
+                        {% endfor %}
+
+                    </ul>
+
+
+                {% else %}
+
+                    <p>
+                        Você não possui treinos próximos.
+                    </p>
+
+                {% endif %}
+
+
+                <a href="{{ url_for('treinos.listar') }}" class="btn-home">
+                    Ver treinos
+                </a>
+
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+
+
+    <!-- COLUNA CENTRAL -->
+    <section class="coluna centro">
+
+
+        {% if perfil == "aluno" %}
+
+
+            <!-- Indicadores -->
+            <div class="desempenho-grid">
+
+
+                <div class="card mini-card">
+
+                    <h4>
+                        Frequência
+                    </h4>
+
+
+                    {% if current_user.usr_mod_id %}
+
+                        <p>
+                            {{ frequencia_percentual }}%
+                        </p>
+
+                        <small>
+                            {{ treinos_que_foi }}/{{ total_treinos_modalidade }} treinos
+                        </small>
+
+
+                    {% else %}
+
+                        <p>
+                            --
+                        </p>
+
+                        <small>
+                            Defina uma modalidade
+                        </small>
+
+                    {% endif %}
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- Treinos da modalidade -->
+            <div class="card destaque-central">
+
+                <h3>
+                    Treinos da sua modalidade
+                </h3>
+
+
+                {% if treinos_disponiveis %}
+
+                    <ul>
+
+                        {% for treino in treinos_disponiveis %}
+
+                            <li>
+
+                                <strong>
+                                    {{ treino.trn_nome }}
+                                </strong><br>
+
+
+                                {% if treino.ocorrencia_aberta %}
+
+                                    {{ treino.ocorrencia_aberta.tro_data.strftime('%d/%m/%Y às %H:%M') }}
+
+                                {% else %}
+
+                                    Sem ocorrência aberta
+
+                                {% endif %}
+
+                            </li>
+
+                        {% endfor %}
+
+                    </ul>
+
+
+                {% else %}
+
+                    <p>
+                        Não há treinos disponíveis da sua modalidade no momento.
+                    </p>
+
+                {% endif %}
+
+
+            </div>
+
+
+
+
+        {% else %}
+
+
+
+            <!-- Indicadores professor -->
+            <div class="desempenho-grid">
+
+
+                <div class="card mini-card">
+
+                    <h4>
+                        Treinos ativos
+                    </h4>
+
+                    <p>
+                        {{ total_treinos_ativos }}
+                    </p>
+
+                </div>
+
+
+
+                <div class="card mini-card">
+
+                    <h4>
+                        Inscrições abertas
+                    </h4>
+
+                    <p>
+                        {{ total_inscricoes_abertas }}
+                    </p>
+
+                </div>
+
+
+
+                <div class="card mini-card">
+
+                    <h4>
+                        Notificações
+                    </h4>
+
+                    <p>
+                        {{ total_notificacoes_nao_lidas }}
+                    </p>
+
+                </div>
+
+
+            </div>
+
+            {% endif %}
+
+            <!-- Mural -->
+            <div class="card mural-card">
+
+                <h3>
+                    Mural de fotos
+                </h3>
+
+
+                {% if fotos_mural %}
+
+
+                    <div class="mural-grid">
+
+                        {% for foto in fotos_mural %}
+
+
+                            <a href="{{ url_for('mural.mural') }}">
+
+                                <img
+                                    src="{{ url_for('static', filename=foto.mft_img_id) }}"
+                                    alt="{{ foto.mft_legenda }}"
+                                    title="{{ foto.mft_legenda }}"
+                                >
+
+                            </a>
+
+
+                        {% endfor %}
+
+
+                    </div>
+
+
+
+                    <a href="{{ url_for('mural.mural') }}" class="btn-home">
+                        Ver galeria de fotos completa
+                    </a>
+
+
+                {% else %}
+
+
+                    <p>
+                        Nenhuma foto publicada.
+                    </p>
+
+
+                {% endif %}
+
+
+            </div>
+
+    </section>
+
+    <section class="coluna direita">
+
+
+        {% if perfil == "aluno" %}
+
+
+
+            <div class="card conquistas-card">
+
+                <h3>
+                    Minhas conquistas
+                </h3>
+
+
+                {% if conquistas_recentes %}
+
+                    <div class="conquistas-lista">
+
+                        {% for conquista in conquistas_recentes %}
+
+                            <span class="badge-conquista">
+                                {{ conquista.conquista.cnq_nome }}
+                            </span>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                {% else %}
+
+                    <p>
+                        Você ainda não possui conquistas recentes.
+                    </p>
+
+
+                {% endif %}
+
+
+            </div>
+
+
+
+
+            <div class="card ranking-card">
+
+                <h3>
+                    Ranking
+                </h3>
+
+
+                <p>
+
+                    Sua posição atual:
+
+                    <strong>
+
+                        {% if posicao_ranking %}
+                            #{{ posicao_ranking }}
+                        {% else %}
+                            Não classificado
+                        {% endif %}
+
+                    </strong>
+
+                </p>
+
+
+                <a href="{{ url_for('rankings.listar') }}" class="btn-home">
+                    Ver ranking
+                </a>
+
+
+            </div>
+
+
+
+
+            <div class="card perfil-card">
+
+                <h3>
+                    Meu perfil
+                </h3>
+
+
+                <p>
+                    Modalidade:
+                    {{ current_user.modalidade.mod_nome if current_user.modalidade else 'Não definida' }}
+                </p>
+
+
+                <p>
+                    Média de notas:
+                    {{ media_notas }}
+                </p>
+
+
+                <a href="{{ url_for('usuarios.perfil', id=current_user.usr_id) }}" class="btn-home">
+                    Ir para perfil
+                </a>
+
+
+            </div>
+
+
+
+        {% else %}
+
+
+
+            <div class="card perfil-card">
+
+                <h3>
+                    Meu perfil
+                </h3>
+
+
+                <p>
+                    {{ current_user.usr_nome }}
+                </p>
+
+
+                <a href="{{ url_for('usuarios.perfil', id=current_user.usr_id) }}" class="btn-home">
+                    Ir para perfil
+                </a>
+
+
+            </div>
+
+
+
+            <div class="card ranking-card">
+
+                <h3>
+                    Ranking
+                </h3>
+
+
+                <a href="{{ url_for('rankings.listar') }}" class="btn-home">
+                    Ver ranking
+                </a>
+
+
+            </div>
+
+
+
+        {% endif %}
+
+
+    </section>
+
+
+</main>
+
+{% endblock %}

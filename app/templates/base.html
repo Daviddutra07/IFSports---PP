@@ -24,29 +24,60 @@
 <body>
 <nav class="navbar"> 
     <div class="nav-logo">
-        <img src="{{ url_for('static', filename='images/Logo Principal - Sem Fundo - Maior.png') }}" alt="logo"> 
+        <a href="{{ url_for('home.index') }}" class="logo"> <img src="{{ url_for('static', filename='images/Logo Principal - Sem Fundo - Maior.png') }}" alt="Logo - IFSports"> </a>
     </div>
 
     {% if current_user.is_authenticated %}
-        <a href="#" class="toggle-button" id="openSidebar">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-        </a>
-
-        <div class="nav-links nav-logged">
-            <a href="">HOME</a>
-            <a href="{{ url_for('treinos.listar') }}">TREINOS</a>
-            <a href="{{ url_for('rankings.listar') }}">RANKING</a>
-            <a href="{{ url_for('avisos.listar' )}}">AVISOS</a>
-            <a href="{{ url_for('usuarios.perfil', id=current_user.usr_id) }}">PERFIL</a>
-            <a href="{{ url_for('notificacoes.listar') }}" class="nav-icone notificacao-link">
+        <div class="nav-mobile-acoes">
+            <a href="{{ url_for('notificacoes.listar') }}" class="nav-icone notificacao-mobile-link">
                 <i class="bi bi-bell"></i>
-            
+
                 {% if tem_notificacoes_nao_lidas %}
                     <span class="notificacao-bolinha"></span>
                 {% endif %}
             </a>
+
+            <a href="#" class="toggle-button" id="openSidebar">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </a>
+        </div>
+
+        <div class="nav-links nav-logged">
+            <a href="{{ url_for('home.index') }}">HOME</a>
+            <a href="{{ url_for('treinos.listar') }}">TREINOS</a>
+            <a href="{{ url_for('rankings.listar') }}">RANKING</a>
+            <a href="{{ url_for('avisos.listar' )}}">AVISOS</a>
+            <a href="{{ url_for('usuarios.perfil', id=current_user.usr_id) }}">PERFIL</a>
+            <div class="notificacao-wrapper">
+                <button type="button" class="nav-icone notificacao-link" id="toggleNotificacoes">
+                    <i class="bi bi-bell"></i>
+                
+                    <i class="bi bi-chevron-down seta-notificacao"></i>
+
+                    {% if tem_notificacoes_nao_lidas %}
+                        <span class="notificacao-bolinha"></span>
+                    {% endif %}
+                </button>
+            
+                <div class="painel-notificacoes" id="painelNotificacoes">
+                    <div class="painel-header">
+                        <h3>Notificações</h3>
+                        <button type="button" id="fecharPainelNotificacoes">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                
+                    <div class="painel-conteudo" id="listaNotificacoesPainel">
+                        <p class="carregando-notificacoes">Carregando...</p>
+                    </div>
+                
+                    <div class="painel-footer">
+                        <a href="{{ url_for('notificacoes.listar') }}">Ver todas</a>
+                    </div>
+                </div>
+            </div>
             <form method="POST" action="{{ url_for('auth.logout') }}" class="d-inline">
                 {{ logout_form.hidden_tag() }}
                 <button type="submit" class="nav-auth">SAIR</button>
@@ -56,7 +87,7 @@
         <div class="sidebar"> 
             <ul> 
                 <li> <a href="#" id="closeSidebar">Fechar</a> </li>
-                <li> <a href="">HOME</a> </li>
+                <li> <a href="{{ url_for('home.index') }}">HOME</a> </li>
                 <li> <a href="{{ url_for('treinos.listar') }}">TREINOS</a></li>
                 <li> <a href="{{ url_for('rankings.listar') }}">RANKING</a> </li>
                 <li> <a href="{{ url_for('avisos.listar' )}}">AVISOS</a> </li>
@@ -123,4 +154,141 @@
         overlay.addEventListener("click", closeSidebar);
     
     });
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const botao = document.getElementById("toggleNotificacoes");
+    const painel = document.getElementById("painelNotificacoes");
+    const fechar = document.getElementById("fecharPainelNotificacoes");
+    const lista = document.getElementById("listaNotificacoesPainel");
+
+    if (!botao || !painel || !lista) return;
+
+    async function carregarNotificacoes() {
+        lista.innerHTML = `<p class="carregando-notificacoes">Carregando...</p>`;
+
+        try {
+            const response = await fetch("/notificacoes/dropdown");
+            const data = await response.json();
+
+            if (!data.notificacoes || data.notificacoes.length === 0) {
+                lista.innerHTML = `
+                    <div class="painel-vazio">
+                        <p>Você não possui notificações no momento.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            lista.innerHTML = data.notificacoes.map(notificacao => `
+                <article class="item-notificacao ${!notificacao.lida ? 'nao-lida' : ''}">
+                    <div class="item-topo">
+                        <div>
+                            <h4>${notificacao.titulo}</h4>
+                            <small>${notificacao.data}</small>
+                        </div>
+                        ${!notificacao.lida ? `<span class="badge">Nova</span>` : ""}
+                    </div>
+
+                    ${notificacao.descricao ? `<p>${notificacao.descricao}</p>` : ""}
+
+                    <div class="item-acoes">
+                        ${!notificacao.lida ? `
+                            <button type="button" onclick="marcarComoLidaPainel(${notificacao.id}, this)">
+                                Marcar como lida
+                            </button>
+                        ` : ""}
+
+                        ${notificacao.link ? `
+                            <button type="button" onclick="abrirNotificacaoPainel(${notificacao.id}, '${notificacao.link}', this)">
+                                Abrir
+                            </button>
+                        ` : ""}
+                    </div>
+                </article>
+            `).join("");
+        } catch (error) {
+            console.error(error);
+            lista.innerHTML = `<p class="erro-notificacoes">Erro ao carregar notificações.</p>`;
+        }
+    }
+
+    botao.addEventListener("click", async function (e) {
+        e.preventDefault();
+        painel.classList.toggle("ativo");
+        botao.classList.toggle("ativo");    
+
+        if (painel.classList.contains("ativo")) {
+            await carregarNotificacoes();
+        }
+    });
+
+    fechar?.addEventListener("click", function () {
+        painel.classList.remove("ativo");
+        botao.classList.remove("ativo");
+    });
+
+    document.addEventListener("click", function (e) {
+        if (!painel.contains(e.target) && !botao.contains(e.target)) {
+            painel.classList.remove("ativo");
+            botao.classList.remove("ativo");
+        }
+    });
+});
+
+function atualizarItemNotificacao(item) {
+    if (!item) return;
+
+    item.classList.remove("nao-lida");
+
+    const badge = item.querySelector(".badge");
+    if (badge) badge.remove();
+
+    const botoes = item.querySelectorAll(".item-acoes button");
+    botoes.forEach(btn => {
+        if (btn.textContent.trim() === "Marcar como lida") {
+            btn.remove();
+        }
+    });
+
+    atualizarBolinhaNavbar();
+}
+
+function marcarComoLidaPainel(id, botao) {
+    fetch(`/notificacoes/${id}/ler`, { method: "POST" })
+        .then(response => {
+            if (!response.ok) throw new Error("Erro ao marcar como lida");
+            return response.json();
+        })
+        .then(data => {
+            if (data.sucesso) {
+                const item = botao.closest(".item-notificacao");
+                atualizarItemNotificacao(item);
+            }
+        })
+        .catch(err => console.error(err));
+}
+
+function abrirNotificacaoPainel(id, link, botao) {
+    const item = botao.closest(".item-notificacao");
+
+    fetch(`/notificacoes/${id}/ler`, { method: "POST" })
+        .then(() => {
+            atualizarItemNotificacao(item);
+            window.location.href = link;
+        })
+        .catch(err => {
+            console.error(err);
+            window.location.href = link;
+        });
+}
+
+function atualizarBolinhaNavbar() {
+    const aindaTemNaoLida = document.querySelector(".item-notificacao.nao-lida");
+
+    if (!aindaTemNaoLida) {
+        document.querySelectorAll(".notificacao-bolinha").forEach(bolinha => bolinha.remove());
+    }
+}
 </script>

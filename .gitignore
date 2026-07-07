@@ -8,3 +8,5 @@ __pycache__/
 app/static/uploads/
 
 seed.py
+seed_historico_aluno.py
+seed2.py

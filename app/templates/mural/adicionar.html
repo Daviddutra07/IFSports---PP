@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Adicionar Foto - IFSports{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/adicionarfoto.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+
+<main>
+    <div class="breadcrumb">
+        <a href="{{ url_for('home.index') }}">Início</a> >
+        <a href="{{ url_for('mural.mural') }}">Mural</a> >
+        <span>Adicionar Foto</span>
+    </div>
+    <hr>
+    <header class="mural-header">
+
+        <h1 class="brilho">
+            Adicionar Foto
+        </h1>
+
+        <p>
+            Compartilhe momentos dos treinos e competições.
+        </p>
+
+    </header>
+    <div class="card-form">
+        <form method="POST" enctype="multipart/form-data">
+
+            {{ form.hidden_tag() }}
+            <div class="form-grupo">
+
+                {{ form.imagem.label }}
+
+                {{ form.imagem(class="input-form", id="imagem-input") }}
+
+
+                {% for erro in form.imagem.errors %}
+
+                    <div class="text-danger">
+                        {{ erro }}
+                    </div>
+
+                {% endfor %}
+
+
+            </div>
+
+            <div class="preview-container">
+
+                <img 
+                    id="preview"
+                    src=""
+                    alt="Pré-visualização da imagem"
+                >
+
+            </div>
+
+            <div class="form-grupo">
+
+                {{ form.legenda.label }}
+
+                {{ form.legenda(class="input-form") }}
+
+
+                {% for erro in form.legenda.errors %}
+
+                    <div class="text-danger">
+                        {{ erro }}
+                    </div>
+
+                {% endfor %}
+            </div>
+            {{ form.submit(class="btn-form") }}
+
+        </form>
+    </div>
+</main>
+
+
+
+<script>
+
+const inputImagem = document.getElementById("imagem-input");
+const preview = document.getElementById("preview");
+
+
+inputImagem.addEventListener("change", function() {
+
+    const arquivo = this.files[0];
+
+
+    if (arquivo) {
+
+        preview.src = URL.createObjectURL(arquivo);
+
+        preview.style.display = "block";
+
+    }
+
+});
+
+
+</script>
+
+
+{% endblock %}

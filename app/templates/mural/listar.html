@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Mural de Fotos - IFSports{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/mural.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+<main>
+
+<header class="mural-header">
+
+    <h1 class="brilho">Mural de Fotos</h1>
+
+    <p>
+        Reviva os melhores momentos dos treinos, competições e eventos esportivos.
+    </p>
+
+    {% if current_user.usr_tipo == "professor" %}
+        <div class="new-foto">
+            <a href="{{ url_for('mural.adicionar_foto') }}">
+                ADICIONAR FOTO
+            </a>
+        </div>
+    {% endif %}
+
+</header>
+
+<section class="mural-container">
+
+{% for foto in fotos %}
+
+<div class="card-foto">
+
+    <img
+        src="{{ url_for('static', filename=foto.mft_img_id) }}"
+        alt="{{ foto.mft_legenda }}"
+    >
+
+    <div class="foto-body">
+
+        <h3 class="legenda">{{ foto.mft_legenda }}</h3>
+
+        <div class="foto-info">
+
+            <span>
+                <i class="bi bi-person"></i>
+
+                {{ foto.usuario.usr_nome }}
+
+            </span>
+
+            <span>
+
+                <i class="bi bi-calendar-event"></i>
+
+                {{ foto.mft_created_at.strftime("%d/%m/%Y") }}
+
+            </span>
+
+        </div>
+
+        {% if current_user.usr_tipo == "professor" %}
+
+        <div class="acoes">
+
+            <a
+                class="editar"
+                href="{{ url_for('mural.editar_foto', foto_id=foto.mft_id) }}"
+            >
+
+                <i class="bi bi-pencil-fill"></i>
+
+            </a>
+
+            <form
+                action="{{ url_for('mural.excluir_foto', foto_id=foto.mft_id) }}"
+                method="POST"
+            >
+
+                <button class="excluir">
+
+                    <i class="bi bi-trash-fill"></i>
+
+                </button>
+
+            </form>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% else %}
+
+<div class="no-fotos">
+
+    <h2>Nenhuma foto publicada.</h2>
+
+    <p>O mural ainda está vazio.</p>
+
+</div>
+
+{% endfor %}
+
+</section>
+
+</main>
+{% endblock %}

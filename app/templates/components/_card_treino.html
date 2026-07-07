@@ -4,7 +4,7 @@
     </div>
 
     <div class="card-conteudo">
-        <h3 class="treino-titulo">{{ treino.trn_nome }}</h3>
+        <h3 class="treino-titulo brilho">{{ treino.trn_nome }}</h3>
 
         <p class="descricao">
             {{ treino.trn_descricao[:120] if treino.trn_descricao else "" }}{% if treino.trn_descricao and treino.trn_descricao|length > 120 %}...{% endif %}

@@ -112,7 +112,7 @@ def criar():
                 ocorrencia_id=aviso.treino.ocorrencia_aberta.tro_id if aviso.treino and aviso.treino.ocorrencia_aberta else None,
                 referencia_id=aviso.avs_id,
                 referencia_tipo="aviso",
-                expira_em=aviso.avs_expira_em + time
+                expira_em=aviso.avs_expira_em
             )
 
         elif aviso.avs_modalidade_id:

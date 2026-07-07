@@ -1,0 +1,343 @@
+html, main {
+    height: 100%;
+    overflow-y: hidden;
+}
+
+.home-page {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr 1fr;
+    gap: 24px;
+    height: calc(100vh - 10vh);
+    padding: 24px;
+    margin-top: 10vh;
+    box-sizing: border-box;
+}
+
+.coluna {
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+    margin:0 2px;
+    min-width:0;
+    min-height:0;
+}
+
+.card {
+    background:white;
+    border-radius:18px;
+    padding:22px;
+    border:2px solid var(--verde-secundario);
+    box-shadow:0 10px 25px rgba(126,217,87,.15);
+    overflow: hidden;
+}
+
+.mural-card {
+    min-height:0;
+}
+
+
+.mural-grid {
+    overflow:hidden;
+}
+
+.boas-vindas {
+    color:var(--verde-principal);
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    padding:0 10px;
+    justify-content:center;
+}
+
+
+
+.boas-vindas h2 {
+    font-size:1.5rem;
+}
+
+
+
+.boas-vindas p {
+    font-size:1.1rem;
+}
+
+
+.proximos-treinos {
+    border:3px solid var(--verde-secundario);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    align-items:center;
+}
+
+
+
+.proximos-treinos a {
+    width:50%;
+    text-align:center;
+}
+
+
+
+.treinos-disponiveis {
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+}
+
+
+
+.treinos-disponiveis .brilho {
+    font-size:1.2rem;
+}
+
+
+
+.treinos-disponiveis ul {
+    display:flex;
+    flex-direction:column;
+    gap:7.5px;
+    padding:0;
+}
+
+
+
+.treinos-disponiveis li {
+    list-style:none;
+    text-align:center;
+    color:var(--verde-principal);
+}
+
+
+.desempenho-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:18px;
+}
+
+
+
+.mini-card {
+    text-align:center;
+}
+
+
+.destaque-central {
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+
+
+.destaque-central ul {
+    padding:0;
+}
+
+
+
+.destaque-central li {
+    list-style:none;
+    padding:10px 0;
+}
+
+
+.btn-home {
+
+    margin-top:autoq;
+
+    align-self:center;
+
+    padding:10px 18px;
+
+    border-radius:999px;
+
+    background:var(--verde-principal);
+
+    color:white;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+    transition:.2s;
+
+}
+
+
+
+.btn-home:hover {
+
+    transform:scale(1.05);
+
+}
+
+
+
+.item-aviso + .item-aviso {
+
+    margin-top:16px;
+
+    padding-top:16px;
+
+    border-top:1px solid #e5e5e5;
+
+}
+
+
+.conquistas-lista {
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:10px;
+
+}
+
+
+
+.badge-conquista {
+
+    background:#f3f4f6;
+
+    border-radius:999px;
+
+    padding:8px 12px;
+
+    font-size:.9rem;
+
+    font-weight:600;
+
+}
+
+
+
+.mural-card {
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+
+
+.mural-grid {
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:12px;
+
+    margin:18px 0;
+
+}
+
+
+
+.mural-grid a {
+
+    text-decoration:none;
+
+}
+
+
+
+.mural-grid img {
+
+    width:100%;
+
+    height:120px;
+
+    object-fit:cover;
+
+    border-radius:10px;
+
+    transition:.2s;
+
+}
+
+
+
+.mural-grid img:hover {
+
+    transform:scale(1.05);
+
+}
+@media(max-width:1100px) {
+
+    html,
+    body {
+        overflow-y:auto;
+    }
+
+
+    .home-page {
+
+        display:flex;
+
+        flex-direction:column;
+
+        height:auto;
+
+        min-height:90vh;
+
+        margin-top:10vh;
+
+    }
+
+
+    .coluna {
+
+        width:100%;
+
+    }
+
+
+    .desempenho-grid {
+
+        grid-template-columns:1fr;
+
+    }
+
+
+    .mural-grid {
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+}
+
+@media(max-width:600px) {
+
+    .home-page {
+
+        padding:15px;
+
+    }
+
+
+    .mural-grid a:nth-child(n+3) {
+            display:none;
+        }
+
+
+    .mural-grid {
+
+            grid-template-columns:repeat(2,1fr);
+
+        }
+
+    }
+
+
+    .proximos-treinos a {
+
+        width:80%;
+
+}
