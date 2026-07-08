@@ -57,7 +57,7 @@ def confirmar_email(token):
         flash(' Conta já confirmada.', 'info')
     else:
         user.usr_confirmed = True
-        user.usr_confirmed_at = datetime.now
+        user.usr_confirmed_at = datetime.now()
         db.session.commit()
         flash('Conta confirmada com sucesso!', 'success')
 
