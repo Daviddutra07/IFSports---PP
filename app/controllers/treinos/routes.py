@@ -20,19 +20,52 @@ def listar():
     page = request.args.get("page", 1, type=int)
     per_page = 6
 
-    query_base = (Treino.query.join(TreinoOcorrencia, TreinoOcorrencia.tro_treino_id == Treino.trn_id).filter(Treino.trn_ativo.is_(True),Treino.trn_deleted_at.is_(None),TreinoOcorrencia.tro_ativo.is_(True),TreinoOcorrencia.tro_validado_em.is_(None)).order_by(TreinoOcorrencia.tro_data.desc()).distinct())
+    modalidades = Modalidade.query.order_by(Modalidade.mod_nome).all()
+
+    query_base = (
+        TreinoOcorrencia.query
+        .join(Treino)
+        .filter(Treino.trn_deleted_at.is_(None))
+    )
 
     if current_user.usr_tipo == "professor":
-        query_base = query_base.filter(Treino.trn_pro_id == current_user.usr_id)
-        treinos_pag = query_base.paginate(page=page, per_page=per_page, error_out=False)
+        query_base = query_base.filter(
+            Treino.trn_pro_id == current_user.usr_id
+        )
+
+    status = request.args.get("status", "atuais")
+    modalidade = request.args.get("modalidade", type=int)
+
+    if status == "atuais":
+        query_base = query_base.filter(
+            Treino.trn_ativo.is_(True),
+            TreinoOcorrencia.tro_ativo.is_(True),
+            TreinoOcorrencia.tro_validado_em.is_(None)
+        )
+
+    elif status == "antigos":
+        query_base = query_base.filter(
+            TreinoOcorrencia.tro_validado_em.is_not(None)
+        )
+
+    elif status == "todos":
+        pass
+
+    if modalidade:
+        query_base = query_base.filter(Treino.trn_mod_id == modalidade)
+
+    query_base = query_base.order_by(TreinoOcorrencia.tro_data.desc())
+
+    treinos_pag = query_base.paginate(page=page,per_page=per_page,error_out=False)
+
+    if current_user.usr_tipo == "professor":
         excluir_form = TreinoExcluir()
 
-        return render_template("treinos/listar.html",treinos_pag=treinos_pag,excluir_form=excluir_form)
+        return render_template("treinos/listar.html",treinos_pag=treinos_pag,excluir_form=excluir_form,status=status,modalidade=modalidade, modalidades=modalidades)
 
-    treinos_pag = query_base.paginate(page=page, per_page=per_page, error_out=False)
     checkin_form = TreinoCheckIn()
 
-    return render_template("treinos/listar.html",treinos_pag=treinos_pag,checkin_form=checkin_form)
+    return render_template("treinos/listar.html",treinos_pag=treinos_pag,checkin_form=checkin_form,status=status,modalidade=modalidade, modalidades=modalidades)
 
 @treinos_bp.route("/criar", methods=["GET", "POST"])
 @professor_required

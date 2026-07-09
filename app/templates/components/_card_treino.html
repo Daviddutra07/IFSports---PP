@@ -1,92 +1,173 @@
+{% set treino_ocorrencia = ocorrencia %}
+{% set treino = ocorrencia.treino %}
+
 <div class="card-treino" id="treino-{{ treino.trn_id }}">
     <div class="card-topo">
         {{ treino.modalidade.mod_nome }}
     </div>
 
     <div class="card-conteudo">
-        <h3 class="treino-titulo brilho">{{ treino.trn_nome }}</h3>
+        <h3 class="treino-titulo brilho">
+            {{ treino.trn_nome }}
+        </h3>
 
         <p class="descricao">
-            {{ treino.trn_descricao[:120] if treino.trn_descricao else "" }}{% if treino.trn_descricao and treino.trn_descricao|length > 120 %}...{% endif %}
+            {{ treino.trn_descricao[:120] if treino.trn_descricao else "" }}
+            {% if treino.trn_descricao and treino.trn_descricao|length > 120 %}...{% endif %}
         </p>
 
         <div class="info-treino">
+
             {% if treino.trn_fixo %}
                 <p>
-                    📅
-                    Toda(o)
+                    📅 Toda(o)
                     {% set dias = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'] %}
                     {{ dias[treino.trn_dia_semana] }}
                 </p>
 
-                {% if treino.trn_horario %}
-                    <p>⏰ {{ treino.trn_horario.strftime('%H:%M') }}</p>
+                <p>
+                    ⏰ {{ treino.trn_horario.strftime('%H:%M') }}
+                </p>
+
+                {% if treino_ocorrencia.ja_validado %}
+
+                    <p>
+                        ✅ Realizado em: {{ treino_ocorrencia.tro_data.strftime('%d/%m/%Y') }}
+                    </p>
+
+                {% else %}
+
+                    <p>
+                        🔥 Próximo: {{ treino_ocorrencia.tro_data.strftime('%d/%m/%Y') }}
+                    </p>
+
                 {% endif %}
 
-                {% if treino.data_exibicao %}
-                    <p>🔥 Próximo: {{ treino.data_exibicao.strftime('%d/%m/%Y') }}</p>
-                {% endif %}
             {% else %}
-                {% if treino.data_exibicao %}
-                    <p>📅 {{ treino.data_exibicao.strftime('%d/%m/%Y') }}</p>
-                    <p>⏰ {{ treino.data_exibicao.strftime('%H:%M') }}</p>
+                {% if treino_ocorrencia.ja_validado %}
+
+                    <p>
+                        ✅ Realizado em: {{ treino_ocorrencia.tro_data.strftime('%d/%m/%Y') }}
+                    </p>
+
+                    <p>
+                        ⏰ {{ treino_ocorrencia.tro_data.strftime('%H:%M') }}
+                    </p>
+
+                {% else %}
+
+                    <p>
+                        📅 {{ treino_ocorrencia.tro_data.strftime('%d/%m/%Y') }}
+                    </p>
+
+                    <p>
+                        ⏰ {{ treino_ocorrencia.tro_data.strftime('%H:%M') }}
+                    </p>
+
                 {% endif %}
+
             {% endif %}
 
             <p>
                 👥
-                <span class="vagas-ocupadas">{{ treino.vagas_ocupadas }}</span>
+                <span class="vagas-ocupadas">
+                    {{ treino_ocorrencia.tro_vagas_ocupadas }}
+                </span>
                 /
-                <span class="vagas-total">{{ treino.trn_quantidade }}</span>
+                <span class="vagas-total">
+                    {{ treino.trn_quantidade }}
+                </span>
                 vagas
             </p>
 
-            {% if (user_tipo or current_user.usr_tipo) == 'aluno' %}
+            {% if current_user.usr_tipo == "aluno" %}
                 <p>👨‍🏫 Prof. {{ treino.professor.usr_nome }}</p>
             {% endif %}
+
         </div>
 
         <div class="card-footer">
+
             <span class="treino">
-                {% if treino.ocorrencia_aberta %}
-                    <a href="{{ url_for('treinos.detalhes', ocorrencia_id=treino.ocorrencia_aberta.tro_id) }}">Detalhes</a>
-                {% else %}
-                    <span>Sem ocorrência</span>
+
+                <a href="{{ url_for('treinos.detalhes', ocorrencia_id=treino_ocorrencia.tro_id) }}">
+                    Detalhes
+                </a>
+
+                {% if current_user.usr_tipo == "aluno" %}
+
+                    {% if not treino_ocorrencia.ja_validado %}
+
+                        {% set fez_checkin =
+                            treino_ocorrencia.frequencias
+                            | selectattr("frq_aluno_id", "equalto", current_user.usr_id)
+                            | list
+                            | length > 0
+                        %}
+
+                        {% if fez_checkin %}
+
+                            <form method="post" action="{{ url_for('treinos.cancelar_checkin', id=treino.trn_id) }}">
+                                {{ checkin_form.hidden_tag() }}
+
+                                <button type="submit" class="btn-cancelar">
+                                    CANCELAR
+                                </button>
+                            </form>
+
+                        {% elif treino_ocorrencia.tro_vagas_ocupadas >= treino.trn_quantidade %}
+
+                            <button class="btn-lotado" disabled>
+                                LOTADO
+                            </button>
+
+                        {% else %}
+
+                            <form method="post"
+                                action="{{ url_for('treinos.checkin', id=treino.trn_id) }}"
+                                id="form-checkin-{{ treino.trn_id }}">
+
+                                {{ checkin_form.hidden_tag() }}
+
+                                <button type="submit" class="btn-checkin">
+                                    INSCRIÇÃO
+                                </button>
+
+                            </form>
+
+                        {% endif %}
+
+                    {% endif %}
+
                 {% endif %}
 
-                {% if (user_tipo or current_user.usr_tipo) == 'aluno' %}
-                    {% if treino.ja_fez_checkin %}
-                        <form method="post" action="{{ url_for('treinos.cancelar_checkin', id=treino.trn_id) }}">
-                            {{ checkin_form.hidden_tag() }}
-                            <button type="submit" class="btn-cancelar">CANCELAR</button>
-                        </form>
-                    {% elif treino.vagas_ocupadas >= treino.trn_quantidade %}
-                        <button class="btn-lotado" disabled>LOTADO</button>
-                    {% else %}
-                        <form method="post" action="{{ url_for('treinos.checkin', id=treino.trn_id) }}" id="form-checkin-{{ treino.trn_id }}">
-                            {{ checkin_form.hidden_tag() }}
-                            <button type="submit" class="btn-checkin">INSCRIÇÃO</button>
-                        </form>
-                    {% endif %}
-                {% endif %}
             </span>
 
-            {% if (user_tipo or current_user.usr_tipo) == "professor" %}
+            {% if current_user.usr_tipo == "professor" %}
+
                 <div class="acoes">
+
                     <span class="editar">
-                        <a href="{{ url_for('treinos.editar', id=treino.trn_id) }}" title="Editar">
+                        <a href="{{ url_for('treinos.editar', id=treino.trn_id) }}">
                             <i class="bi bi-pencil-fill"></i>
                         </a>
                     </span>
 
                     <form method="post" action="{{ url_for('treinos.remover', id=treino.trn_id) }}">
+
                         {{ excluir_form.hidden_tag() }}
-                        <button type="submit" title="Excluir" class="excluir">
+
+                        <button type="submit" class="excluir">
                             <i class="bi bi-trash3"></i>
                         </button>
+
                     </form>
+
                 </div>
+
             {% endif %}
+
         </div>
+
     </div>
 </div>
