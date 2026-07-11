@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, render_template
 from dotenv import load_dotenv
 from flask_login import current_user
 from flask_socketio import join_room,leave_room
@@ -86,6 +86,51 @@ def create_app():
             ).first() is not None
 
         return dict(tem_notificacoes_nao_lidas=tem_notificacoes_nao_lidas)
+
+
+    # Páginas de Erros
+    @app.errorhandler(403)
+    def erro_403(e):
+
+        return render_template(
+            "errors/error.html",
+            codigo=403,
+            titulo="Acesso negado",
+            mensagem="Você não possui permissão para acessar esta página."
+        ), 403
+
+
+    @app.errorhandler(404)
+    def erro_404(e):
+
+        return render_template(
+            "errors/error.html",
+            codigo=404,
+            titulo="Página não encontrada",
+            mensagem="A página que você tentou acessar não existe ou foi removida."
+        ), 404
+
+
+    @app.errorhandler(405)
+    def erro_405(e):
+
+        return render_template(
+            "errors/error.html",
+            codigo=405,
+            titulo="Método não permitido",
+            mensagem="A ação solicitada não pode ser executada nesta página."
+        ), 405
+
+
+    @app.errorhandler(500)
+    def erro_500(e):
+
+        return render_template(
+            "errors/error.html",
+            codigo=500,
+            titulo="Erro interno",
+            mensagem="Ocorreu um erro inesperado. Tente novamente mais tarde."
+        ), 500
 
     # Registrar controllers (blueprints)
     from app.controllers.auth.routes import auth_bp

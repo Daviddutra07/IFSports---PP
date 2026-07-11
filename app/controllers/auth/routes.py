@@ -93,7 +93,7 @@ def login():
         if user.usr_primeiro_login:
             return redirect(url_for("usuarios.concluir") )
 
-        return redirect(url_for('treinos.listar'))
+        return redirect(url_for('home.index'))
     
     return render_template('auth/login.html', form=form)
 

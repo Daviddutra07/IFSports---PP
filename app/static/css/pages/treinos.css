@@ -475,6 +475,72 @@ input[type="submit"]:hover {
     background-color: red;
 }
 
+.info-treino p{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 0;
+    color: #444;
+    font-size: .95rem;
+}
+
+.info-treino i{
+    width: 25px;
+    height: 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+    font-size: 1rem;
+
+    color: white;
+    flex-shrink: 0;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,.12);
+}
+
+/* Dia */
+.bi-calendar-week-fill{
+    background: linear-gradient(135deg,#4facfe,#00c6fb);
+}
+
+/* Horário */
+.bi-alarm-fill{
+    background: linear-gradient(135deg,#6a11cb,#2575fc);
+}
+
+/* Próximo treino */
+.bi-fire{
+    background: linear-gradient(135deg,#ff9966,#ff5e62);
+}
+
+/* Treino realizado */
+.bi-check-square-fill{
+    background: linear-gradient(135deg,#00b09b,#96c93d);
+}
+
+/* Vagas */
+.bi-people-fill{
+    background: linear-gradient(135deg,#43cea2,#185a9d);
+}
+
+/* Professor */
+.bi-person-badge-fill{
+    background: linear-gradient(135deg,#f7971e,#ffd200);
+    color:#444;
+}
+
+.info-treino i{
+    transition: .25s ease;
+}
+
+.card-treino:hover .info-treino i{
+    transform: translateY(-2px) scale(1.08);
+    box-shadow: 0 8px 18px rgba(0,0,0,.18);
+}
+
 .no-treinos {
     grid-column: 1 / -1;
     text-align: center;

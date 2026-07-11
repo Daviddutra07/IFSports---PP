@@ -20,25 +20,25 @@
 
             {% if treino.trn_fixo %}
                 <p>
-                    📅 Toda(o)
+                    <i class="bi bi-calendar-week-fill"></i> Toda(o)
                     {% set dias = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'] %}
                     {{ dias[treino.trn_dia_semana] }}
                 </p>
 
                 <p>
-                    ⏰ {{ treino.trn_horario.strftime('%H:%M') }}
+                    <i class="bi bi-alarm-fill"></i> {{ treino.trn_horario.strftime('%H:%M') }}
                 </p>
 
                 {% if treino_ocorrencia.ja_validado %}
 
                     <p>
-                        ✅ Realizado em: {{ treino_ocorrencia.tro_data.strftime('%d/%m/%Y') }}
+                        <i class="bi bi-check-square-fill"></i> Realizado em: {{ treino_ocorrencia.tro_data.strftime('%d/%m/%Y') }}
                     </p>
 
                 {% else %}
 
                     <p>
-                        🔥 Próximo: {{ treino_ocorrencia.tro_data.strftime('%d/%m/%Y') }}
+                        <i class="bi bi-fire"></i> Próximo: {{ treino_ocorrencia.tro_data.strftime('%d/%m/%Y') }}
                     </p>
 
                 {% endif %}
@@ -47,21 +47,21 @@
                 {% if treino_ocorrencia.ja_validado %}
 
                     <p>
-                        ✅ Realizado em: {{ treino_ocorrencia.tro_data.strftime('%d/%m/%Y') }}
+                        <i class="bi bi-check-square-fill"></i> Realizado em: {{ treino_ocorrencia.tro_data.strftime('%d/%m/%Y') }}
                     </p>
 
                     <p>
-                        ⏰ {{ treino_ocorrencia.tro_data.strftime('%H:%M') }}
+                        <i class="bi bi-alarm-fill"></i> {{ treino_ocorrencia.tro_data.strftime('%H:%M') }}
                     </p>
 
                 {% else %}
 
                     <p>
-                        📅 {{ treino_ocorrencia.tro_data.strftime('%d/%m/%Y') }}
+                        <i class="bi bi-calendar-week-fill"></i> {{ treino_ocorrencia.tro_data.strftime('%d/%m/%Y') }}
                     </p>
 
                     <p>
-                        ⏰ {{ treino_ocorrencia.tro_data.strftime('%H:%M') }}
+                        <i class="bi bi-alarm-fill"></i> {{ treino_ocorrencia.tro_data.strftime('%H:%M') }}
                     </p>
 
                 {% endif %}
@@ -69,7 +69,7 @@
             {% endif %}
 
             <p>
-                👥
+                <i class="bi bi-people-fill"></i>
                 <span class="vagas-ocupadas">
                     {{ treino_ocorrencia.tro_vagas_ocupadas }}
                 </span>
@@ -81,7 +81,7 @@
             </p>
 
             {% if current_user.usr_tipo == "aluno" %}
-                <p>👨‍🏫 Prof. {{ treino.professor.usr_nome }}</p>
+                <p><i class="bi bi-person-badge-fill"></i> Prof. {{ treino.professor.usr_nome }}</p>
             {% endif %}
 
         </div>
@@ -158,7 +158,7 @@
                         {{ excluir_form.hidden_tag() }}
 
                         <button type="submit" class="excluir">
-                            <i class="bi bi-trash3"></i>
+                            <i class="bi bi-trash-fill"></i>
                         </button>
 
                     </form>
