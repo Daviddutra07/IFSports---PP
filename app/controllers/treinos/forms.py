@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired, Length, NumberRange, Optional, Vali
 
 class TreinoForm(FlaskForm):
 
-    trn_nome = StringField("Nome do treino", validators=[DataRequired(message="O nome é obrigatório."), Length(min=3, max=70)])
+    trn_nome = StringField("Nome do treino", validators=[DataRequired(message="O nome é obrigatório."), Length(min=3, max=70, message="O nome deve possuir entre 3 e 70 caracteres.")])
 
     trn_descricao = TextAreaField("Descrição",validators=[Optional()])
 

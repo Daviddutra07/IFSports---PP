@@ -1,6 +1,6 @@
 from datetime import datetime
 from flask import Blueprint, render_template, redirect, session, url_for, flash
-from flask_login import login_user, login_required, logout_user
+from flask_login import current_user, login_user, login_required, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.services.email_service import enviar_email_confirmacao, validar_token
 from app.extensions import db
@@ -65,6 +65,9 @@ def confirmar_email(token):
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return  redirect(url_for('home.index'))
+
     form = LoginForm()
 
     if form.validate_on_submit():

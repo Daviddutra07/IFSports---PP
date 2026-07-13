@@ -107,7 +107,11 @@
 
                         {% if fez_checkin %}
 
-                            <form method="post" action="{{ url_for('treinos.cancelar_checkin', id=treino.trn_id) }}">
+                            <form
+                                method="post"
+                                action="{{ url_for('treinos.cancelar_checkin', id=treino.trn_id) }}"
+                                onsubmit="event.preventDefault(); confirmar('Deseja realmente cancelar sua inscrição neste treino?', () => this.submit());"
+                            >
                                 {{ checkin_form.hidden_tag() }}
 
                                 <button type="submit" class="btn-cancelar">
@@ -153,7 +157,11 @@
                         </a>
                     </span>
 
-                    <form method="post" action="{{ url_for('treinos.remover', id=treino.trn_id) }}">
+                    <form
+                        method="post"
+                        action="{{ url_for('treinos.remover', id=treino.trn_id) }}"
+                        onsubmit="event.preventDefault(); confirmar('Deseja realmente excluir este treino?', () => this.submit());"
+                    >
 
                         {{ excluir_form.hidden_tag() }}
 

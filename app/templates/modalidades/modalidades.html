@@ -1,34 +1,51 @@
 {% extends 'base.html' %}
 
-{% block titulo %} Criar Modalidade - IFSports {% endblock %}
+{% block titulo %}
+    {{ titulo }} - IFSports
+{% endblock %}
 
-{% block css %} 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/treinos.css' ) }}">
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/treinos.css') }}">
 {% endblock %}
 
 {% block conteudo %}
-    <main> 
-        <div class="breadcrumb"> 
-            <a href=""> Início </a> >
-            <a href="{{ url_for('treinos.listar') }}"> Modalidades </a> >
-            <span> Inserir Modalidade </span>
-        </div>
-        <hr>
 
-        <div class="card-form">
-            <form method="post" action="{{ url_for('modalidades.criar') }}"> 
-                {{ form.hidden_tag() }}
+<main>
 
-                <div class="form-grupo">
-                    {{ form.mod_nome.label }} 
-                    {{ form.mod_nome}}
-                    {% for error in form.mod_nome.errors %}
-                        <div class="text-danger">{{ error }}</div>
-                    {% endfor %}
-                </div>
+    <div class="breadcrumb">
+        <a href="{{ url_for('home.index') }}"> Início</a> >
+        <a href="{{ url_for('modalidades.listar') }}">Modalidades</a> >
+        <span>{{ titulo }}</span>
+    </div>
 
-                {{ form.submit }}
-            </form>
-        </div>
-    </main> 
+    <hr>
+
+    <div class="card-form">
+
+        <form method="POST">
+
+            {{ form.hidden_tag() }}
+
+            <div class="form-grupo">
+
+                {{ form.mod_nome.label }}
+
+                {{ form.mod_nome }}
+
+                {% for error in form.mod_nome.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+
+            </div>
+
+            {{ form.submit(
+                value="Salvar Alterações" if modalidade else "Inserir Modalidade"
+            ) }}
+
+        </form>
+
+    </div>
+
+</main>
+
 {% endblock %}

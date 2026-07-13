@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/components/toast.css') }}"> <!-- Mensagens Flash-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components/confirm_modal.css') }}"> 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.js" integrity="sha512-8BHxHDLsOHx+flIrQ0DrZcea7MkHqRU5GbTHmbdzMRnAaoCIkZ97PqZcXJkKZckMMhqfoeaJE+DNUVuyoQsO3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script> 
         const socket = io();
@@ -21,8 +23,41 @@
     {% block css %} {% endblock %}
 
 </head>
-<body>
-<nav class="navbar"> 
+    <div class="confirm-modal" id="confirmModal">
+
+        <div class="confirm-box">
+
+            <div class="confirm-header">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <h5>Confirmação</h5>
+            </div>
+
+            <div class="confirm-body">
+                <p id="confirmMessage">
+                    Tem certeza que deseja continuar?
+                </p>
+            </div>
+
+            <div class="confirm-footer">
+
+                <button 
+                    class="confirm-cancel"
+                    onclick="fecharConfirmacao()">
+                    Cancelar
+                </button>
+
+                <button 
+                    class="confirm-ok"
+                    id="confirmButton">
+                    Confirmar
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+    <nav class="navbar"> 
     <div class="nav-logo">
         <a href="{{ url_for('home.index') }}" class="logo"> <img src="{{ url_for('static', filename='images/Logo Principal - Sem Fundo - Maior.png') }}" alt="Logo - IFSports"> </a>
     </div>
@@ -291,4 +326,40 @@ function atualizarBolinhaNavbar() {
         document.querySelectorAll(".notificacao-bolinha").forEach(bolinha => bolinha.remove());
     }
 }
+
+let confirmCallback = null;
+
+function confirmar(mensagem, callback) {
+
+    document.getElementById("confirmMessage").textContent = mensagem;
+
+    confirmCallback = callback;
+
+    document
+        .getElementById("confirmModal")
+        .classList.add("active");
+}
+
+
+document.getElementById("confirmButton").onclick = function(){
+
+    if(confirmCallback){
+        confirmCallback();
+    }
+
+    fecharConfirmacao();
+
+};
+
+
+function fecharConfirmacao(){
+
+    document
+        .getElementById("confirmModal")
+        .classList.remove("active");
+
+    confirmCallback = null;
+
+}
+
 </script>

@@ -9,7 +9,7 @@
 {% block conteudo %}
     <main> 
         <div class="breadcrumb"> 
-            <a href=""> Início </a> >
+            <a href="{{ url_for('home.index') }}"> Início </a> >
             <a href="{{ url_for('treinos.listar') }}"> Treinos </a> >
             <span> {{ acao }} Treino </span>
         </div>

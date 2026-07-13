@@ -77,6 +77,7 @@
             <form
                 action="{{ url_for('mural.excluir_foto', foto_id=foto.mft_id) }}"
                 method="POST"
+                onsubmit="event.preventDefault(); confirmar('Deseja realmente excluir esta foto?', () => this.submit());"
             >
 
                 <button class="excluir">

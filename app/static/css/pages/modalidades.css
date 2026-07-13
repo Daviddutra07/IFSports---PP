@@ -1,0 +1,449 @@
+/* =================================
+        LISTAGEM MODALIDADES
+================================= */
+
+
+.pagina-modalidades{
+
+    min-height:90vh;
+
+    padding:30px 20px;
+
+    background-color:var(--fundo-claro);
+
+}
+
+
+
+/* ================================
+            HEADER
+================================ */
+
+
+.modalidades-header{
+
+    text-align:center;
+
+    margin-bottom:35px;
+
+}
+
+
+
+.modalidades-header h1{
+
+    font-size:2.5rem;
+
+    margin-bottom:10px;
+
+    color:var(--verde-principal);
+
+}
+
+
+
+.modalidades-header p{
+
+    color:#555;
+
+    font-size:1rem;
+
+    max-width:700px;
+
+    margin:0 auto 20px auto;
+
+}
+
+
+
+/* BOTÃO */
+
+
+.nova-modalidade{
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:15px;
+
+    border-top:1px solid rgba(0,0,0,.08);
+
+}
+
+
+
+.nova-modalidade a{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:10px;
+
+
+    width:280px;
+
+    height:45px;
+
+
+    background-color:var(--verde-secundario);
+
+    color:white;
+
+    text-decoration:none;
+
+    border-radius:8px;
+
+
+    font-weight:800;
+
+    letter-spacing:1px;
+
+
+    transition:.25s;
+
+}
+
+
+
+.nova-modalidade a:hover{
+
+    background-color:var(--verde-hover);
+
+    transform:translateY(-3px);
+
+}
+
+
+
+/* ================================
+        TABELA
+================================ */
+
+
+.modalidades-container{
+
+    max-width:1100px;
+
+    margin:0 auto;
+
+}
+
+
+
+.tabela-wrapper{
+
+    background:white;
+
+    border-radius:20px;
+
+    border:2px solid var(--verde-secundario);
+
+    overflow:hidden;
+
+    box-shadow:
+    0 10px 25px rgba(126,217,87,.15);
+
+}
+
+
+
+.modalidades-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+
+
+.modalidades-table th{
+
+    padding:18px;
+
+    background:
+    linear-gradient(
+        135deg,
+        var(--verde-secundario),
+        var(--verde-hover)
+    );
+
+    color:white;
+
+    font-weight:700;
+
+    text-align:center;
+
+}
+
+
+
+.modalidades-table td{
+
+    padding:20px;
+
+    text-align:center;
+
+    border-bottom:1px solid #eee;
+
+}
+
+
+
+.modalidades-table tbody tr{
+
+    transition:.2s;
+
+}
+
+
+
+.modalidades-table tbody tr:hover{
+
+    background:#f8fcf5;
+
+}
+
+
+
+.nome-modalidade{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    font-weight:700;
+
+    color:#444;
+
+    text-align:left!important;
+
+}
+
+
+
+.nome-modalidade i{
+
+    color:var(--verde-principal);
+
+    font-size:1.3rem;
+
+}
+
+
+
+/* ================================
+        ALUNOS
+================================ */
+
+
+.quantidade-alunos{
+
+    display:inline-flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+
+    min-width:40px;
+
+    height:32px;
+
+
+    background:var(--verde-principal);
+
+    color:white;
+
+
+    border-radius:20px;
+
+    font-weight:700;
+
+}
+
+
+
+/* ================================
+        AÇÕES
+================================ */
+
+
+.acoes-modalidade{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:10px;
+
+}
+
+
+
+.acoes-modalidade form{
+
+    margin:0;
+
+}
+
+
+
+.editar,
+.excluir{
+
+    width:38px;
+
+    height:38px;
+
+
+    border:none;
+
+    border-radius:8px;
+
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+
+    color:white;
+
+    cursor:pointer;
+
+    text-decoration:none;
+
+
+    transition:.2s;
+
+}
+
+
+
+.editar{
+
+    background:#f0a500;
+
+}
+
+
+
+.excluir{
+
+    background:#d90429;
+
+}
+
+
+
+.editar:hover,
+.excluir:hover{
+
+    transform:translateY(-3px);
+
+}
+
+
+
+.bloqueado{
+
+    background:#888;
+
+    cursor:not-allowed;
+
+}
+
+
+
+
+/* ================================
+        VAZIO
+================================ */
+
+
+.no-modalidades{
+
+    max-width:700px;
+
+    margin:50px auto;
+
+
+    text-align:center;
+
+
+    padding:40px;
+
+
+    background:white;
+
+
+    border:2px solid var(--verde-secundario);
+
+    border-radius:20px;
+
+}
+
+
+
+.no-modalidades i{
+
+    font-size:3rem;
+
+    color:var(--verde-secundario);
+
+}
+
+
+
+.no-modalidades h2{
+
+    color:var(--verde-principal);
+
+}
+
+
+
+
+/* ================================
+        RESPONSIVO
+================================ */
+
+
+@media(max-width:768px){
+
+
+    .modalidades-header h1{
+
+        font-size:2rem;
+
+    }
+
+
+    .modalidades-table{
+
+        font-size:.9rem;
+
+    }
+
+
+    .modalidades-table th,
+    .modalidades-table td{
+
+        padding:12px 8px;
+
+    }
+
+
+}
