@@ -12,9 +12,11 @@
             <h1 class="treino-titulo brilho">Treinos Disponíveis</h1>
             <p>Rumo à Vitória, Faça Inscrição Nos Treinos! Cada treino é uma chance de ganhar pontos e melhorar sua performance!</p>
             {% if current_user.usr_tipo == "professor" %}
-                <div class="new-treino"> 
-                    <a href="{{ url_for('treinos.criar')}}"> CRIAR TREINO </a>
+            <div class="new">
+                <div class="btn-criar"> 
+                    <a href="{{ url_for('treinos.criar')}}"> <i class="bi bi-plus-circle"></i> Criar Treino </a>
                 </div>
+            </div>
             {% endif %}
         </header>
 

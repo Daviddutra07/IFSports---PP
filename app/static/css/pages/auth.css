@@ -139,6 +139,74 @@ main {
     display: none;
 }
 
+/* ===========================
+   ESQUECI SENHA / REDEFINIR
+=========================== */
+
+.card-auth > p{
+    margin: 12px 0 25px;
+    text-align: center;
+    color: #666;
+    line-height: 1.5;
+}
+
+.form-grupo a{
+    display: inline-block;
+    margin-top: 10px;
+    font-size: .9rem;
+    font-weight: 600;
+    color: var(--verde-secundario);
+    transition: .2s;
+}
+
+.form-grupo a:hover{
+    color: var(--verde-hover);
+}
+
+.btn-auth{
+    margin-top: 15px;
+    transition: .25s;
+}
+
+.btn-auth:hover{
+    background: var(--verde-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(126,217,87,.3);
+}
+
+.text-danger{
+    display: block;
+    margin-top: 6px;
+    font-size: .85rem;
+    color: #dc2626;
+}
+
+.card-auth form{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.card-auth form .form-grupo:last-of-type{
+    margin-bottom: 10px;
+}
+
+.form-links{
+    display:flex;
+    justify-content:flex-end;
+    margin-top:8px;
+}
+
+.form-links a{
+    font-size:.9rem;
+    color:var(--verde-secundario);
+    font-weight:600;
+}
+
+.form-links a:hover{
+    color:var(--verde-hover);
+}
+
 @keyframes  float {
     0%   { transform: translateY(0); }
     25%  { transform: translateY(-6px); }
@@ -213,5 +281,6 @@ main {
         margin-top: 30px;
         text-align: center;
         font-size: 0.9rem;
+        
     }
 }

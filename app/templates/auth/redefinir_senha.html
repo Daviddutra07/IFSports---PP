@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+Redefinir senha - IFSports
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/auth.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+<main>
+
+    <div class="left-auth">
+
+        <h1>
+            Crie uma nova senha<br>
+            para continuar utilizando o IFSports.
+        </h1>
+
+        <img
+            src="{{ url_for('static', filename='images/diversidadeesporte.png') }}"
+            class="left-auth-image"
+        >
+
+    </div>
+
+    <div class="tittle-hide">
+
+        <h1>
+            Redefinir senha
+        </h1>
+
+    </div>
+
+    <div class="right-auth">
+
+        <div class="card-auth">
+
+            <h1>Nova senha</h1>
+
+            <p>
+                Escolha uma nova senha para sua conta.
+            </p>
+
+            <form method="POST">
+
+                {{ form.hidden_tag() }}
+
+                <div class="form-grupo">
+
+                    {{ form.senha.label }}
+
+                    <div class="input-icon">
+
+                        <svg  xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" > <path d="M6 22h12c1.1 0 2-.9 2-2v-9c0-1.1-.9-2-2-2h-1V7c0-2.76-2.24-5-5-5S7 4.24 7 7v2H6c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2M9 7c0-1.65 1.35-3 3-3s3 1.35 3 3v2H9zm-3 4h12v9h-5v-2.28c.59-.35 1-.99 1-1.72 0-1.1-.9-2-2-2s-2 .9-2 2a2 2 0 0 0 1 1.72V20H6z"></path> </svg>
+
+                        {{ form.senha(placeholder="Digite sua nova senha") }}
+
+                    </div>
+
+                    {% for error in form.senha.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+
+                </div>
+
+                <div class="form-grupo">
+
+                    {{ form.confirmar_senha.label }}
+
+                    <div class="input-icon">
+
+                        <svg  xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" > <path d="M6 22h12c1.1 0 2-.9 2-2v-9c0-1.1-.9-2-2-2h-1V7c0-2.76-2.24-5-5-5S7 4.24 7 7v2H6c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2M9 7c0-1.65 1.35-3 3-3s3 1.35 3 3v2H9zm-3 4h12v9h-5v-2.28c.59-.35 1-.99 1-1.72 0-1.1-.9-2-2-2s-2 .9-2 2a2 2 0 0 0 1 1.72V20H6z"></path> </svg>
+
+                        {{ form.confirmar_senha(placeholder="Confirme sua nova senha") }}
+
+                    </div>
+
+                    {% for error in form.confirmar_senha.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+
+                </div>
+
+                {{ form.submit(class="btn-auth") }}
+
+            </form>
+
+        </div>
+
+    </div>
+
+</main>
+{% endblock %}

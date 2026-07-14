@@ -299,24 +299,7 @@ atualizarNavbar();
 
     </section>
 
-    <footer class="footer">
-
-        <div class="footer-content">
-
-            <img src="{{ url_for('static', filename='images/Logo Principal - Sem Fundo - Maior.png') }}"
-                alt="IFSports">
-
-            <p>
-                © 2026 IFSports • Instituto Federal do Rio Grande do Norte
-            </p>
-
-            <span>
-                Desenvolvido por alunos do IFRN Campus Caicó.
-            </span>
-
-        </div>
-
-    </footer>
+    {% include 'components/footer.html' %}
 
 </main>
 

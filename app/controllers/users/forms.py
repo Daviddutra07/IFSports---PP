@@ -54,6 +54,10 @@ class FormEditarProfessor(FlaskForm):
 
     remover_imagem = BooleanField("Remover foto de perfil")
 
+    senha_atual = PasswordField(
+        "Senha atual",
+    validators=[Optional()])
+
     senha = PasswordField(
         "Nova senha",
         validators=[
@@ -96,6 +100,10 @@ class FormEditarAluno(FlaskForm):
     )
 
     remover_imagem = BooleanField("Remover foto de perfil")
+    
+    senha_atual = PasswordField(
+        "Senha atual",
+    validators=[Optional()])
 
     senha = PasswordField(
         "Nova senha",

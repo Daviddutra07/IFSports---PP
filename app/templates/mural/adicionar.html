@@ -36,16 +36,6 @@
 
                 {{ form.imagem(class="input-form", id="imagem-input") }}
 
-
-                {% for erro in form.imagem.errors %}
-
-                    <div class="text-danger">
-                        {{ erro }}
-                    </div>
-
-                {% endfor %}
-
-
             </div>
 
             <div class="preview-container">
@@ -64,14 +54,6 @@
 
                 {{ form.legenda(class="input-form") }}
 
-
-                {% for erro in form.legenda.errors %}
-
-                    <div class="text-danger">
-                        {{ erro }}
-                    </div>
-
-                {% endfor %}
             </div>
             {{ form.submit(class="btn-form") }}
 

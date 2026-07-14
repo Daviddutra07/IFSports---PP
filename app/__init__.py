@@ -10,6 +10,7 @@ from app.extensions import db, login_manager, mail, socketio
 from app.models.notificacoes import Notificacao
 from app.seed.conquistas import inserir_conquistas
 from app.seed.modalidades import inserir_modalidades
+from app.seed.perguntas import inserir_faqs
 
 load_dotenv()
 
@@ -142,6 +143,8 @@ def create_app():
     from app.controllers.notificacoes.routes import notificacoes_bp
     from app.controllers.home.routes import home_bp
     from app.controllers.mural.routes import mural_bp
+    from app.controllers.faq.routes import faq_bp
+
 
     app.register_blueprint(rankings_bp)
     app.register_blueprint(avisos_bp)
@@ -152,11 +155,13 @@ def create_app():
     app.register_blueprint(notificacoes_bp)
     app.register_blueprint(home_bp)
     app.register_blueprint(mural_bp)
+    app.register_blueprint(faq_bp)
 
     with app.app_context():
         db.create_all()
         inserir_conquistas()
         inserir_modalidades()
+        inserir_faqs()
 
 
     return app

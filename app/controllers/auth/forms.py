@@ -27,3 +27,35 @@ class LoginForm(FlaskForm):
 
 class LogoutForm(FlaskForm):
     submit = SubmitField("Sair")
+
+class EsqueciSenhaForm(FlaskForm):
+    email = StringField(
+        "E-mail",
+        validators=[
+            DataRequired(),
+            Email()
+        ]
+    )
+
+    submit = SubmitField("Enviar link")
+
+class RedefinirSenhaForm(FlaskForm):
+
+    senha = PasswordField(
+        "Nova senha",
+        validators=[
+            DataRequired(),
+            Length(min=8),
+            EqualTo(
+                "confirmar_senha",
+                message="As senhas devem ser iguais."
+            )
+        ]
+    )
+
+    confirmar_senha = PasswordField(
+        "Confirmar senha",
+        validators=[DataRequired()]
+    )
+
+    submit = SubmitField("Salvar nova senha")

@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+Esqueci minha senha - IFSports
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/auth.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+<main>
+
+    <div class="left-auth">
+
+        <h1>
+            Esqueceu sua senha?<br>
+            Não se preocupe, nós ajudamos você.
+        </h1>
+
+        <img
+            src="{{ url_for('static', filename='images/diversidadeesporte.png') }}"
+            class="left-auth-image"
+        >
+
+        <p class="register-desktop">
+            Lembrou sua senha?
+            <a href="{{ url_for('auth.login') }}" style="color: rgba(164,230,128,.914);">
+                Entrar
+            </a>
+        </p>
+
+    </div>
+
+    <div class="tittle-hide">
+
+        <h1>
+            Esqueceu sua senha?<br>
+            Informe seu e-mail institucional.
+        </h1>
+
+    </div>
+
+    <div class="right-auth">
+
+        <div class="card-auth">
+
+            <h1>Recuperar senha</h1>
+
+            <p>
+                Informe seu e-mail e enviaremos um link para redefinir sua senha.
+            </p>
+
+            <form method="POST">
+
+                {{ form.hidden_tag() }}
+
+                <div class="form-grupo">
+
+                    {{ form.email.label }}
+
+                    <div class="input-icon">
+
+                        <svg  xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"  fill="currentColor" viewBox="0 0 24 24" ><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2m-8.61 10.79c.18.14.4.21.61.21s.43-.07.61-.21l1.55-1.21L18.58 18H5.41l4.42-4.42 1.55 1.21ZM20 6v.51l-8 6.22-8-6.22V6zm0 3.04v7.54l-4.24-4.24zm-11.76 3.3L4 16.58V9.04zM20 18"></path> </svg>
+
+                        {{ form.email(placeholder="Ex: aluno@escolar.ifrn.edu.br") }}
+
+                    </div>
+                </div>
+
+                {{ form.submit(class="btn-auth") }}
+
+            </form>
+
+        </div>
+
+        <p class="register-mobile">
+
+            Lembrou sua senha?
+
+            <a href="{{ url_for('auth.login') }}" style="color: rgba(164,230,128,.914);">
+                Entrar
+            </a>
+
+        </p>
+
+    </div>
+
+</main>
+{% endblock %}

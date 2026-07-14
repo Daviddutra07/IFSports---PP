@@ -20,6 +20,7 @@
             console.log("Socket conectado:", socket.id);
         });
     </script>
+    
     {% block css %} {% endblock %}
 
 </head>
@@ -59,7 +60,7 @@
     </div>
     <nav class="navbar"> 
     <div class="nav-logo">
-        <a href="{{ url_for('home.index') }}" class="logo"> <img src="{{ url_for('static', filename='images/Logo Principal - Sem Fundo - Maior.png') }}" alt="Logo - IFSports"> </a>
+        <a href="{{ url_for('home.index') }}" class="logo"> <img src="{{ url_for('static', filename='images/Logo Principal - Sem Fundo.png') }}" alt="Logo - IFSports"> </a>
     </div>
 
     {% if current_user.is_authenticated %}
@@ -84,6 +85,7 @@
             <a href="{{ url_for('treinos.listar') }}">TREINOS</a>
             <a href="{{ url_for('rankings.listar') }}">RANKING</a>
             <a href="{{ url_for('avisos.listar' )}}">AVISOS</a>
+            <a href="{{ url_for('faq.listar')}}">AJUDA</a>
             <a href="{{ url_for('usuarios.perfil', id=current_user.usr_id) }}">PERFIL</a>
             <div class="notificacao-wrapper">
                 <button type="button" class="nav-icone notificacao-link" id="toggleNotificacoes">
@@ -126,6 +128,7 @@
                 <li> <a href="{{ url_for('treinos.listar') }}">TREINOS</a></li>
                 <li> <a href="{{ url_for('rankings.listar') }}">RANKING</a> </li>
                 <li> <a href="{{ url_for('avisos.listar' )}}">AVISOS</a> </li>
+                <li> <a href="{{ url_for('faq.listar')}}">AJUDA</a> </li>    
                 <li> <a href="{{ url_for('usuarios.perfil', id=current_user.usr_id) }}">PERFIL</a> </li>    
                 <li>
                     <form method="POST" action="{{ url_for('auth.logout') }}" class="d-inline"> 
@@ -145,6 +148,27 @@
         </div>
     {% endif %}
 </nav>
+
+{% if form is defined and form.errors %}
+
+<div class="form-errors">
+
+    <div class="form-errors-header">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <strong>Corrija os seguintes erros:</strong>
+    </div>
+
+    <ul>
+        {% for campo, erros in form.errors.items() %}
+            {% for erro in erros %}
+                <li>{{ erro }}</li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+
+</div>
+
+{% endif %}
 
     {% block conteudo %} 
     {% endblock %}
@@ -361,5 +385,23 @@ function fecharConfirmacao(){
     confirmCallback = null;
 
 }
+document.addEventListener("DOMContentLoaded", function(){
 
+    const erro = document.querySelector(".form-errors");
+
+    if(erro){
+
+        setTimeout(() => {
+
+            erro.classList.add("remover");
+
+            setTimeout(() => {
+                erro.remove();
+            }, 400);
+
+        }, 5000);
+
+    }
+
+});
 </script>
