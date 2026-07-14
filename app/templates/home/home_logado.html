@@ -1,0 +1,487 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Home - IFSports{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/home_logado.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+
+<main class="home-page">
+
+    <!-- COLUNA ESQUERDA -->
+    <section class="coluna esquerda">
+
+        <div class="boas-vindas">
+            <h2>
+                Seja bem-vindo(a), <br>
+                {{ current_user.usr_nome }}!
+            </h2>
+
+            <p>
+                {% if perfil == "aluno" %}
+                    Acompanhe seus treinos, desempenho e conquistas.
+                {% else %}
+                    Gerencie seus treinos e acompanhe suas inscrições.
+                {% endif %}
+            </p>
+        </div>
+
+
+        <div class="card proximos-treinos">
+
+            {% if perfil == "aluno" %}
+                <div class="lista-treinos-home">
+                    <h3> Próximos Treinos </h3>
+
+                    {% for treino in treinos_disponiveis %}
+
+                    <div class="treino-home-item">
+
+                        <div class="treino-home-icone">
+                            <i class="bi bi-calendar-event-fill"></i>
+                        </div>
+
+                        <div class="treino-home-info">
+
+                            <strong>{{ treino.trn_nome }}</strong>
+
+                            {% if treino.ocorrencia_aberta %}
+                            <small>
+                                {{ treino.ocorrencia_aberta.tro_data.strftime('%d/%m/%Y') }}
+                            </small>
+
+                            <small>
+                                {{ treino.ocorrencia_aberta.tro_data.strftime('%H:%M') }}
+                            </small>
+                            {% endif %}
+
+                        </div>
+
+                        
+                    </div>
+                    
+                    {% endfor %}
+                    <a href="{{ url_for('treinos.listar') }}" class="btn-home">
+                        Ver todos os treinos
+                    </a>
+                </div>
+
+
+            {% else %}
+
+                <h3 class="brilho">
+                    Próximo treino
+                </h3>
+
+                {% if proximo_treino %}
+
+                <div class="proximo-treino-card">
+
+                    <div class="icone-treino">
+                        <i class="bi bi-trophy-fill"></i>
+                    </div>
+
+                    <h2>
+                        {{ proximo_treino.treino.trn_nome }}
+                    </h2>
+
+                    <div class="info-treino">
+
+                        <div class="info-item">
+                            <span class="info-label"><i class="bi bi-calendar-week-fill"></i> Data</span>
+                            <strong>{{ proximo_treino.tro_data.strftime('%d/%m/%Y') }}</strong>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="info-label"><i class="bi bi-alarm-fill"></i> Horário</span>
+                            <strong>{{ proximo_treino.tro_data.strftime('%H:%M') }}</strong>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="info-label"><i class="bi bi-people-fill"></i> Inscritos</span>
+                            <strong>{{ total_inscritos_proximo }} alunos</strong>
+                        </div>
+
+                    </div>
+
+                    <div class="status-treino">
+                        Próxima ocorrência agendada
+                    </div>
+
+                </div>
+
+                    <a href="{{ url_for('treinos.listar') }}" class="btn-home">
+                        Gerenciar treinos
+                    </a>
+
+                {% else %}
+
+                    <p>Você ainda não possui treinos agendados.</p>
+
+                    <a href="{{ url_for('treinos.criar') }}" class="btn-home">
+                        Criar treino
+                    </a>
+
+                {% endif %}
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+
+
+    <!-- COLUNA CENTRAL -->
+    <section class="coluna centro">
+
+
+        {% if perfil == "aluno" %}
+            <!-- Indicadores -->
+            <h3> Minha Perfomance </h3>
+            <div class="indicadores-aluno">
+                <div class="card mini-card">
+
+                    <div class="mini-icone">
+                        <i class="bi bi-award-fill"></i>
+                    </div>
+
+                    <h4>
+                        Nível do atleta
+                    </h4>
+
+                    <small class="nivel-atleta">
+                        {{ progresso_nivel.nome }}
+                    </small>
+
+
+                    <div class="barra-progresso">
+
+                        <div 
+                            class="barra-preenchida"
+                            style="width: {{ progresso_nivel.percentual }}%">
+                        </div>
+
+                    </div>
+
+
+                    <span>
+                        {{ progresso_nivel.pontos }} XP
+                    </span>
+
+
+                </div>
+
+
+
+                <!-- Frequência -->
+                <div class="card mini-card">
+
+                    <div class="mini-icone">
+                        <i class="bi bi-activity"></i>
+                    </div>
+
+                    <h4>
+                        Frequência nos treinos
+                    </h4>
+                    <p class="nivel-atleta">
+                        {{ frequencia_percentual }}%
+                    </p>
+                    <div class="barra-progresso">
+                        <div 
+                            class="barra-preenchida"
+                            style="width: {{ frequencia_percentual }}%">
+                        </div>
+                    </div>
+                    <small>
+                        {{ treinos_que_foi }}/{{ total_treinos_modalidade }} treinos
+                    </small>
+                </div>
+            </div>
+        {% else %}
+
+        
+        
+        <!-- Indicadores professor -->
+        <div class="card pendencias-card">
+            
+            <div class="card-header">
+                <h3> Pendências</h3>
+
+                    {% if pendencias %}
+                        <span class="contador-pendencias">
+                            {{ pendencias|length }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    
+                    {% if pendencias %}
+                    
+                    <div class="lista-pendencias">
+                        
+                        {% for ocorrencia in pendencias %}
+                        
+                        <div class="pendencia-item">
+                            
+                            <div class="pendencia-topo">
+                                
+                                <div>
+                                    
+                                    <h4>
+                                        {{ ocorrencia.treino.trn_nome }}
+                                    </h4>
+                                    
+                                    <small>
+                                        {{ ocorrencia.tro_data.strftime('%d/%m/%Y às %H:%M') }}
+                                    </small>
+                                    
+                                </div>
+                                
+                                <span class="status-pendente">
+                                        Pendente
+                                    </span>
+                                    
+                                </div>
+
+                                <p>
+                                    A frequência deste treino ainda não foi validada.
+                                </p>
+                                
+                                <a href="{{ url_for('treinos.validar_frequencias', ocorrencia_id=ocorrencia.tro_id) }}" class="btn-home"
+                                >
+                                Validar frequência
+                            </a>
+                            
+                        </div>
+                        
+                        {% endfor %}
+                        
+                    </div>
+
+                    {% else %}
+                    
+                    <div class="sem-pendencias">
+                        
+                        <div class="icone-sucesso">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </div>
+                        
+                        <h4>
+                            Tudo em dia!
+                        </h4>
+                        
+                        <p>
+                            Não existem frequências aguardando validação.
+                        </p>
+                        
+                    </div>
+                    
+                    {% endif %}
+            
+        {% endif %}
+        
+        </div>
+        <!-- Mural -->
+        <h3>    Mural de fotos </h3>
+        <div class="mural-card">
+            {% if fotos_mural %}
+                <div class="mural-grid">
+                    {% for foto in fotos_mural %}
+                        <a href="{{ url_for('mural.mural') }}">
+                            <img
+                                src="{{ url_for('static', filename=foto.mft_img_id) }}"
+                                alt="{{ foto.mft_legenda }}"
+                                title="{{ foto.mft_legenda }}"
+                            >
+                        </a>
+                    {% endfor %}
+                </div>
+                <a href="{{ url_for('mural.mural') }}" class="btn-home">
+                    Ver galeria de fotos completa
+                </a>
+            {% else %}
+
+                <div class="mural-vazio">
+
+                    <i class="bi bi-images"></i>
+
+                    <h4>
+                        O mural ainda está vazio
+                    </h4>
+
+                    <span>
+                        Em breve novas fotos dos treinos e competições aparecerão aqui.
+                    </span>
+
+                </div>
+
+            
+                {% if perfil != "aluno" %}
+                    <a href="{{ url_for('mural.adicionar_foto') }}" class="btn-home"> Publicar Foto</a>
+                {% endif %}
+            {% endif %}
+        </div>
+
+    </section>
+
+    <section class="coluna direita">
+
+
+        {% if perfil == "aluno" %}
+
+
+            <div class="conquistas-card">
+
+                <h3>
+                    Minhas conquistas
+                </h3>
+
+
+                {% if conquistas_destaque %}
+
+                    <div class="conquistas-home-lista">
+
+                        {% for uc in conquistas_destaque %}
+
+                            {% set tier = uc.conquista.cnq_tier %}
+                            {% set config = tier_config.get(tier, tier_config["normal"]) %}
+
+                            <div 
+                                class="conquista-home-item {% if tier in ['ouro','lendária'] %}brilho-mini{% endif %}"
+                                style="
+                                    background: {{ config['cor'] }};
+                                    border-color: {{ config['borda'] }};
+                                "
+                            >
+
+                                <span class="icone-home">
+                                    {{ config['icone'] }}
+                                </span>
+
+                                <strong style="color: {{ config.get('texto','#333') }}">
+                                    {{ uc.conquista.cnq_nome }}
+                                </strong>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+
+                    <p>
+                        Você ainda não possui conquistas recentes.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+
+        {% endif %}
+
+        {% if perfil != "aluno" %}
+
+        <div class="card acoes-card">
+
+            <h3>
+                <i class="bi bi-lightning-charge-fill"></i>
+                Ações rápidas
+            </h3>
+
+            <div class="acoes-grid">
+
+                <a href="{{ url_for('treinos.criar') }}" class="acao-item">
+                    <div class="acao-icone">
+                        <i class="bi bi-plus-circle-fill"></i>
+                    </div>
+
+                    <div>
+                        <strong>Novo treino</strong>
+                        <small>Criar um treinamento</small>
+                    </div>
+                </a>
+
+                <a href="{{ url_for('treinos.listar') }}" class="acao-item">
+                    <div class="acao-icone">
+                        <i class="bi bi-calendar-week-fill"></i>
+                    </div>
+
+                    <div>
+                        <strong>Treinos</strong>
+                        <small>Gerenciar agenda</small>
+                    </div>
+                </a>
+
+                <a href="{{ url_for('mural.adicionar_foto') }}" class="acao-item">
+                    <div class="acao-icone">
+                        <i class="bi bi-images"></i>
+                    </div>
+
+                    <div>
+                        <strong>Publicar foto</strong>
+                        <small>Atualizar o mural</small>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+
+        {% endif %}
+
+        <div class="card modalidades-card">
+
+            <h3>
+                Modalidades
+            </h3>
+
+
+            <div class="modalidades-lista">
+
+                {% for modalidade in modalidades_progresso %}
+
+                    <div class="modalidade-item">
+
+                        <div class="modalidade-topo">
+
+                            <strong>{{ modalidade.nome }}</strong>
+
+                            <span>{{ modalidade.percentual }}%</span>
+
+                        </div>
+
+
+                        <div class="barra-progresso modalidade-barra">
+
+                            <div 
+                                class="barra-preenchida"
+                                style="width: {{ modalidade.percentual }}%">
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                {% endfor %}
+
+                <a href="{{ url_for('modalidades.listar') }}" class="btn-home">
+                        Ver modalidades
+                </a>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+{% endblock %}

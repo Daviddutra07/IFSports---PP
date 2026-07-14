@@ -9,15 +9,15 @@ class AvisoForm(FlaskForm):
         "Título",
         validators=[
             DataRequired(),
-            Length(min=3, max=150)
+            Length(min=3, max=150, message="O título deve possuir entre 3 e 150 caracteres.")
         ]
     )
 
     avs_mensagem = TextAreaField(
         "Mensagem",
         validators=[
-            DataRequired(),
-            Length(min=5, max=1000)
+            DataRequired(message="A mensagem deve possuir no máximo 1000 caracteres."),
+            Length(max=1000)
         ]
     )
 

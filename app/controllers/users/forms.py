@@ -31,14 +31,14 @@ class FormAluno(FlaskForm):
     modalidade = SelectField(
         "Modalidade principal",
         coerce=int,
-        validators=[DataRequired()]
+        validators=[DataRequired(message="Selecione uma modalidade.")]
     )
     submit = SubmitField("Salvar")
 
 class FormEditarProfessor(FlaskForm):
     nome = StringField(
         "Nome completo",
-        validators=[DataRequired(), Length(min=3, max=70)]
+        validators=[DataRequired(), Length(min=3, max=70, message="O nome deve possuir entre 3 e 70 caracteres.")]
     )
 
     imagem = FileField(
@@ -54,18 +54,22 @@ class FormEditarProfessor(FlaskForm):
 
     remover_imagem = BooleanField("Remover foto de perfil")
 
+    senha_atual = PasswordField(
+        "Senha atual",
+    validators=[Optional()])
+
     senha = PasswordField(
         "Nova senha",
         validators=[
             Optional(),
-            Length(min=8, message="A senha deve ter ao menos 8 caracteres")
+            Length(min=8, message="A senha deve possuir pelo menos 8 caracteres.")
         ]
     )
 
     confirmar_senha = PasswordField(
         "Confirmar senha",
         validators=[
-            EqualTo("senha", message="As senhas devem coincidir"),
+            EqualTo("senha", message="As senhas devem ser iguais."),
             Optional()
         ]
     )
@@ -75,13 +79,13 @@ class FormEditarProfessor(FlaskForm):
 class FormEditarAluno(FlaskForm):
     nome = StringField(
         "Nome completo",
-        validators=[DataRequired(), Length(min=3, max=70)]
+        validators=[DataRequired(), Length(min=3, max=70, message="O nome deve possuir entre 3 e 70 caracteres.")]
     )
 
     modalidade = SelectField(
         "Modalidade principal",
         coerce=int,
-        validators=[DataRequired()]
+        validators=[DataRequired(message="Selecione uma modalidade.")]
     )
 
     imagem = FileField(
@@ -96,19 +100,23 @@ class FormEditarAluno(FlaskForm):
     )
 
     remover_imagem = BooleanField("Remover foto de perfil")
+    
+    senha_atual = PasswordField(
+        "Senha atual",
+    validators=[Optional()])
 
     senha = PasswordField(
         "Nova senha",
         validators=[
             Optional(),
-            Length(min=8, message="A senha deve ter ao menos 8 caracteres")
+            Length(min=8, message="A senha deve possuir pelo menos 8 caracteres.")
         ]
     )
 
     confirmar_senha = PasswordField(
         "Confirmar senha",
         validators=[
-            EqualTo("senha", message="As senhas devem coincidir"),
+            EqualTo("senha", message="As senhas devem ser iguais."),
             Optional()
         ]
     )

@@ -1,0 +1,370 @@
+html,
+body {
+    overflow-y: auto;
+}
+
+
+/* ===========================
+   PÁGINA FORM FAQ
+=========================== */
+
+
+main {
+    min-height: 90vh;
+    padding: 30px 20px;
+    background-color: var(--fundo-claro);
+}
+
+
+/* ===========================
+   CONTAINER
+=========================== */
+
+
+.faq-form-container {
+
+    max-width: 900px;
+
+    margin: 0 auto;
+
+    background-color: white;
+
+    padding: 40px;
+
+    border-radius: 20px;
+
+    border: 2px solid var(--verde-secundario);
+
+    box-shadow:
+        0 10px 25px rgba(126,217,87,.15);
+
+}
+
+
+/* ===========================
+   CABEÇALHO
+=========================== */
+
+
+.faq-form-header {
+
+    text-align: center;
+
+    margin-bottom: 35px;
+
+}
+
+
+.faq-form-header h1 {
+
+    font-size: 2.5rem;
+
+    margin-bottom: 10px;
+
+}
+
+
+.faq-form-header p {
+
+    color: #555;
+
+    font-size: 1rem;
+
+}
+
+
+
+/* ===========================
+   FORMULÁRIO
+=========================== */
+
+
+.faq-form {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 25px;
+
+}
+
+
+
+.campo {
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+
+.campo label {
+
+    margin-bottom: 6px;
+
+    font-weight: 600;
+
+    font-size: 14px;
+
+    color: var(--verde-principal);
+
+}
+
+
+
+/* Pergunta e resposta ocupam largura total */
+
+.campo:nth-child(1),
+.campo:nth-child(2) {
+
+    grid-column: span 2;
+
+}
+
+
+
+/* ===========================
+   INPUTS
+=========================== */
+
+
+.campo input,
+.campo select,
+.campo textarea {
+
+    padding: 12px;
+
+    border-radius: 12px;
+
+    border: 2px solid #e0e0e0;
+
+    font-size: 14px;
+
+    background-color: #fafafa;
+
+    transition: .2s ease;
+
+}
+
+
+
+.campo textarea {
+
+    min-height: 160px;
+
+    resize: vertical;
+
+}
+
+
+
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+
+    outline:none;
+
+    border-color: var(--verde-secundario);
+
+    box-shadow:
+        0 0 0 3px rgba(126,217,87,.2);
+
+    background-color:white;
+
+}
+
+
+
+/* ===========================
+   CATEGORIA + ORDEM
+=========================== */
+
+
+.linha {
+
+    grid-column: span 2;
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:25px;
+
+}
+
+
+
+/* ===========================
+   ERROS
+=========================== */
+
+
+.erro {
+
+    margin-top:5px;
+
+    font-size:13px;
+
+    color:#d32f2f;
+
+}
+
+
+
+/* ===========================
+   AÇÕES
+=========================== */
+
+
+.acoes {
+
+    grid-column:span 2;
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    align-items:center;
+
+    gap:15px;
+
+    margin-top:10px;
+
+}
+
+
+
+.acoes a {
+
+    padding:12px 25px;
+
+    background-color:#666;
+
+    color:white;
+
+    border-radius:14px;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+    transition:.2s ease;
+
+}
+
+
+
+.acoes button {
+
+    padding:14px 25px;
+
+    border-radius:14px;
+
+    border:none;
+
+    background-color:var(--verde-secundario);
+
+    color:white;
+
+    font-weight:600;
+
+    letter-spacing:1px;
+
+    cursor:pointer;
+
+    transition:.2s ease;
+
+}
+
+
+
+.acoes button:hover {
+
+    background-color:var(--verde-hover);
+
+    transform:translateY(-2px);
+
+}
+
+
+
+.acoes a:hover {
+
+    transform:translateY(-2px);
+
+}
+
+
+
+/* ===========================
+   RESPONSIVIDADE
+=========================== */
+
+
+@media(max-width:768px){
+
+
+    .faq-form-container {
+
+        padding:25px 20px;
+
+    }
+
+
+
+    .faq-form {
+
+        grid-template-columns:1fr;
+
+    }
+
+
+
+    .campo:nth-child(1),
+    .campo:nth-child(2),
+    .linha,
+    .acoes {
+
+        grid-column:span 1;
+
+    }
+
+
+
+    .linha {
+
+        grid-template-columns:1fr;
+
+    }
+
+
+
+    .acoes {
+
+        flex-direction:column-reverse;
+
+    }
+
+
+
+    .acoes a,
+    .acoes button {
+
+        width:100%;
+
+        text-align:center;
+
+    }
+
+
+
+    .faq-form-header h1 {
+
+        font-size:2rem;
+
+    }
+
+}

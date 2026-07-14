@@ -25,6 +25,11 @@
             </div>
             {% endif %}
 
+            <div class="form-grupo">
+                {{ form.senha_atual.label }}
+                {{ form.senha_atual(class="input") }}
+            </div>
+
             {% if form.senha %}
             <div class="form-grupo">
                 {{ form.senha.label }}

@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+
+{% block titulo %}
+FAQ - IFSports
+{% endblock %}
+
+
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/faq.css') }}">
+{% endblock %}
+
+
+
+{% block conteudo %}
+<main> 
+    <section class="faq-container">
+
+        <div class="faq-header">
+
+            <h1 class="brilho">
+                Perguntas Frequentes
+            </h1>
+
+            <p>
+                Tire suas dúvidas sobre o IFSports
+            </p>
+
+        </div>
+
+
+
+        {% if current_user.is_authenticated and current_user.usr_tipo == 'professor' %}
+
+        <div class="faq-actions">
+
+            <a href="{{ url_for('faq.criar') }}" class="btn-criar">
+                <i class="bi bi-plus-circle"></i>
+                Nova pergunta
+            </a>
+
+        </div>
+
+        {% endif %}
+
+
+
+        <div class="faq-list">
+
+
+            {% for pergunta in perguntas %}
+
+            <details class="faq-item">
+
+
+                <summary>
+
+                    <span class="pergunta-texto">
+
+                        <i class="bi bi-question-circle-fill"></i>
+
+                        {{ pergunta.faq_pergunta }}
+
+                    </span>
+
+
+                    <i class="bi bi-chevron-down seta-faq"></i>
+
+                </summary>
+
+
+
+                <div class="faq-resposta">
+
+                    {% if pergunta.faq_categoria %}
+
+                    <span class="categoria">
+                        {{ pergunta.faq_categoria }}
+                    </span>
+
+                    {% endif %}
+
+
+                    <p>
+                        {{ pergunta.faq_resposta }}
+                    </p>
+
+
+
+                    {% if current_user.is_authenticated and current_user.usr_tipo == 'professor' %}
+
+                    <div class="faq-admin-actions">
+
+
+                        <a href="{{ url_for('faq.editar', id=pergunta.faq_id) }}"
+                        class="btn-editar">
+
+                            <i class="bi bi-pencil fill"></i>
+                        </a>
+
+
+
+                        <form
+                            method="post"
+                            action="{{ url_for('faq.excluir', id=pergunta.faq_id) }}"
+                            onsubmit="event.preventDefault(); confirmar('Deseja realmente excluir esta pergunta?', () => this.submit());"
+                        >
+
+                            <button type="submit" class="btn-excluir">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+
+                        </form>
+
+
+                    </div>
+
+                    {% endif %}
+
+
+                </div>
+
+
+            </details>
+
+
+            {% else %}
+
+
+            <p class="sem-faq">
+                Nenhuma pergunta cadastrada.
+            </p>
+
+
+            {% endfor %}
+
+
+        </div>
+
+
+    </section>
+
+    {% include 'components/footer.html' %}
+</main>
+
+{% endblock %}

@@ -1,0 +1,307 @@
+{% extends 'base.html' %}
+
+{% block titulo %}IFSports{% endblock %}
+
+{% block scripts %}
+<script>
+
+const counters = document.querySelectorAll(".counter");
+
+const observer = new IntersectionObserver(entries=>{
+
+    entries.forEach(entry=>{
+
+        if(!entry.isIntersecting) return;
+
+        const el = entry.target;
+
+        const target = Number(el.dataset.target);
+
+        let current = 0;
+
+        const incremento = Math.ceil(target/80);
+
+        const timer = setInterval(()=>{
+
+            current += incremento;
+
+            if(current >= target){
+
+                current = target;
+
+                clearInterval(timer);
+
+            }
+
+            el.textContent = current + "+";
+
+        },20);
+
+        observer.unobserve(el);
+
+    });
+
+});
+
+counters.forEach(counter=>observer.observe(counter));
+
+const navbar = document.querySelector("nav");
+
+function atualizarNavbar(){
+
+    if(window.scrollY > 60){
+
+        navbar.classList.add("scrolled");
+
+    }else{
+
+        navbar.classList.remove("scrolled");
+
+    }
+
+}
+
+window.addEventListener("scroll", atualizarNavbar);
+
+atualizarNavbar();
+
+</script>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/home_guest.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+
+<main class="landing">
+
+    <!-- HERO -->
+    <section class="hero">
+
+        <img src="{{ url_for('static', filename='images/Landing Page.png') }}" alt="IFSports">
+
+        <div class="hero-overlay">
+
+            <h1>O esporte do IFRN, conectado em um só lugar.</h1>
+
+            <p>
+                Organize treinos, acompanhe seu desempenho, conquiste medalhas
+                e faça parte da comunidade esportiva do IFSports.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a href="{{ url_for('auth.login') }}" class="btn-login">
+                    Entrar
+                </a>
+
+                <a href="{{ url_for('auth.register') }}" class="btn-cadastro">
+                    Criar conta
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- SOBRE -->
+
+    <section class="features">
+
+        <h2>Por que utilizar o IFSports?</h2>
+
+        <div class="features-grid">
+
+            <div class="feature-card">
+
+                <i class="bi bi-calendar-check-fill"></i>
+
+                <h3>Treinos</h3>
+
+                <p>
+                    Participe dos treinos da sua modalidade e acompanhe sua agenda.
+                </p>
+
+            </div>
+
+            <div class="feature-card">
+
+                <i class="bi bi-graph-up-arrow"></i>
+
+                <h3>Desempenho</h3>
+
+                <p>
+                    Visualize frequência, evolução e progresso ao longo do semestre.
+                </p>
+
+            </div>
+
+            <div class="feature-card">
+
+                <i class="bi bi-award-fill"></i>
+
+                <h3>Conquistas</h3>
+
+                <p>
+                    Ganhe XP, desbloqueie medalhas e evolua seu nível.
+                </p>
+
+            </div>
+
+            <div class="feature-card">
+
+                <i class="bi bi-images"></i>
+
+                <h3>Mural</h3>
+
+                <p>
+                    Reviva os melhores momentos dos treinos e competições.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- COMO FUNCIONA -->
+
+    <section class="timeline">
+
+        <h2>Como funciona?</h2>
+
+        <div class="timeline-grid">
+
+            <div>
+                <span>1</span>
+                <h4>Cadastre-se</h4>
+            </div>
+
+            <div>
+                <span>2</span>
+                <h4>Escolha sua modalidade</h4>
+            </div>
+
+            <div>
+                <span>3</span>
+                <h4>Participe dos treinos</h4>
+            </div>
+
+            <div>
+                <span>4</span>
+                <h4>Evolua no ranking</h4>
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ESTATÍSTICAS -->
+
+    <section class="stats">
+
+        <div>
+
+            <h2 class="counter" data-target="12">0</h2>
+
+            <span>Modalidades</span>
+
+        </div>
+
+        <div>
+
+            <h2 class="counter" data-target="150">0</h2>
+
+            <span>Atletas</span>
+
+        </div>
+
+        <div>
+
+            <h2 class="counter" data-target="40">0</h2>
+
+            <span>Treinos</span>
+
+        </div>
+
+        <div>
+
+            <h2 class="counter" data-target="500">0</h2>
+
+            <span>Presenças</span>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- MODALIDADES -->
+
+    <section class="modalidades-home">
+
+        <h2>Modalidades disponíveis</h2>
+
+        <div class="modalidades-grid">
+
+            <div>⚽ Futebol</div>
+
+            <div>🏐 Vôlei</div>
+
+            <div>🏀 Basquete</div>
+
+            <div>🏓 Tênis de Mesa</div>
+
+            <div>🏸 Badminton</div>
+
+            <div>♟️ Xadrez</div>
+
+        </div>
+
+    </section>
+
+    <section class="institucional">
+
+        <div class="institucional-content">
+
+            <h2>Mais do que uma plataforma.</h2>
+
+            <p>
+
+                Desenvolvido para fortalecer o esporte no IFRN,
+                promovendo organização, integração e evolução dos atletas.
+
+            </p>
+
+        </div>
+
+    </section>
+
+    <!-- CTA -->
+
+    <section class="cta">
+
+        <h2>Pronto para fazer parte do esporte do IFRN?</h2>
+
+        <p>
+            Cadastre-se gratuitamente e comece sua jornada.
+        </p>
+
+        <a href="{{ url_for('auth.register') }}" class="btn-cadastro">
+            Criar minha conta
+        </a>
+
+    </section>
+
+    {% include 'components/footer.html' %}
+
+</main>
+
+{% endblock %}
+

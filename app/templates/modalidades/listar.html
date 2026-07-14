@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Modalidades - IFSports{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/modalidades.css') }}">
+{% endblock %}
+
+
+{% block conteudo %}
+    <main class="pagina-modalidades">
+
+        <header class="modalidades-header">
+
+            <h1 class="modalidade-titulo brilho">
+                Modalidades Esportivas
+            </h1>
+
+            <p>
+                Encontre as modalidades disponíveis no IFSports
+            </p>
+
+
+            {% if current_user.usr_tipo == "professor" %}
+
+            <div class="nova-modalidade">
+
+                <a href="{{ url_for('modalidades.criar') }}">
+                    <i class="bi bi-plus-circle"></i>
+                    CRIAR MODALIDADE
+                </a>
+
+            </div>
+
+            {% endif %}
+
+
+        </header>
+
+
+
+        {% if modalidades %}
+
+
+        <section class="modalidades-container">
+
+
+            <div class="tabela-wrapper">
+
+
+                <table class="modalidades-table">
+
+
+                    <thead>
+
+                        <tr>
+                            <th>Modalidade</th>
+                            <th>Alunos</th>
+
+                            {% if current_user.usr_tipo == "professor" %}
+                                <th>Ações</th>
+                            {% endif %}
+
+                        </tr>
+
+                    </thead>
+
+
+
+                    <tbody>
+
+
+                    {% for modalidade, total_alunos in modalidades %}
+
+
+                        <tr>
+
+
+                            <td class="nome-modalidade">
+
+                                <i class="bi bi-trophy-fill"></i>
+
+                                {{ modalidade.mod_nome }}
+
+                            </td>
+
+
+
+                            <td>
+
+                                <span class="quantidade-alunos">
+                                    {{ total_alunos }}
+                                </span>
+
+                            </td>
+
+
+
+                            {% if current_user.usr_tipo == "professor" %}
+
+
+                            <td>
+
+
+                                <div class="acoes-modalidade">
+
+
+                                    <a
+                                    href="{{ url_for('modalidades.editar', id=modalidade.mod_id) }}"
+                                    class="editar"
+                                    title="Editar">
+
+                                        <i class="bi bi-pencil fill"></i>
+
+                                    </a>
+
+
+
+                                    {% if modalidade.mod_id in modalidades_bloqueadas %}
+
+
+                                        <button
+                                        class="excluir bloqueado"
+                                        disabled
+                                        title="Existem usuários ou treinos vinculados">
+
+                                            <i class="bi bi-trash"></i>
+
+                                        </button>
+
+
+                                    {% else %}
+
+
+                                        <form
+                                        method="POST"
+                                        action="{{ url_for('modalidades.excluir', id=modalidade.mod_id) }}"
+                                        onsubmit="event.preventDefault(); confirmar('Deseja realmente excluir esta modalidade?', () => this.submit());">
+
+
+                                            <button
+                                            type="submit"
+                                            class="excluir"
+                                            title="Excluir">
+
+                                                <i class="bi bi-trash"></i>
+
+                                            </button>
+
+
+                                        </form>
+
+
+                                    {% endif %}
+
+
+                                </div>
+
+
+                            </td>
+
+
+                            {% endif %}
+
+
+                        </tr>
+
+
+                    {% endfor %}
+
+
+                    </tbody>
+
+
+                </table>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        {% else %}
+
+
+        <div class="no-modalidades">
+
+            <i class="bi bi-trophy"></i>
+
+            <h2>
+                Nenhuma modalidade cadastrada.
+            </h2>
+
+            <p>
+                Cadastre uma modalidade para começar a organizar os esportes.
+            </p>
+
+        </div>
+
+
+        {% endif %}
+
+
+    </main>
+{% endblock %}

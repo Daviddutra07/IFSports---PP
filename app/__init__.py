@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, render_template
 from dotenv import load_dotenv
 from flask_login import current_user
 from flask_socketio import join_room,leave_room
@@ -9,6 +9,8 @@ from app.config import Config
 from app.extensions import db, login_manager, mail, socketio
 from app.models.notificacoes import Notificacao
 from app.seed.conquistas import inserir_conquistas
+from app.seed.modalidades import inserir_modalidades
+from app.seed.perguntas import inserir_faqs
 
 load_dotenv()
 
@@ -86,6 +88,51 @@ def create_app():
 
         return dict(tem_notificacoes_nao_lidas=tem_notificacoes_nao_lidas)
 
+
+    # Páginas de Erros
+    @app.errorhandler(403)
+    def erro_403(e):
+
+        return render_template(
+            "errors/error.html",
+            codigo=403,
+            titulo="Acesso negado",
+            mensagem="Você não possui permissão para acessar esta página."
+        ), 403
+
+
+    @app.errorhandler(404)
+    def erro_404(e):
+
+        return render_template(
+            "errors/error.html",
+            codigo=404,
+            titulo="Página não encontrada",
+            mensagem="A página que você tentou acessar não existe ou foi removida."
+        ), 404
+
+
+    @app.errorhandler(405)
+    def erro_405(e):
+
+        return render_template(
+            "errors/error.html",
+            codigo=405,
+            titulo="Método não permitido",
+            mensagem="A ação solicitada não pode ser executada nesta página."
+        ), 405
+
+
+    @app.errorhandler(500)
+    def erro_500(e):
+
+        return render_template(
+            "errors/error.html",
+            codigo=500,
+            titulo="Erro interno",
+            mensagem="Ocorreu um erro inesperado. Tente novamente mais tarde."
+        ), 500
+
     # Registrar controllers (blueprints)
     from app.controllers.auth.routes import auth_bp
     from app.controllers.treinos.routes import treinos_bp
@@ -94,6 +141,10 @@ def create_app():
     from app.controllers.avisos.routes import avisos_bp
     from app.controllers.rankings.routes import rankings_bp
     from app.controllers.notificacoes.routes import notificacoes_bp
+    from app.controllers.home.routes import home_bp
+    from app.controllers.mural.routes import mural_bp
+    from app.controllers.faq.routes import faq_bp
+
 
     app.register_blueprint(rankings_bp)
     app.register_blueprint(avisos_bp)
@@ -102,10 +153,15 @@ def create_app():
     app.register_blueprint(modalidades_bp)
     app.register_blueprint(usuarios_bp)
     app.register_blueprint(notificacoes_bp)
+    app.register_blueprint(home_bp)
+    app.register_blueprint(mural_bp)
+    app.register_blueprint(faq_bp)
 
     with app.app_context():
         db.create_all()
         inserir_conquistas()
+        inserir_modalidades()
+        inserir_faqs()
 
 
     return app

@@ -9,17 +9,65 @@
 {% block conteudo %}
     <main> 
         <header class="treinos-header">
-            <h1 class="treino-titulo">Treinos Disponíveis</h1>
+            <h1 class="treino-titulo brilho">Treinos Disponíveis</h1>
             <p>Rumo à Vitória, Faça Inscrição Nos Treinos! Cada treino é uma chance de ganhar pontos e melhorar sua performance!</p>
             {% if current_user.usr_tipo == "professor" %}
-                <div class="new-treino"> 
-                    <a href="{{ url_for('treinos.criar')}}"> CRIAR TREINO </a>
+            <div class="new">
+                <div class="btn-criar"> 
+                    <a href="{{ url_for('treinos.criar')}}"> <i class="bi bi-plus-circle"></i> Criar Treino </a>
                 </div>
+            </div>
             {% endif %}
         </header>
 
+        <div class="barra-filtros">
+            <form method="GET" class="filtros-treinos">
+
+                <div class="campo-filtro">
+                    <label for="status">Filtrar por</label>
+
+                    <select name="status" id="status" onchange="this.form.submit()">
+                        <option value="atuais"
+                            {% if status == "atuais" %}selected{% endif %}>
+                            Treinos atuais
+                        </option>
+
+                        <option value="antigos"
+                            {% if status == "antigos" %}selected{% endif %}>
+                            Treinos antigos
+                        </option>
+
+                        <option value="todos"
+                            {% if status == "todos" %}selected{% endif %}>
+                            Todos
+                        </option>
+                    </select>
+                </div>
+
+                <div class="campo-filtro">
+                    <label for="modalidade">Modalidade</label>
+
+                    <select name="modalidade" id="modalidade" onchange="this.form.submit()">
+
+                        <option value="">Todas</option>
+
+                        {% for mod in modalidades %}
+                            <option
+                                value="{{ mod.mod_id }}"
+                                {% if modalidade == mod.mod_id %}selected{% endif %}
+                            >
+                                {{ mod.mod_nome }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                </div>
+
+            </form>
+        </div>
+
         <section class="treinos-container">
-            {% for treino in treinos_pag.items %}
+            {% for ocorrencia in treinos_pag.items %}
                 {% include 'components/_card_treino.html' %}
             {% else %}
                 <div class="no-treinos">
@@ -31,13 +79,33 @@
 
         <div class="pagination">
             {% if treinos_pag.has_prev %}
-                <a class="page-link" href="{{ url_for('treinos.listar', page=treinos_pag.prev_num) }}">« Anterior</a>
+                <a
+                    class="page-link"
+                    href="{{ url_for(
+                        'treinos.listar',
+                        page=treinos_pag.prev_num,
+                        status=status,
+                        modalidade=modalidade
+                    ) }}"
+                >
+                    « Anterior
+                </a>
             {% endif %}
-    
+
             <span>Página {{ treinos_pag.page }} de {{ treinos_pag.pages }}</span>
-    
+
             {% if treinos_pag.has_next %}
-                <a class="page-link" href="{{ url_for('treinos.listar', page=treinos_pag.next_num) }}">Próxima »</a>
+                <a
+                    class="page-link"
+                    href="{{ url_for(
+                        'treinos.listar',
+                        page=treinos_pag.next_num,
+                        status=status,
+                        modalidade=modalidade
+                    ) }}"
+                >
+                    Próxima »
+                </a>
             {% endif %}
         </div>
         

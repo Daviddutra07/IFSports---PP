@@ -1,6 +1,6 @@
 from flask import Blueprint, abort, flash, render_template, redirect, request, url_for
 from flask_login import current_user, login_required
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from app.models.conquistas import UsuarioConquista, Conquista
 from app.models.frequencia import Frequencia
 from app.models.modalidades import Modalidade
@@ -15,6 +15,7 @@ import os
 from flask import current_app
 from datetime import datetime
 from sqlalchemy.orm import joinedload
+
 
 usuarios_bp = Blueprint('usuarios', __name__, url_prefix='/usuarios', template_folder='templates/users')
 @usuarios_bp.route("/<int:id>")
@@ -154,7 +155,35 @@ def editar(id):
             user.usr_mod_id = form.modalidade.data
 
         if form.senha.data:
-            user.usr_senha_hash = generate_password_hash(form.senha.data)
+
+            if not form.senha_atual.data:
+                flash(
+                    "Informe sua senha atual para alterá-la.",
+                    "warning"
+                )
+                return render_template(
+                    "users/editarperfil.html",
+                    form=form,
+                    user=user
+                )
+
+            if not check_password_hash(
+                user.usr_senha_hash,
+                form.senha_atual.data
+            ):
+                flash(
+                    "Senha atual incorreta.",
+                    "error"
+                )
+                return render_template(
+                    "users/editarperfil.html",
+                    form=form,
+                    user=user
+                )
+
+            user.usr_senha_hash = generate_password_hash(
+                form.senha.data
+            )
 
         if form.remover_imagem.data:
             if user.usr_img and "default_profile.png" not in user.usr_img:

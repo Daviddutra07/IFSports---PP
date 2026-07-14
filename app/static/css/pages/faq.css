@@ -1,0 +1,476 @@
+html,
+body{
+    overflow-y:auto;
+}
+
+
+/* ===========================
+   PÁGINA FAQ
+=========================== */
+
+.faq-container{
+
+    max-width:1100px;
+
+    margin:0 auto;
+
+    padding:30px 20px;
+
+}
+
+
+/* ===========================
+   CABEÇALHO
+=========================== */
+
+.faq-header{
+
+    text-align:center;
+
+    margin-bottom:35px;
+
+}
+
+
+.faq-header h1{
+
+    font-size:2.5rem;
+
+    margin-bottom:10px;
+
+    color:transparent;
+
+}
+
+
+.faq-header p{
+
+    font-size:1.1rem;
+
+    color:#555;
+
+}
+
+
+
+/* ===========================
+   BOTÃO NOVA FAQ
+=========================== */
+
+
+.faq-actions{
+
+    display:flex;
+
+    justify-content:center;
+
+    margin-bottom:30px;
+
+}
+
+
+.btn-criar{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    text-decoration:none;
+
+    padding:12px 25px;
+
+    border-radius:999px;
+
+    background:var(--verde-secundario);
+
+    color:white;
+
+    font-weight:700;
+
+    letter-spacing:.5px;
+
+    box-shadow:
+        0 8px 20px rgba(126,217,87,.3);
+
+    transition:.25s;
+
+}
+
+
+.btn-criar:hover{
+
+    background:var(--verde-hover);
+
+    transform:translateY(-3px);
+
+}
+
+
+
+/* ===========================
+   LISTA FAQ
+=========================== */
+
+
+.faq-list{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+}
+
+
+
+/* ===========================
+   CARD FAQ
+=========================== */
+
+
+.faq-item{
+
+    background:white;
+
+    border-radius:18px;
+
+    border:2px solid var(--verde-secundario);
+
+    box-shadow:
+        0 10px 25px rgba(126,217,87,.15);
+
+    overflow:hidden;
+
+    transition:.25s;
+
+}
+
+
+.faq-item:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+        0 15px 30px rgba(126,217,87,.22);
+
+}
+
+
+
+/* ===========================
+   PERGUNTA
+=========================== */
+
+
+.faq-item summary{
+
+    list-style:none;
+
+    cursor:pointer;
+
+    padding:20px 25px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:20px;
+
+    font-size:1.05rem;
+
+    font-weight:700;
+
+    color:var(--verde-principal);
+
+}
+
+
+.faq-item summary::-webkit-details-marker{
+
+    display:none;
+
+}
+
+
+.faq-item summary i{
+
+    width:32px;
+
+    height:32px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:rgba(126,217,87,.15);
+
+    color:var(--verde-principal);
+
+    transition:.3s;
+
+}
+
+
+.faq-item[open] summary .seta-faq{
+
+    transform:rotate(180deg);
+
+    background:var(--verde-secundario);
+
+    color:white;
+
+}
+
+
+
+/* ===========================
+   RESPOSTA
+=========================== */
+
+
+.faq-resposta{
+
+    padding:0 25px 25px;
+
+    border-top:1px solid #eeeeee;
+
+}
+
+
+.faq-resposta p{
+
+    margin-top:20px;
+
+    color:#555;
+
+    line-height:1.7;
+
+    font-size:.95rem;
+
+}
+
+
+
+/* ===========================
+   CATEGORIA
+=========================== */
+
+
+.categoria{
+
+    display:inline-flex;
+
+    margin-top:18px;
+
+    padding:6px 14px;
+
+    border-radius:999px;
+
+    background:#e9f9ec;
+
+    color:var(--verde-principal);
+
+    font-size:.8rem;
+
+    font-weight:700;
+
+}
+
+
+
+/* ===========================
+   AÇÕES PROFESSOR
+=========================== */
+
+
+.faq-admin-actions{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:12px;
+
+    margin-top:20px;
+
+}
+
+
+.faq-admin-actions a,
+.faq-admin-actions button{
+
+    width:35px;
+    height:35px;
+    border-radius:10px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-decoration:none;
+    color:white;
+    border:none;
+    cursor:pointer;
+    transition:.2s;
+
+}
+
+
+.btn-editar{
+
+    background:#f59e0b;
+
+}
+
+
+.btn-excluir{
+
+    background:#dc2626;
+
+}
+
+
+.faq-admin-actions a:hover{
+
+    transform:translateY(-3px);
+
+    filter:brightness(.9);
+
+}
+
+
+
+/* ===========================
+   SEM FAQ
+=========================== */
+
+
+.sem-faq{
+
+    text-align:center;
+
+    padding:50px;
+
+    background:white;
+
+    border-radius:18px;
+
+    border:2px solid var(--verde-secundario);
+
+    color:#666;
+
+}
+
+
+
+/* ===========================
+   RESPONSIVIDADE
+=========================== */
+
+.pergunta-texto {
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+
+.pergunta-texto i {
+
+    width:32px;
+
+    height:32px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:50%;
+
+    background:rgba(126,217,87,.15);
+
+    color:var(--verde-principal);
+
+    font-size:1rem;
+
+    flex-shrink:0;
+
+    transition:.3s ease;
+
+}
+
+
+.faq-item:hover .pergunta-texto i {
+
+    background:var(--verde-secundario);
+
+    color:white;
+
+    transform:scale(1.1);
+
+}
+
+
+/* mantém a seta separada */
+
+.seta-faq {
+
+    transition:.3s ease;
+
+}
+
+@media(max-width:768px){
+
+
+    .faq-container{
+
+        padding:20px 15px;
+
+    }
+
+
+    .faq-header h1{
+
+        font-size:2rem;
+
+    }
+
+
+    .faq-item summary{
+
+        padding:18px;
+
+        font-size:.95rem;
+
+    }
+
+
+    .faq-resposta{
+
+        padding:0 18px 20px;
+
+    }
+
+
+    .faq-admin-actions{
+
+        justify-content:center;
+
+    }
+
+}
+

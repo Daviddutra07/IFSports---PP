@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Editar Foto - IFSports{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/adicionarfoto.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="{{ url_for('home.index') }}">Início</a> >
+        <a href="{{ url_for('mural.mural') }}">Mural</a> >
+        <span>Editar Foto</span>
+    </div>
+
+    <hr>
+
+    <header class="mural-header">
+
+        <h1 class="brilho">
+            Editar Foto
+        </h1>
+
+        <p>
+            Atualize a legenda da publicação no mural.
+        </p>
+
+    </header>
+
+
+    <div class="card-form">
+
+        <form method="POST">
+
+            {{ form.hidden_tag() }}
+
+
+            <div class="preview-container">
+
+                <img
+                    src="{{ url_for('static', filename=foto.mft_img_id) }}"
+                    alt="Foto do mural"
+                    style="display:block;"
+                >
+
+            </div>
+
+
+            <div class="form-grupo">
+
+                {{ form.legenda.label }}
+
+                {{ form.legenda(class="input-form") }}
+            </div>
+
+
+            {{ form.submit(class="btn-form") }}
+
+        </form>
+
+    </div>
+
+
+</main>
+
+{% endblock %}

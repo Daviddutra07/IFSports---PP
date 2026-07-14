@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+    {% if faq %}
+        Editar FAQ
+    {% else %}
+        Criar FAQ
+    {% endif %}
+{% endblock %}
+
+
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/faq_crud.css') }}">
+{% endblock %}
+
+
+{% block conteudo %}
+<main>
+    <div class="faq-form-container">
+
+        <div class="faq-form-header">
+
+            <h1 class="brilho">
+                {% if faq %}
+                    Editar pergunta
+                {% else %}
+                    Nova pergunta
+                {% endif %}
+            </h1>
+
+            <p>
+                Preencha as informações da FAQ.
+            </p>
+
+        </div>
+
+
+        <form method="POST" class="faq-form">
+
+            {{ form.hidden_tag() }}
+
+
+            <div class="campo">
+
+                {{ form.pergunta.label }}
+
+                {{ form.pergunta(
+                    placeholder="Digite a pergunta..."
+                ) }}
+
+                {% for erro in form.pergunta.errors %}
+                    <span class="erro">
+                        {{ erro }}
+                    </span>
+                {% endfor %}
+
+            </div>
+
+
+
+            <div class="campo">
+
+                {{ form.resposta.label }}
+
+                {{ form.resposta(
+                    placeholder="Digite a resposta..."
+                ) }}
+
+                {% for erro in form.resposta.errors %}
+                    <span class="erro">
+                        {{ erro }}
+                    </span>
+                {% endfor %}
+
+            </div>
+
+
+
+            <div class="linha">
+
+
+                <div class="campo">
+
+                    {{ form.categoria.label }}
+
+                    {{ form.categoria() }}
+
+                </div>
+
+
+
+                <div class="campo">
+
+                    {{ form.ordem.label }}
+
+                    {{ form.ordem() }}
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="acoes">
+
+                <a href="{{ url_for('faq.listar') }}">
+                    Cancelar
+                </a>
+
+
+                <button type="submit">
+
+                    {% if faq %}
+                        Salvar alterações
+                    {% else %}
+                        Criar FAQ
+                    {% endif %}
+
+                </button>
+
+            </div>
+
+
+        </form>
+
+
+    </div>
+</main>
+
+{% endblock %}

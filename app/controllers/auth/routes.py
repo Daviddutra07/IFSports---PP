@@ -1,11 +1,12 @@
 from datetime import datetime
 from flask import Blueprint, render_template, redirect, session, url_for, flash
-from flask_login import login_user, login_required, logout_user
+from flask_login import current_user, login_user, login_required, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.services.email_service import enviar_email_confirmacao, validar_token
 from app.extensions import db
 from app.models.users import User
-from app.controllers.auth.forms import RegisterForm, LoginForm
+from app.controllers.auth.forms import EsqueciSenhaForm, RedefinirSenhaForm, RegisterForm, LoginForm
+from app.services.email_service import (enviar_email_confirmacao,enviar_email_reset,validar_token)
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth', template_folder='templates/auth')
 
@@ -17,7 +18,7 @@ def register():
         nome = form.nome.data
         email = form.email.data.lower()
         senha_hash = generate_password_hash(form.senha.data)
-        role = form.user_role.data
+        role = form.user_role
 
         # Verifica se o email já existe
         if User.query.filter_by(usr_email=email).first():
@@ -41,30 +42,117 @@ def register():
 
 @auth_bp.route('/confirmar/<token>')
 def confirmar_email(token):
-    email = validar_token(token)
+
+    email = validar_token(
+        token,
+        salt="email-confirm"
+    )
 
     if not email:
-        flash(' Link inválido ou expirado.', 'warning')
-        return redirect(url_for('auth.login'))
+        flash("Link inválido ou expirado.", "warning")
+        return redirect(url_for("auth.login"))
 
     user = User.query.filter_by(usr_email=email).first()
 
     if not user:
-        flash(' Usuário não encontrado.', 'error')
-        return redirect(url_for('auth.login'))
+        flash("Usuário não encontrado.", "error")
+        return redirect(url_for("auth.login"))
 
     if user.usr_confirmed:
-        flash(' Conta já confirmada.', 'info')
+        flash("Conta já confirmada.", "info")
     else:
         user.usr_confirmed = True
-        user.usr_confirmed_at = datetime.now
+        user.usr_confirmed_at = datetime.now()
         db.session.commit()
-        flash('Conta confirmada com sucesso!', 'success')
+        flash("Conta confirmada com sucesso!", "success")
 
-    return redirect(url_for('auth.login'))
+    return redirect(url_for("auth.login"))
+
+@auth_bp.route('/esqueci-senha', methods=['GET', 'POST'])
+def esqueci_senha():
+
+    form = EsqueciSenhaForm()
+
+    if form.validate_on_submit():
+
+        email = form.email.data.lower()
+
+        user = User.query.filter_by(usr_email=email).first()
+
+        # Mesmo que o usuário não exista,
+        # mostramos a mesma mensagem por segurança.
+        if user:
+            try:
+                enviar_email_reset(user)
+            except Exception:
+                pass
+
+        flash(
+            "Se existir uma conta com esse e-mail, enviaremos um link para redefinir sua senha.",
+            "info"
+        )
+
+        return redirect(url_for('auth.login'))
+
+    return render_template(
+        'auth/esqueci_senha.html',
+        form=form
+    )
+
+@auth_bp.route('/redefinir-senha/<token>', methods=['GET', 'POST'])
+def redefinir_senha(token):
+
+    email = validar_token(
+        token,
+        salt="reset-password",
+        expiration=3600
+    )
+
+    if not email:
+        flash(
+            "Link inválido ou expirado.",
+            "warning"
+        )
+        return redirect(url_for('auth.login'))
+
+    user = User.query.filter_by(
+        usr_email=email
+    ).first()
+
+    if not user:
+        flash(
+            "Usuário não encontrado.",
+            "error"
+        )
+        return redirect(url_for('auth.login'))
+
+    form = RedefinirSenhaForm()
+
+    if form.validate_on_submit():
+
+        user.usr_senha_hash = generate_password_hash(
+            form.senha.data
+        )
+
+        db.session.commit()
+
+        flash(
+            "Senha alterada com sucesso!",
+            "success"
+        )
+
+        return redirect(url_for('auth.login'))
+
+    return render_template(
+        'auth/redefinir_senha.html',
+        form=form
+    )
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return  redirect(url_for('home.index'))
+
     form = LoginForm()
 
     if form.validate_on_submit():
@@ -93,7 +181,7 @@ def login():
         if user.usr_primeiro_login:
             return redirect(url_for("usuarios.concluir") )
 
-        return redirect(url_for('treinos.listar'))
+        return redirect(url_for('home.index'))
     
     return render_template('auth/login.html', form=form)
 

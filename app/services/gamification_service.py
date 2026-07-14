@@ -210,3 +210,35 @@ def conceder_conquista(user_id, conquista):
     )
 
     return True
+
+def calcular_progresso_nivel(pontos):
+
+    niveis = [
+        (1, "Atleta Amador", 0, 200),
+        (2, "Atleta Dedicado", 200, 450),
+        (3, "Atleta Competidor", 450, 750),
+        (4, "Atleta de Alto Nível", 750, 1100),
+        (5, "Atleta Profissional", 1100, 1100)
+    ]
+
+
+    for nivel, nome, inicio, proximo in niveis:
+
+        if pontos < proximo or nivel == 5:
+
+            if nivel == 5:
+                percentual = 100
+            else:
+                progresso = pontos - inicio
+                total = proximo - inicio
+
+                percentual = round((progresso / total) * 100)
+
+
+            return {
+                "nivel": nivel,
+                "nome": nome,
+                "pontos": pontos,
+                "proximo_nivel": proximo,
+                "percentual": percentual
+            }
