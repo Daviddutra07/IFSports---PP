@@ -111,6 +111,9 @@ def editar(id):
     treino = Treino.query.get_or_404(id)
     form = TreinoForm(obj=treino)
 
+    if treino.trn_pro_id != current_user.usr_id:
+        abort(404)
+
     modalidades = Modalidade.query.all()
     form.trn_mod_id.choices = [(m.mod_id, m.mod_nome) for m in modalidades]
 
