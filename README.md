@@ -148,6 +148,6 @@ python -m pytest tests/ -v
 
 ## ⚖️ Licença
 
-O sistema foi construído como **Trabalho de Conclusão de Curso (TCC)** pelos alunos do **IFRN** - campus Caicó.
+O sistema foi construído como **Projeto de Pesquisa | Prática Profissional** pelos alunos do **IFRN** - campus Caicó.
 
 - [Licença MIT](LICENSE)
