@@ -1,6 +1,6 @@
 <div align='center'>
     <img
-        src='docs/assets/logo.jpg'
+        src='docs/logo.jpg'
         loading='lazy'
         alt='Logo IFSports'
         width='500'
