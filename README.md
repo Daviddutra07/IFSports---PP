@@ -126,6 +126,14 @@ python -m pytest tests/ -v
 
 ---
 
+## 📄 Documentos
+
+- [Sobre o Projeto](docs/sobre_o_projeto.md)
+- [Requisitos Funcionais](docs/requisitos_funcionais.md)
+- [Requisitos Não Funcionais](docs/requisitos_nao_funcionais.md)
+- [Trabalhos Relacionados](docs/trabalhos_relacionados.md)
+- [Relatório de Testes (Unitários, Integração e Sistema)](docs/relatorio_de_testes.pdf)
+
 ## 😁 Equipe
 
 | Nome                                                      | Papel no projeto |
@@ -136,6 +144,7 @@ python -m pytest tests/ -v
 | [Guilherme David](https://github.com/Guilherme-David)        | Desenvolvedor      |
 | [Ingrid Monteiro](https://github.com/ingridmont)              | Desenvolvedora     |
 | [Romerito Campos](https://github.com/RoCampos)                | Orientador         |
+| Hudson Pablo de Oliveira Bezerra                             | Coorientador       |
 
 ## ⚖️ Licença
 
