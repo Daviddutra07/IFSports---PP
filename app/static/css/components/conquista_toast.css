@@ -1,0 +1,169 @@
+/* Pop-up de conquista desbloqueada (topo, centralizado; fica abaixo das mensagens
+   flash (#toastbox), que ocupam o canto superior direito) */
+
+#conquistaToastBox {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(560px, calc(100vw - 24px));
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    z-index: 1300;
+    pointer-events: none; /* a caixa não bloqueia cliques; só os cards */
+}
+
+.conquista-toast {
+    --c1: #4800c4;
+    --c2: #2c0079;
+
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 16px 14px 14px;
+    border-radius: 22px;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(135deg, var(--c1), var(--c2));
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    pointer-events: auto;
+    animation: conquistaEntrar 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.15) both;
+}
+
+.conquista-toast.saindo {
+    animation: conquistaSair 0.3s ease-in forwards;
+}
+
+/* Cores por tier da conquista */
+.conquista-toast.tema-normal   { --c1: #1e88c7; --c2: #0d5c8f; }
+.conquista-toast.tema-ativo    { --c1: #e07b00; --c2: #a85200; }
+.conquista-toast.tema-bronze   { --c1: #b36a22; --c2: #6e3a0c; }
+.conquista-toast.tema-prata    { --c1: #7d8793; --c2: #4f5862; }
+.conquista-toast.tema-ouro     { --c1: #c99a0b; --c2: #8a6500; }
+.conquista-toast.tema-lendaria { --c1: #8a35e6; --c2: #4800c4; }
+
+/* Ícone com ondas ao redor e selo de check */
+.conquista-icone {
+    position: relative;
+    flex-shrink: 0;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    line-height: 1;
+    background: rgba(255, 255, 255, 0.22);
+    animation: conquistaOnda 2s ease-out infinite;
+}
+
+.conquista-icone .selo {
+    position: absolute;
+    right: -6px;
+    bottom: -4px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: #fff;
+    background: #22c55e;
+    border: 2px solid #fff;
+}
+
+.conquista-texto {
+    flex: 1;
+    min-width: 0;
+}
+
+.conquista-texto .rotulo {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    opacity: 0.85;
+}
+
+.conquista-texto .nome {
+    display: block;
+    margin: 2px 0;
+    font-size: 17px;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.conquista-texto .descricao {
+    display: block;
+    font-size: 13px;
+    line-height: 1.3;
+    opacity: 0.92;
+}
+
+.conquista-pontos {
+    flex-shrink: 0;
+    padding: 9px 16px;
+    border-radius: 999px;
+    background: #fff;
+    color: var(--c1);
+    font-size: 15px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.conquista-fechar {
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.9;
+}
+
+.conquista-fechar:hover,
+.conquista-fechar:focus-visible {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+@keyframes conquistaEntrar {
+    from { opacity: 0; transform: translateY(-30px) scale(0.96); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes conquistaSair {
+    to { opacity: 0; transform: translateY(-20px) scale(0.96); }
+}
+
+@keyframes conquistaOnda {
+    0%   { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.35), 0 0 0 0 rgba(255, 255, 255, 0.18); }
+    100% { box-shadow: 0 0 0 14px rgba(255, 255, 255, 0), 0 0 0 28px rgba(255, 255, 255, 0); }
+}
+
+@media (max-width: 520px) {
+    #conquistaToastBox { top: 160px; }
+    .conquista-toast { gap: 10px; padding: 12px 10px 12px 8px; }
+    .conquista-icone { width: 48px; height: 48px; margin: 6px; font-size: 24px; }
+    .conquista-texto .nome { font-size: 15px; }
+    .conquista-texto .descricao { font-size: 12px; }
+    .conquista-pontos { padding: 7px 11px; font-size: 13px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .conquista-toast,
+    .conquista-toast.saindo,
+    .conquista-icone { animation: none; }
+}

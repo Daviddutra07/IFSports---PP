@@ -55,14 +55,7 @@ def test_editar_treino_sucesso(client, login_professor, treino, modalidade):
     assert treino_atualizado.trn_quantidade == 15
 
 
-def test_editar_treino_de_outro_professor_nao_e_bloqueado(client, login_professor, modalidade):
-    """
-    Documenta um comportamento identificado no código-fonte: diferente de
-    remover(), a rota editar() não verifica se o treino pertence ao
-    professor autenticado. Hoje, qualquer professor logado consegue editar
-    o treino de outro professor. Este teste registra o comportamento atual
-    (não o comportamento desejável) para efeito de rastreabilidade.
-    """
+def test_editar_treino_de_outro_professor_e_bloqueado(client, login_professor, modalidade):
     outro_professor = User(
         usr_nome="Outro Professor",
         usr_email="outroprof@ifrn.edu.br",
@@ -81,14 +74,13 @@ def test_editar_treino_de_outro_professor_nao_e_bloqueado(client, login_professo
 
     response = client.post(
         f"/treinos/editar/{treino_do_outro.trn_id}",
-        data=_payload_avulso(modalidade, nome="Nome Alterado Por Outro Professor"),
-        follow_redirects=True
+        data=_payload_avulso(modalidade, nome="Nome Alterado Por Outro Professor")
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 404
 
-    treino_atualizado = Treino.query.get(treino_do_outro.trn_id)
-    assert treino_atualizado.trn_nome == "Nome Alterado Por Outro Professor"
+    treino_intacto = Treino.query.get(treino_do_outro.trn_id)
+    assert treino_intacto.trn_nome == "Treino do Outro Professor"
 
 
 # ---------------------------------------------------------------------------

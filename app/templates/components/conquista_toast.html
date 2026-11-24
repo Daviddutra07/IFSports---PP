@@ -1,0 +1,83 @@
+{# Pop-up de conquista desbloqueada.
+   Aparece de duas formas:
+   - em tempo real, pelo evento Socket.IO "conquista_desbloqueada" (página aberta);
+   - na próxima página carregada, quando a conquista veio da própria ação do usuário
+     (ex.: check-in), via flash com a categoria "conquista". #}
+{% if current_user.is_authenticated %}
+<div id="conquistaToastBox" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+    const caixa = document.getElementById("conquistaToastBox");
+    const TEMPO_EXIBICAO = 7000;
+
+    // SVGs fixos (sem depender de fonte de ícones)
+    const SVG_CHECK = '<svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3.2L13 4.8"/></svg>';
+    const SVG_FECHAR = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg>';
+
+    function criar(tag, classe, texto) {
+        const el = document.createElement(tag);
+        if (classe) el.className = classe;
+        if (texto !== undefined) el.textContent = texto;
+        return el;
+    }
+
+    function fechar(card) {
+        if (!card.isConnected || card.classList.contains("saindo")) return;
+        card.classList.add("saindo");
+        setTimeout(() => card.remove(), 300);
+    }
+
+    function mostrarConquista(dados) {
+        const card = criar("div", "conquista-toast tema-" + (dados.tema || "normal"));
+
+        const icone = criar("div", "conquista-icone", dados.icone || "🏅");
+        const selo = criar("span", "selo");
+        selo.innerHTML = SVG_CHECK;
+        icone.appendChild(selo);
+
+        const texto = criar("div", "conquista-texto");
+        texto.appendChild(criar("span", "rotulo", "Conquista desbloqueada!"));
+        texto.appendChild(criar("strong", "nome", dados.nome));
+        if (dados.descricao) texto.appendChild(criar("span", "descricao", dados.descricao));
+
+        const pontos = criar("div", "conquista-pontos", "+ " + dados.pontos + " pts");
+
+        const botao = criar("button", "conquista-fechar");
+        botao.innerHTML = SVG_FECHAR;
+        botao.type = "button";
+        botao.setAttribute("aria-label", "Fechar");
+        botao.addEventListener("click", () => fechar(card));
+
+        card.append(icone, texto, pontos, botao);
+        caixa.appendChild(card);
+
+        setTimeout(() => fechar(card), TEMPO_EXIBICAO);
+    }
+
+    // conquistas que chegam várias de uma vez aparecem em sequência
+    function mostrarVarias(lista) {
+        lista.forEach((dados, i) => setTimeout(() => mostrarConquista(dados), i * 600));
+    }
+
+    // a notificação já foi criada no banco: acende a bolinha do sino sem recarregar
+    function acenderBolinhaSino() {
+        document.querySelectorAll(".notificacao-link, .notificacao-mobile-link").forEach(sino => {
+            if (!sino.querySelector(".notificacao-bolinha")) {
+                sino.appendChild(criar("span", "notificacao-bolinha"));
+            }
+        });
+    }
+
+    socket.on("conquista_desbloqueada", function (dados) {
+        mostrarConquista(dados);
+        acenderBolinhaSino();
+    });
+
+    {% set conquistas_pendentes = get_flashed_messages(category_filter=["conquista"]) %}
+    {% if conquistas_pendentes %}
+    mostrarVarias({{ conquistas_pendentes | tojson }});
+    {% endif %}
+})();
+</script>
+{% endif %}

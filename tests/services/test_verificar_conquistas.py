@@ -2,6 +2,7 @@ from app.extensions import db
 from app.models.conquistas import UsuarioConquista
 from app.services.gamification_service import (
     conceder_conquista,
+    notificar_conquistas,
     verificar_conquistas,
 )
 from tests.factories import criar_aluno, criar_conquista, criar_frequencia
@@ -265,3 +266,57 @@ def test_verifica_conquista_cascata_pontos_bonus_desbloqueia_outra(app, aluno):
     assert _concedida(aluno, conquista_a)
     assert _concedida(aluno, conquista_b)
     assert aluno.usr_pontos == 120
+
+
+# ---------------------------------------------------------------------------
+# retorno de verificar_conquistas e aviso (pop-up) ao usuário
+# ---------------------------------------------------------------------------
+
+def test_verificar_conquistas_retorna_dados_das_conquistas_concedidas(app, aluno):
+    criar_conquista(
+        tipo="pontos", meta=50, bonus=60, nome="A", tier="ouro", tier_valor=1,
+        descricao="Descrição A"
+    )
+    criar_conquista(tipo="pontos", meta=100, bonus=10, nome="B", tier_valor=2)
+
+    aluno.usr_pontos = 50
+    db.session.commit()
+
+    novas = verificar_conquistas(aluno.usr_id)
+
+    # A e B (em cascata), cada uma com os dados que o pop-up precisa
+    assert [c["nome"] for c in novas] == ["A", "B"]
+    assert novas[0]["usuario_id"] == aluno.usr_id
+    assert novas[0]["pontos"] == 60
+    assert novas[0]["tema"] == "ouro"
+    assert novas[0]["descricao"] == "Descrição A"
+
+
+def test_verificar_conquistas_sem_novas_retorna_lista_vazia(app, aluno):
+    criar_conquista(tipo="pontos", meta=100, bonus=20)
+    aluno.usr_pontos = 10
+    db.session.commit()
+
+    assert verificar_conquistas(aluno.usr_id) == []
+
+
+def test_notificar_conquistas_de_outro_usuario_vai_por_socket(app, mocker):
+    emit = mocker.patch("app.services.gamification_service.socketio.emit")
+    flash = mocker.patch("app.services.gamification_service.flash")
+    dados = {"usuario_id": 7, "nome": "X", "tema": "lendaria", "pontos": 60}
+
+    notificar_conquistas([dados], usuario_atual_id=99)
+
+    emit.assert_called_once_with("conquista_desbloqueada", dados, room="usuario_7")
+    flash.assert_not_called()
+
+
+def test_notificar_conquistas_do_proprio_usuario_vai_por_flash(app, mocker):
+    emit = mocker.patch("app.services.gamification_service.socketio.emit")
+    flash = mocker.patch("app.services.gamification_service.flash")
+    dados = {"usuario_id": 7, "nome": "X", "tema": "normal", "pontos": 5}
+
+    notificar_conquistas([dados], usuario_atual_id=7)
+
+    flash.assert_called_once_with(dados, "conquista")
+    emit.assert_not_called()

@@ -9,7 +9,7 @@
 {% block conteudo %}
 <main class="perfil-page">
     <header> 
-        <span class="usr-foto""> 
+        <span class="usr-foto"> 
             <img src="{{ url_for('static', filename=user.usr_img) }}" alt="Foto de perfil">
         </span> 
         <span class="usr_nome"> 
@@ -17,7 +17,11 @@
             {% if aluno %}
                 <p class="brilho"> Nível: {{ nivel }} - {{ nome }} </p>
                 <p class="brilho">Pontos: {{ user.usr_pontos }}</p>
-                <p class="brilho">Nota média: {{ media }}</p>
+                {% if media is not none %}
+                    <p class="brilho">Nota média: {{ media|string|replace('.', ',') }}</p>
+                {% else %}
+                    <p class="brilho">Nota média: ainda sem avaliações</p>
+                {% endif %}
             {% else %}
                 <p class="brilho"> Professor </p>
             {% endif %}
@@ -60,15 +64,15 @@
                 {% endfor %}
             </div>
 
-            {% if total_conquistas > 3 %}
+            {% if total_conquistas > 0 %}
                 <a href="{{ url_for('usuarios.conquistas', id=user.usr_id) }}" class="btn">
                     Ver todas as conquistas
                 </a>
             {% endif %}
         {% else %}
-            <p> O aluno ainda não alcançou nenhuma conquista.
-        </section>
+            <p> O aluno ainda não alcançou nenhuma conquista. </p>
         {% endif %}
+        </section>
     {% endif %}
 
     {% if aluno %}

@@ -9,7 +9,7 @@ from app.models.treino_ocorrencia import TreinoOcorrencia
 from app.controllers.treinos.forms import TreinoCheckIn, TreinoExcluir, TreinoForm
 from app.models.modalidades import Modalidade
 from app.decorators.auth import professor_required
-from app.services.gamification_service import adicionar_pontos, remover_pontos, verificar_conquistas
+from app.services.gamification_service import adicionar_pontos, remover_pontos, verificar_conquistas, notificar_conquistas
 from app.services.notificacao_service import criar_notificacao_por_publico, criar_notificacao_usuario
 
 treinos_bp = Blueprint('treinos', __name__, url_prefix='/treinos', template_folder='templates/treinos')
@@ -242,9 +242,11 @@ def checkin(id):
     db.session.add(frequencia)
     db.session.flush()      
 
-    verificar_conquistas(current_user.usr_id)  
+    conquistas_novas = verificar_conquistas(current_user.usr_id)
 
     db.session.commit()
+
+    notificar_conquistas(conquistas_novas, usuario_atual_id=current_user.usr_id)
 
     flash("Check-in realizado com sucesso!", "success")
     socketio.emit("atualizar_treinos", room="alunos")
@@ -329,6 +331,8 @@ def validar_frequencias(ocorrencia_id):
             flash("Não há participantes para validar.", "warning")
             return redirect(url_for("treinos.listar", ocorrencia_id=ocorrencia.tro_id))
 
+        conquistas_novas = []
+
         for frequencia in alunos:
             status = "presente" if f"status_{frequencia.frq_id}" in request.form else "ausente"
             frequencia.frq_status = status
@@ -350,7 +354,7 @@ def validar_frequencias(ocorrencia_id):
                     publico="usuario", referencia_id=ocorrencia.tro_id, referencia_tipo="ocorrencia", commit=False
                 )
 
-            verificar_conquistas(frequencia.aluno.usr_id)
+            conquistas_novas.extend(verificar_conquistas(frequencia.aluno.usr_id))
 
         ocorrencia.tro_validado_em = datetime.now()
         ocorrencia.tro_ativo = False
@@ -362,6 +366,8 @@ def validar_frequencias(ocorrencia_id):
             treino.trn_ativo = False
 
         db.session.commit()
+
+        notificar_conquistas(conquistas_novas, usuario_atual_id=current_user.usr_id)
 
         flash("Frequências validadas com sucesso!", "success")
         socketio.emit("atualizar_treinos", room="alunos")

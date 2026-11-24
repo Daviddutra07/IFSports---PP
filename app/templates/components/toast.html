@@ -46,7 +46,10 @@ function mostrarToast(mensagem, tipo){
     {% if messages %}
         <script>
             {% for category, message in messages %}
+                {# categoria "conquista" é tratada por components/conquista_toast.html #}
+                {% if category != "conquista" %}
                 mostrarToast("{{ message }}", "{{ category }}");
+                {% endif %}
             {% endfor %}
         </script>
     {% endif %}

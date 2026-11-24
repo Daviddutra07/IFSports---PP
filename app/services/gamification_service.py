@@ -1,6 +1,7 @@
 from app.models.users import User
 from app.models.frequencia import Frequencia
-from app.extensions import db
+from app.extensions import db, socketio
+from flask import flash
 from sqlalchemy import func
 from app.models.conquistas import Conquista, UsuarioConquista
 from app.services.notificacao_service import criar_notificacao_usuario
@@ -73,12 +74,59 @@ def calcular_media(usuario_id):
         .filter(Frequencia.frq_aluno_nota != None)\
         .scalar()
 
-    return round(media, 2) if media else None
+    # média 0 é uma nota válida; só retorna None quando não há avaliações
+    return round(media, 2) if media is not None else None
 
+
+
+def montar_dados_conquista(user_id, conquista):
+    """Dados mínimos (serializáveis) para o pop-up de conquista no navegador."""
+    tier = conquista.cnq_tier if conquista.cnq_tier in TIER_CONFIG else "normal"
+
+    return {
+        "usuario_id": user_id,
+        "id": conquista.cnq_id,
+        "nome": conquista.cnq_nome,
+        "descricao": conquista.cnq_descricao or "",
+        "tier": tier,
+        # "lendária" -> "lendaria": usado como classe CSS (tema do pop-up)
+        "tema": tier.replace("á", "a"),
+        "icone": TIER_CONFIG[tier]["icone"],
+        "pontos": conquista.cnq_pontos_bonus,
+    }
+
+
+def notificar_conquistas(conquistas, usuario_atual_id=None):
+    """Avisa o usuário no navegador sobre conquistas recém-desbloqueadas.
+
+    Deve ser chamada DEPOIS do commit. `conquistas` é a lista retornada por
+    verificar_conquistas().
+
+    - Usuário que está fazendo a requisição (ex.: aluno que fez check-in): a página
+      vai ser recarregada por causa do redirect, então o pop-up é enfileirado via
+      flash e aparece na próxima página.
+    - Outro usuário (ex.: professor validando a presença do aluno): o evento vai
+      por Socket.IO para a sala do usuário e aparece na página que ele estiver
+      aberta, sem recarregar.
+    """
+    for dados in conquistas:
+        if dados["usuario_id"] == usuario_atual_id:
+            flash(dados, "conquista")
+        else:
+            socketio.emit(
+                "conquista_desbloqueada",
+                dados,
+                room=f"usuario_{dados['usuario_id']}"
+            )
 
 
 def verificar_conquistas(user_id):
-    houve_nova = False
+    """Concede as conquistas que o usuário já merece.
+
+    Retorna a lista (dicts) das conquistas concedidas nesta chamada, incluindo as
+    desbloqueadas em cascata, para o chamador avisar o usuário após o commit.
+    """
+    novas = []
 
     # ordena para as lendárias ficarem por último
     conquistas = (
@@ -172,12 +220,14 @@ def verificar_conquistas(user_id):
                 desbloquear = True
 
         if desbloquear:
-            concedida = conceder_conquista(user_id, conquista)
-            if concedida:
-                houve_nova = True
+            if conceder_conquista(user_id, conquista):
+                novas.append(montar_dados_conquista(user_id, conquista))
 
-    if houve_nova:
-        verificar_conquistas(user_id)
+    if novas:
+        # conquistas novas podem render pontos que desbloqueiam outras
+        novas.extend(verificar_conquistas(user_id))
+
+    return novas
 
 def conceder_conquista(user_id, conquista):
     existe = UsuarioConquista.query.filter_by(

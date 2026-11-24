@@ -33,6 +33,9 @@ def create_app(test_config=None):
     @socketio.on("connect")
     def handle_connect():
         if current_user.is_authenticated:
+            # sala individual: permite avisar só este usuário (ex.: pop-up de conquista)
+            join_room(f"usuario_{current_user.usr_id}")
+
             if current_user.usr_tipo == "aluno":
                 join_room("alunos")
             elif current_user.usr_tipo == "professor":
